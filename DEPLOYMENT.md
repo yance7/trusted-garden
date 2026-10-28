@@ -8,7 +8,9 @@
 2. 打开仓库 **Settings → Pages**。
 3. 在 **Build and deployment → Source** 选择 **GitHub Actions**。
 4. 打开 **Actions → Deploy V0.8 to GitHub Pages**。首次推送会自动运行；若 Pages 启用较晚，可选择 **Run workflow**，分支为 `main`。
-5. 等待 `build`、`deploy` 均成功后访问 <https://yance7.github.io/trusted-garden/>。
+5. 等待 `build`、`deploy` 均成功后访问 <https://trusted-garden.yance.me/>。仓库现已绑定此自定义域名，默认地址 <https://yance7.github.io/trusted-garden/> 会跳转到它。
+
+Pages 的自定义域名由仓库 Settings / API 管理；Actions 发布不依赖产物中的 `CNAME` 文件。迁移域名时同步检查 DNS 和 Pages 的 HTTPS 状态。
 
 如通过 API 配置 Pages，应选择 `build_type: workflow`。这是 Actions 发布，不使用分支目录发布。
 
@@ -39,7 +41,7 @@ dist/
 
 - **Pages 未启用 / deploy 失败**：确认 Pages 的 Source 为 GitHub Actions，再重新运行工作流。
 - **权限或审批等待**：检查仓库 Actions 是否允许运行，以及 `github-pages` 环境是否配置了审批规则。
-- **404**：先确认 `deploy` 成功，再访问完整项目地址 `/trusted-garden/`；仓库上传成功不等于网站部署成功。
+- **404**：先确认 `deploy` 成功，再访问自定义域名首页或默认项目地址 `/trusted-garden/`；仓库上传成功不等于网站部署成功。
 - **场景卡顿**：切换 Performance 模式；优先使用桌面浏览器并启用硬件加速。
 - **本地依赖**：发布构建只使用 Node.js 标准库，无需 `npm install`；Playwright 仅用于可选的开发验证。
 

@@ -5,7 +5,8 @@
 > 所有运行数值均为模拟值，接入真实传感器前不代表实际运行情况。
 
 - 仓库：[yance7/trusted-garden](https://github.com/yance7/trusted-garden)
-- GitHub Pages 默认地址：<https://yance7.github.io/trusted-garden/>（首次 Actions 部署成功后可访问）
+- 线上地址：<https://trusted-garden.yance.me/>（仓库 Pages 已配置此自定义域名）
+- GitHub Pages 默认地址：<https://yance7.github.io/trusted-garden/>（使用自定义域名时由 GitHub 跳转）
 - 版本详情：[V0.8 说明](v0.8/README.md)
 - 历史记录：[CHANGELOG.md](CHANGELOG.md)（历史文字保留，V0.6 / V0.7 文件已移除）
 
