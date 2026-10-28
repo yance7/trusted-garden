@@ -1,0 +1,18 @@
+# Dependencies and generated site
+node_modules/
+dist/
+__pycache__/
+*.pyc
+
+# Local diagnostics and screenshots
+tools/screenshots/
+tools/render-check/*.png
+tools/render-check/*.log
+
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+desktop.ini

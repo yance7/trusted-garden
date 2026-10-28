@@ -1,0 +1,27 @@
+import { chromium } from 'playwright-core';
+import { pathToFileURL } from 'url';
+const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+const file = process.argv[2];
+const browser = await chromium.launch({ executablePath: CHROME, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--no-sandbox'] });
+const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+const errs = [];
+page.on('pageerror', (e) => errs.push('PAGEERROR: ' + e.message));
+await page.goto(pathToFileURL(file).href, { waitUntil: 'load', timeout: 90000 });
+await page.waitForTimeout(10000);
+await page.click('#enterBtn');
+await page.waitForTimeout(2000);
+await page.click('#v8Walk');
+await page.waitForTimeout(2500);
+console.log('AT_SPAWN', JSON.stringify(await page.evaluate(() => window.__v8())));
+
+await page.evaluate(() => { window.__keyTest = []; window.addEventListener('keydown', (e) => window.__keyTest.push(e.code), true); });
+await page.keyboard.down('w');
+await page.waitForTimeout(2500);
+const mid = await page.evaluate(() => window.__v8());
+console.log('DURING_W', JSON.stringify(mid));
+console.log('KEYS_SEEN', JSON.stringify(await page.evaluate(() => window.__keyTest)));
+await page.keyboard.up('w');
+await page.waitForTimeout(1500);
+console.log('AFTER_W', JSON.stringify(await page.evaluate(() => window.__v8())));
+console.log('ERRORS', JSON.stringify(errs.slice(0, 6)));
+await browser.close();

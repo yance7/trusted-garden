@@ -1,0 +1,191 @@
+/* ============================================================
+   Trusted Garden - V0.7 Showcase layer
+   ============================================================ */
+:root{
+  --v7glass:rgba(247,244,236,.72);
+  --v7line:rgba(23,35,28,.14);
+  --v7line2:rgba(23,35,28,.08);
+  --v7shadow:0 14px 40px rgba(24,37,29,.10);
+  --v7shadow-lg:0 26px 70px rgba(24,37,29,.16);
+  --v7green:#26412f;
+  --v7accent:#4f7f63;
+}
+
+/* ---------- base polish ---------- */
+.skywash{display:none!important}
+::selection{background:rgba(47,81,64,.18)}
+.topbtn,.viewbtn,.weather-chip,.roundbtn,.modebtn,.scenario,.quality-strip button{transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.topbtn:hover,.roundbtn:hover{transform:translateY(-1px)}
+.drawer::-webkit-scrollbar{width:9px}
+.drawer::-webkit-scrollbar-track{background:transparent}
+.drawer::-webkit-scrollbar-thumb{background:rgba(31,47,37,.20);border-radius:9px}
+.drawer::-webkit-scrollbar-thumb:hover{background:rgba(31,47,37,.34)}
+
+/* hotspots a touch more refined */
+.hotspot:before{box-shadow:0 0 0 3px rgba(244,241,232,.55),0 2px 6px rgba(20,32,24,.18)}
+.hotspot span{box-shadow:0 4px 14px rgba(25,38,30,.06)}
+
+/* ---------- photo / cinematic mode ---------- */
+#app.v7-photo .topbar,
+#app.v7-photo .left-rail,
+#app.v7-photo .bottom-story,
+#app.v7-photo .timebar,
+#app.v7-photo .weather-dock,
+#app.v7-photo .quality-strip,
+#app.v7-photo .drawer,
+#app.v7-photo .system-status,
+#app.v7-photo .mode-switcher,
+#app.v7-photo .compass,
+#app.v7-photo #labels,
+#app.v7-photo .screen-note,
+#app.v7-photo .flow-panel,
+#app.v7-photo .v7-minimap,
+#app.v7-photo .v7-controls,
+#app.v7-photo .v7-time{
+  opacity:0!important;pointer-events:none!important;transition:opacity .5s ease;
+}
+#app.v7-photo .v7-controls{opacity:.0}
+#app.v7-photo #v7ExitPhoto{opacity:1!important;pointer-events:auto!important}
+
+/* ---------- control cluster ---------- */
+.v7-controls{position:absolute;z-index:26;left:22px;bottom:10px;display:flex;gap:7px;align-items:center;transition:opacity .5s ease}
+.v7-minimap,.v7-legend{transition:opacity .5s ease}
+#app.v7-intro .v7-controls,
+#app.v7-intro .v7-minimap,
+#app.v7-intro .v7-legend{opacity:0!important;pointer-events:none!important}
+.v7-btn{
+  display:flex;align-items:center;gap:6px;
+  border:1px solid var(--v7line);background:var(--v7glass);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:999px;padding:7px 12px 7px 10px;font-size:10px;letter-spacing:.03em;color:#2c3b31;
+  box-shadow:0 6px 18px rgba(24,37,29,.07);
+  transition:background .2s,color .2s,border-color .2s,transform .18s,box-shadow .2s;
+}
+.v7-btn svg{width:13px;height:13px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.v7-btn:hover{background:#233b2f;color:#fff;border-color:#233b2f;transform:translateY(-1px);box-shadow:0 10px 24px rgba(24,37,29,.16)}
+.v7-btn.on{background:#233b2f;color:#fff;border-color:#233b2f}
+.v7-btn .v7-ic-play{fill:currentColor;stroke:none}
+.v7-controls .v7-btn span{white-space:nowrap}
+@media(max-width:1180px){.v7-controls .v7-btn span{display:none}.v7-btn{padding:8px}}
+
+/* exit photo mode button */
+#v7ExitPhoto{position:absolute;z-index:40;right:24px;bottom:24px;display:none}
+#app.v7-photo #v7ExitPhoto{display:flex}
+
+/* ---------- minimap ---------- */
+.v7-minimap{
+  position:absolute;z-index:12;right:25px;top:332px;width:212px;
+  background:var(--v7glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--v7line);box-shadow:var(--v7shadow);
+  padding:9px 10px 10px;
+}
+.v7-minimap .v7-mm-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.v7-minimap .v7-mm-head b{font:500 10px/1 var(--serif);letter-spacing:.02em;color:#243329}
+.v7-minimap .v7-mm-head span{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7c847c}
+.v7-minimap canvas{display:block;width:192px;height:132px;border:1px solid var(--v7line2);background:rgba(255,255,255,.32)}
+@media(max-width:1180px){.v7-minimap{display:none}}
+
+/* ---------- time-of-day ---------- */
+.v7-tod{display:flex;align-items:center;gap:9px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(23,35,28,.10)}
+.v7-tod label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.v7-tod input{flex:1;height:3px;accent-color:#4f7f63;min-width:0}
+.v7-tod span{font:500 9px var(--serif);white-space:nowrap;color:#3b4a40;min-width:38px;text-align:right}
+
+/* ---------- toasts ---------- */
+.v7-toasts{position:absolute;z-index:90;left:50%;bottom:142px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.v7-toast{
+  max-width:min(430px,74vw);
+  background:rgba(20,31,24,.90);color:#f2f1e8;border:1px solid rgba(255,255,255,.10);
+  padding:9px 14px;font-size:10.5px;line-height:1.45;letter-spacing:.01em;
+  box-shadow:0 16px 40px rgba(12,20,15,.30);backdrop-filter:blur(8px);
+  opacity:0;transform:translateY(9px);transition:opacity .3s ease,transform .3s ease;
+}
+.v7-toast.on{opacity:1;transform:translateY(0)}
+.v7-toast b{font-weight:600;color:#fff}
+
+/* ---------- help modal ---------- */
+.v7-modal{
+  position:absolute;z-index:120;inset:0;display:none;place-items:center;
+  background:rgba(24,34,27,.34);backdrop-filter:blur(6px);
+}
+.v7-modal.open{display:grid}
+.v7-modal-inner{
+  width:min(560px,90vw);background:rgba(247,244,236,.98);border:1px solid var(--v7line);
+  box-shadow:var(--v7shadow-lg);padding:30px 34px 34px;
+}
+.v7-modal-inner h2{font:500 27px/1.1 var(--serif);letter-spacing:-.02em;margin:0 0 6px}
+.v7-modal-inner p.v7-sub{margin:0 0 20px;font-size:10px;color:var(--muted);letter-spacing:.02em}
+.v7-kbd-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+.v7-kbd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--v7line2);font-size:11px;color:#3c4a41}
+.v7-kbd-row:last-child{border-bottom:0}
+.v7-keys{display:flex;gap:4px}
+kbd{font:500 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,255,255,.7);border:1px solid var(--v7line);border-bottom-width:2px;border-radius:4px;padding:4px 7px;color:#2b3a30;min-width:22px;text-align:center}
+.v7-modal-close{position:absolute;top:16px;right:18px;border:1px solid var(--v7line);background:rgba(255,255,255,.5);width:30px;height:30px;border-radius:50%;font-size:16px;line-height:1;display:grid;place-items:center}
+.v7-modal-close:hover{background:#233b2f;color:#fff}
+.v7-modal-inner{position:relative}
+
+/* ---------- legend / info strip ---------- */
+.v7-legend{position:absolute;z-index:11;left:22px;bottom:64px;display:flex;flex-direction:column;gap:5px;font-size:9px;color:#5c675f;letter-spacing:.02em;pointer-events:none}
+.v7-legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:7px;border-radius:2px}
+@media(max-width:1180px){.v7-legend{display:none}}
+
+/* ---------- viewport frame tint (subtle premium vignette on chrome) ---------- */
+#app:after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;box-shadow:inset 0 0 150px rgba(24,37,29,.07)}
+#app.v7-photo:after{box-shadow:inset 0 0 200px rgba(12,20,15,.14)}
+
+/* drawer / story micro-polish */
+.bottom-story{border-left-width:3px;box-shadow:0 22px 54px rgba(24,37,29,.10)}
+.drawer{transition:transform .34s cubic-bezier(.32,.72,.28,1)}
+.weather-dock{box-shadow:0 18px 48px rgba(24,37,29,.09)}
+.quality-strip{box-shadow:0 10px 26px rgba(24,37,29,.07)}
+.left-rail{transition:box-shadow .3s}
+
+
+/* ============================================================
+   V0.8 - walk mode / character
+   ============================================================ */
+#app.v7-photo .v8-walkbar{opacity:0!important;pointer-events:none!important}
+#app.v8-walking .bottom-story{opacity:0;pointer-events:none;transition:opacity .45s ease}
+
+.v8-walkbar{
+  position:absolute;z-index:30;left:50%;bottom:32px;transform:translateX(-50%) translateY(14px);
+  width:min(600px,calc(100vw - 300px));
+  background:rgba(247,244,236,.90);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--v7line);box-shadow:0 22px 60px rgba(24,37,29,.16);
+  padding:13px 16px 14px;opacity:0;pointer-events:none;
+  transition:opacity .4s ease,transform .4s cubic-bezier(.32,.72,.28,1);
+}
+.v8-walkbar.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.v8-wb-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--v7line2);padding-bottom:9px}
+.v8-wb-head b{font:500 15px/1 var(--serif);letter-spacing:-.01em}
+.v8-wb-head span{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.v8-wb-views{display:flex;gap:6px;margin-top:11px}
+.v8-wb-views button{
+  flex:1;border:1px solid var(--v7line);background:rgba(255,255,255,.42);
+  padding:8px 10px;font-size:10px;letter-spacing:.03em;border-radius:2px;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.v8-wb-views button:hover{background:rgba(35,59,47,.10)}
+.v8-wb-views button.active{background:#233b2f;color:#fff;border-color:#233b2f}
+.v8-wb-keys{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:11px;font-size:9.5px;color:#4d584f}
+.v8-wb-keys span{display:flex;align-items:center;gap:4px}
+.v8-wb-keys kbd{font-size:9px;padding:3px 5px;min-width:18px}
+.v8-wb-exit{
+  margin-top:12px;width:100%;border:1px solid var(--v7line);background:transparent;
+  padding:8px;font-size:10px;letter-spacing:.05em;border-radius:2px;color:#3b4a40;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.v8-wb-exit:hover{background:#8d4a43;color:#fff;border-color:#8d4a43}
+
+/* character name tag: lighter than the fixed hotspots */
+.v8-charlabel{color:#1f3b2c;font-weight:500}
+.v8-charlabel span{background:rgba(247,244,236,.86);border-color:rgba(23,35,28,.16)}
+.v8-charlabel:before{background:#d8b26a;border-color:#7a5a1e}
+#app.v8-walking .v8-charlabel{opacity:0}
+
+/* crosshair for first person */
+#app.v8-first:after{
+  content:"";position:absolute;z-index:6;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:rgba(255,255,255,.72);box-shadow:0 0 0 1px rgba(20,32,24,.45),0 0 8px rgba(0,0,0,.35);
+  pointer-events:none;
+}
