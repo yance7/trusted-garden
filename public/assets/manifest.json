@@ -1,0 +1,1486 @@
+{
+  "version": "0.8-HD",
+  "model": "trusted-garden-v0.8-hd.glb",
+  "materials": [
+    {
+      "name": "source-0-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.95,
+      "metallic": 0,
+      "color": [
+        0.5137254901960784,
+        0.6039215686274509,
+        0.4235294117647059,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-1-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.97,
+      "metallic": 0,
+      "color": [
+        0.6039215686274509,
+        0.6705882352941176,
+        0.47843137254901963,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-2-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.95,
+      "metallic": 0,
+      "color": [
+        0.7843137254901961,
+        0.7529411764705882,
+        0.6666666666666666,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-3-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.86,
+      "metallic": 0,
+      "color": [
+        0.788235294117647,
+        0.7803921568627451,
+        0.7254901960784313,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-4-solid",
+      "family": "wood",
+      "kind": "solid",
+      "roughness": 0.72,
+      "metallic": 0,
+      "color": [
+        0.92,
+        0.92,
+        0.92,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-5-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.6823529411764706,
+        0.6941176470588235,
+        0.6549019607843137,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-6-solid",
+      "family": "soil",
+      "kind": "solid",
+      "roughness": 0.99,
+      "metallic": 0,
+      "color": [
+        0.92,
+        0.92,
+        0.92,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-7-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.9,
+      "metallic": 0,
+      "color": [
+        0.4666666666666667,
+        0.5647058823529412,
+        0.36470588235294116,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-8-solid",
+      "family": "bark",
+      "kind": "solid",
+      "roughness": 0.94,
+      "metallic": 0,
+      "color": [
+        0.92,
+        0.92,
+        0.92,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-9-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.93,
+      "metallic": 0,
+      "color": [
+        0.3137254901960784,
+        0.43529411764705883,
+        0.2823529411764706,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-10-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.9,
+      "metallic": 0,
+      "color": [
+        0.36470588235294116,
+        0.4745098039215686,
+        0.3411764705882353,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-11-solid",
+      "family": "soil",
+      "kind": "solid",
+      "roughness": 0.98,
+      "metallic": 0,
+      "color": [
+        0.92,
+        0.92,
+        0.92,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-12-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.62,
+      "metallic": 0,
+      "color": [
+        0.19215686274509805,
+        0.23137254901960785,
+        0.23921568627450981,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-13-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.78,
+      "metallic": 0,
+      "color": [
+        0.43137254901960786,
+        0.5450980392156862,
+        0.3058823529411765,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-14-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.30980392156862746,
+        0.49411764705882355,
+        0.26666666666666666,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-15-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.76,
+      "metallic": 0,
+      "color": [
+        0.8235294117647058,
+        0.7254901960784313,
+        0.38823529411764707,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-16-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.3843137254901961,
+        0.5019607843137255,
+        0.29411764705882354,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-17-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.65,
+      "metallic": 0,
+      "color": [
+        0.9137254901960784,
+        0.9137254901960784,
+        0.8823529411764706,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-18-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.35,
+      "metallic": 0.55,
+      "color": [
+        0.19215686274509805,
+        0.23137254901960785,
+        0.21568627450980393,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-19-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.38,
+      "metallic": 0.18,
+      "color": [
+        0.1803921568627451,
+        0.2196078431372549,
+        0.20784313725490197,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-20-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.58,
+      "metallic": 0,
+      "color": [
+        0.8666666666666667,
+        0.8509803921568627,
+        0.792156862745098,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-21-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.55,
+      "metallic": 0.1,
+      "color": [
+        0.7294117647058823,
+        0.5411764705882353,
+        0.27058823529411763,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-22-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.36470588235294116,
+        0.5411764705882353,
+        0.28627450980392155,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-23-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.84,
+      "metallic": 0,
+      "color": [
+        0.41568627450980394,
+        0.5294117647058824,
+        0.2823529411764706,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-24-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.55,
+      "metallic": 0.1,
+      "color": [
+        0.23529411764705882,
+        0.3843137254901961,
+        0.2980392156862745,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-25-water",
+      "family": "metal",
+      "kind": "water",
+      "roughness": 0.15,
+      "metallic": 0,
+      "color": [
+        0.1843137254901961,
+        0.44313725490196076,
+        0.5019607843137255,
+        0.8823529411764706
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-26-water",
+      "family": "metal",
+      "kind": "water",
+      "roughness": 0.12,
+      "metallic": 0,
+      "color": [
+        0.2980392156862745,
+        0.6,
+        0.6431372549019608,
+        0.7450980392156863
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-27-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.45,
+      "metallic": 0.15,
+      "color": [
+        0.47843137254901963,
+        0.5333333333333333,
+        0.5254901960784314,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-28-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.55,
+      "metallic": 0,
+      "color": [
+        0.6627450980392157,
+        0.43529411764705883,
+        0.27058823529411763,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-29-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.05,
+      "metallic": 0,
+      "color": [
+        0.8509803921568627,
+        0.9450980392156862,
+        0.9529411764705882,
+        0.47058823529411764
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-30-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.32,
+      "metallic": 0.75,
+      "color": [
+        0.5372549019607843,
+        0.5686274509803921,
+        0.5607843137254902,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-31-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.08,
+      "metallic": 0,
+      "color": [
+        0.7764705882352941,
+        0.8784313725490196,
+        0.8666666666666667,
+        0.2196078431372549
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-32-water",
+      "family": "metal",
+      "kind": "water",
+      "roughness": 0.55,
+      "metallic": 0,
+      "color": [
+        0.30980392156862746,
+        0.4980392156862745,
+        0.5450980392156862,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-33-water",
+      "family": "metal",
+      "kind": "water",
+      "roughness": 0.55,
+      "metallic": 0,
+      "color": [
+        0.30196078431372547,
+        0.4470588235294118,
+        0.36470588235294116,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-34-solid",
+      "family": "wood",
+      "kind": "solid",
+      "roughness": 0.78,
+      "metallic": 0,
+      "color": [
+        0.92,
+        0.92,
+        0.92,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-35-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.2,
+      "metallic": 0.28,
+      "color": [
+        0.09411764705882353,
+        0.19607843137254902,
+        0.22745098039215686,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-36-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.55,
+      "metallic": 0.15,
+      "color": [
+        0.11764705882352941,
+        0.1411764705882353,
+        0.12941176470588237,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-37-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.38,
+      "metallic": 0.22,
+      "color": [
+        0.23137254901960785,
+        0.43529411764705883,
+        0.403921568627451,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-38-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.32,
+      "metallic": 0.35,
+      "color": [
+        0.14901960784313725,
+        0.19607843137254902,
+        0.1803921568627451,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-39-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.18,
+      "metallic": 0,
+      "color": [
+        0.48627450980392156,
+        0.7450980392156863,
+        0.7529411764705882,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-40-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.33,
+      "metallic": 0.6,
+      "color": [
+        0.19215686274509805,
+        0.22745098039215686,
+        0.21568627450980393,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-41-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.56,
+      "metallic": 0,
+      "color": [
+        0.8862745098039215,
+        0.8784313725490196,
+        0.8431372549019608,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-42-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.64,
+      "metallic": 0,
+      "color": [
+        0.8431372549019608,
+        0.8352941176470589,
+        0.788235294117647,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-43-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.18,
+      "metallic": 0.32,
+      "color": [
+        0.08235294117647059,
+        0.19215686274509805,
+        0.22745098039215686,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-44-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.28,
+      "metallic": 0.72,
+      "color": [
+        0.5372549019607843,
+        0.5686274509803921,
+        0.5568627450980392,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-45-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.48,
+      "metallic": 0.12,
+      "color": [
+        0.27058823529411763,
+        0.4117647058823529,
+        0.3254901960784314,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-46-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.2,
+      "metallic": 0.18,
+      "color": [
+        0.11372549019607843,
+        0.1607843137254902,
+        0.15294117647058825,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-47-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.12,
+      "metallic": 0.25,
+      "color": [
+        0.09411764705882353,
+        0.15294117647058825,
+        0.14901960784313725,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-48-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.44,
+      "metallic": 0.12,
+      "color": [
+        0.6039215686274509,
+        0.29411764705882354,
+        0.2627450980392157,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-49-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.1,
+      "metallic": 0,
+      "color": [
+        0.6235294117647059,
+        0.7843137254901961,
+        0.7803921568627451,
+        0.5882352941176471
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-50-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.43,
+      "metallic": 0.15,
+      "color": [
+        0.2784313725490196,
+        0.4823529411764706,
+        0.5333333333333333,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-51-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.24,
+      "metallic": 0.62,
+      "color": [
+        0.6470588235294118,
+        0.6666666666666666,
+        0.6549019607843137,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-52-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.5,
+      "metallic": 0.25,
+      "color": [
+        0.1411764705882353,
+        0.19607843137254902,
+        0.1843137254901961,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-53-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.86,
+      "metallic": 0.05,
+      "color": [
+        0.1411764705882353,
+        0.1568627450980392,
+        0.1450980392156863,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-54-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.08,
+      "metallic": 0.03,
+      "color": [
+        0.6549019607843137,
+        0.8117647058823529,
+        0.8156862745098039,
+        0.3333333333333333
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-55-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.48,
+      "metallic": 0.08,
+      "color": [
+        0.8196078431372549,
+        0.6470588235294118,
+        0.30196078431372547,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-56-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.44,
+      "metallic": 0.08,
+      "color": [
+        0.7372549019607844,
+        0.5450980392156862,
+        0.28627450980392155,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-57-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.78,
+      "metallic": 0,
+      "color": [
+        0.44313725490196076,
+        0.5450980392156862,
+        0.3176470588235294,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-58-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.8,
+      "metallic": 0,
+      "color": [
+        0.3254901960784314,
+        0.48627450980392156,
+        0.27058823529411763,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-59-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.72,
+      "metallic": 0,
+      "color": [
+        0.8470588235294118,
+        0.7411764705882353,
+        0.403921568627451,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-60-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.4,
+        0.5176470588235295,
+        0.30980392156862746,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-61-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.8,
+      "metallic": 0,
+      "color": [
+        0.7764705882352941,
+        0.6039215686274509,
+        0.3843137254901961,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-62-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.55,
+      "metallic": 0,
+      "color": [
+        0.615686274509804,
+        0.40784313725490196,
+        0.27058823529411763,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-63-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.2,
+      "metallic": 0.15,
+      "color": [
+        0.09411764705882353,
+        0.12941176470588237,
+        0.11764705882352941,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-64-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.25,
+      "metallic": 0.72,
+      "color": [
+        0.4980392156862745,
+        0.5372549019607843,
+        0.5254901960784314,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-65-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.32,
+      "metallic": 0.55,
+      "color": [
+        0.19215686274509805,
+        0.22745098039215686,
+        0.21568627450980393,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-66-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.08,
+      "metallic": 0,
+      "color": [
+        0.7725490196078432,
+        0.8666666666666667,
+        0.8666666666666667,
+        0.3137254901960784
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-67-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.58,
+      "metallic": 0,
+      "color": [
+        0.8901960784313725,
+        0.8823529411764706,
+        0.8470588235294118,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-68-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.74,
+      "metallic": 0,
+      "color": [
+        0.38823529411764707,
+        0.5490196078431373,
+        0.2,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-69-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.65,
+      "metallic": 0,
+      "color": [
+        0.30980392156862746,
+        0.5490196078431373,
+        0.1568627450980392,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-70-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.68,
+      "metallic": 0,
+      "color": [
+        0.2196078431372549,
+        0.4392156862745098,
+        0.11764705882352941,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-71-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.78,
+      "metallic": 0,
+      "color": [
+        0.7686274509803922,
+        0.5764705882352941,
+        0.18823529411764706,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-72-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.77,
+      "metallic": 0,
+      "color": [
+        0.42745098039215684,
+        0.5568627450980392,
+        0.2,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-73-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.48627450980392156,
+        0.24705882352941178,
+        0.10980392156862745,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-74-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.8,
+      "metallic": 0,
+      "color": [
+        0.6,
+        0.48627450980392156,
+        0.23921568627450981,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-75-solid",
+      "family": "bark",
+      "kind": "solid",
+      "roughness": 0.92,
+      "metallic": 0,
+      "color": [
+        0.92,
+        0.92,
+        0.92,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-76-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.84,
+      "metallic": 0,
+      "color": [
+        0.11764705882352941,
+        0.2980392156862745,
+        0.11764705882352941,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-77-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.82,
+      "metallic": 0,
+      "color": [
+        0.18823529411764706,
+        0.4,
+        0.1568627450980392,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-78-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.8,
+      "metallic": 0,
+      "color": [
+        0.3176470588235294,
+        0.4980392156862745,
+        0.2,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    },
+    {
+      "name": "source-79-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.28,
+      "metallic": 0.55,
+      "color": [
+        0.12941176470588237,
+        0.16862745098039217,
+        0.14901960784313725,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-80-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.26,
+      "metallic": 0.42,
+      "color": [
+        0.22745098039215686,
+        0.26666666666666666,
+        0.26666666666666666,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-81-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.46,
+      "metallic": 0.05,
+      "color": [
+        0.03137254901960784,
+        0.043137254901960784,
+        0.0392156862745098,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-82-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.08,
+      "metallic": 0.18,
+      "color": [
+        0.043137254901960784,
+        0.08627450980392157,
+        0.10980392156862745,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-83-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.72,
+      "metallic": 0.02,
+      "color": [
+        0.043137254901960784,
+        0.047058823529411764,
+        0.043137254901960784,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-84-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.38,
+      "metallic": 0.08,
+      "color": [
+        0.8196078431372549,
+        0.8392156862745098,
+        0.8,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-85-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.32,
+      "metallic": 0.15,
+      "color": [
+        0.11764705882352941,
+        0.34901960784313724,
+        0.4588235294117647,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-86-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.22,
+      "metallic": 0.7,
+      "color": [
+        0.5568627450980392,
+        0.5882352941176471,
+        0.5686274509803921,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-87-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.25,
+      "metallic": 0.35,
+      "color": [
+        0.06666666666666667,
+        0.08235294117647059,
+        0.0784313725490196,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-88-glass",
+      "family": "metal",
+      "kind": "glass",
+      "roughness": 0.06,
+      "metallic": 0.1,
+      "color": [
+        0.011764705882352941,
+        0.023529411764705882,
+        0.023529411764705882,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-89-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.9,
+      "metallic": 0,
+      "color": [
+        0.6,
+        0.6,
+        0.5490196078431373,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "source-90-solid",
+      "family": "concrete",
+      "kind": "solid",
+      "roughness": 0.42,
+      "metallic": 0.05,
+      "color": [
+        0.6392156862745098,
+        0.0784313725490196,
+        0.054901960784313725,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "extra-bark-0.35-0.28-0.2-false-solid",
+      "family": "bark",
+      "kind": "solid",
+      "roughness": 0.5,
+      "metallic": 0,
+      "color": [
+        0.35,
+        0.28,
+        0.2,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "extra-metal-0.1-0.56-0.48-false-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.5,
+      "metallic": 0.65,
+      "color": [
+        0.1,
+        0.56,
+        0.48,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "extra-metal-0.025-0.09-0.13-false-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.05,
+      "metallic": 0.4,
+      "color": [
+        0.025,
+        0.09,
+        0.13,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "extra-metal-0.4-0.47-0.47-false-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.5,
+      "metallic": 0.65,
+      "color": [
+        0.4,
+        0.47,
+        0.47,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "extra-metal-0.035-0.045-0.047-false-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.5,
+      "metallic": 0.65,
+      "color": [
+        0.035,
+        0.045,
+        0.047,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": false
+    },
+    {
+      "name": "extra-metal-0.08-0.85-0.55-true-solid",
+      "family": "metal",
+      "kind": "solid",
+      "roughness": 0.5,
+      "metallic": 0.65,
+      "color": [
+        0.08,
+        0.85,
+        0.55,
+        1
+      ],
+      "emissive": true,
+      "doubleSided": false
+    },
+    {
+      "name": "grass-solid",
+      "family": "leaf",
+      "kind": "solid",
+      "roughness": 0.85,
+      "metallic": 0,
+      "color": [
+        0.32,
+        0.46,
+        0.17,
+        1
+      ],
+      "emissive": false,
+      "doubleSided": true
+    }
+  ],
+  "textures": "textures/manifest.json",
+  "inventory": "inventory.json",
+  "stats": {
+    "triangles": 947314,
+    "drawBatches": 297,
+    "modelBytes": 11644248,
+    "originalObjects": 2624,
+    "extraComponents": 286,
+    "generatedGrassTriangles": 113856
+  }
+}

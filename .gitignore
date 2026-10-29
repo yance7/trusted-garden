@@ -16,3 +16,7 @@ tools/render-check/*.log
 .DS_Store
 Thumbs.db
 desktop.ini
+.cache/
+.superpowers/
+evidence/
+.worktrees/

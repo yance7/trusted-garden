@@ -1,0 +1,131 @@
+{
+  "revision": "hd-materials-5",
+  "source": "Poly Haven CC0 photographic surfaces plus original procedural leaf/metal materials",
+  "families": {
+    "concrete": {
+      "color": {
+        "url": "textures/concrete-color.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 10384532
+      },
+      "normal": {
+        "url": "textures/concrete-normal.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 10414362
+      },
+      "orm": {
+        "url": "textures/concrete-orm.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 5172228
+      },
+      "photographic": true
+    },
+    "wood": {
+      "color": {
+        "url": "textures/wood-color.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 8680824
+      },
+      "normal": {
+        "url": "textures/wood-normal.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 3516202
+      },
+      "orm": {
+        "url": "textures/wood-orm.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 4933462
+      },
+      "photographic": true
+    },
+    "soil": {
+      "color": {
+        "url": "textures/soil-color.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 7695896
+      },
+      "normal": {
+        "url": "textures/soil-normal.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 8005710
+      },
+      "orm": {
+        "url": "textures/soil-orm.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 6457050
+      },
+      "photographic": true
+    },
+    "bark": {
+      "color": {
+        "url": "textures/bark-color.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 6593452
+      },
+      "normal": {
+        "url": "textures/bark-normal.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 8136804
+      },
+      "orm": {
+        "url": "textures/bark-orm.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 4172482
+      },
+      "photographic": true
+    },
+    "leaf": {
+      "color": {
+        "url": "textures/leaf-color.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 685540
+      },
+      "normal": {
+        "url": "textures/leaf-normal.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 623710
+      },
+      "orm": {
+        "url": "textures/leaf-orm.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 783308
+      }
+    },
+    "metal": {
+      "color": {
+        "url": "textures/metal-color.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 220940
+      },
+      "normal": {
+        "url": "textures/metal-normal.webp",
+        "width": 4096,
+        "height": 4096,
+        "bytes": 68546
+      },
+      "orm": {
+        "url": "textures/metal-orm.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 805714
+      }
+    }
+  },
+  "sources": "sources.json"
+}
