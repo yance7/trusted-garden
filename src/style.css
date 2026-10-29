@@ -22,6 +22,7 @@ button:disabled{opacity:.45;cursor:wait}
 .hotspot{border:1px solid #697d5a48;background:#f5f6eddd;color:#30493b;font-size:10px;padding:5px 8px;border-radius:2px;white-space:nowrap;transform:translate(-50%,-50%)}
 .hotspot{pointer-events:auto!important}.hd-mobile-controls{display:none}.hd-photo .hd-mobile-controls{display:none!important}
 .mode-switcher{left:28px!important;right:auto!important;top:445px!important;width:207px!important;z-index:25!important}
+.quality-strip{position:static!important;margin-top:10px;display:flex;width:auto!important}.quality-strip button{flex:1;padding:7px 5px!important;font-size:7px!important;letter-spacing:.03em!important}.hd-time{position:static!important;width:auto!important;margin-top:8px;padding:8px 0 0!important;border:0!important;border-top:1px solid #5f735925!important;background:transparent!important}
 #hdHelp{border:1px solid #75836f55;padding:28px 34px;background:#f6f5ec;color:#283e32;max-width:90vw}#hdHelp::backdrop{background:#1b332b66}#hdHelp h2{font:25px Georgia,serif}#hdHelp p{font-size:13px;line-height:1.6}#hdHelp button{padding:8px 20px;border:1px solid #71856f;background:transparent}
 .hero.hidden{display:none!important}#hero .hero-copy p{line-height:1.75}
 .hd-photo #app>:not(#gl){visibility:hidden}

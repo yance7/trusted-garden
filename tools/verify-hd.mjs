@@ -27,6 +27,7 @@ try {
   steps.push('seven weather states');
   await page.click('[data-w="clear"]');
   for (const quality of ['performance', 'high', 'photo']) { await page.click(`#quality-${quality}`); assert.equal((await state()).quality, quality); }
+  await page.waitForFunction(()=>window.__garden.stats().canvas[0]>innerWidth);steps.push('Photo HD increases actual render resolution');
   await page.click('#quality-high'); steps.push('quality modes');
   await page.click('#dataBtn');
   for(const layer of ['sensors','robotics','compute','network','actuators','irrigation','waterloop']){

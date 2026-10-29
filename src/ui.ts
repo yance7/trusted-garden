@@ -38,7 +38,8 @@ export class UI {
     byId('labelSwitch').onclick = () => { state.labels = !state.labels; this.sync(); }; byId('dataOverlay').onclick = () => { state.overlay = !state.overlay; this.sync(); };
     byId('enterBtn').onclick = () => { byId('hero').classList.add('hidden'); document.body.classList.add('hd-entered'); this.focus('overview'); };
     for (const [text, position] of content.labels) { const el = document.createElement('button'); el.className = 'hotspot'; el.textContent = String(text).replaceAll('�', '·'); el.onclick = () => { const near = Object.entries(content.views).sort((a, b) => new T.Vector3(...a[1].target as [number,number,number]).distanceTo(new T.Vector3(...position as [number,number,number])) - new T.Vector3(...b[1].target as [number,number,number]).distanceTo(new T.Vector3(...position as [number,number,number])))[0][0]; this.focus(near); }; byId('labels').append(el); this.labels.push({ element: el, position: new T.Vector3(...position as [number, number, number]) }); }
-    this.focus('overview'); this.weather('clear');
+    byId('weatherDock').append(byId('quality-high').parentElement!,document.querySelector('.hd-time')!);
+    this.focus('overview'); this.weather('clear');window.addEventListener('resize',()=>this.sync());
   }
   toast(message: string) { const el = byId('hd-toast'); el.textContent = message; el.classList.add('visible'); setTimeout(() => el.classList.remove('visible'), 2600); }
   focus(view: string) { this.controls.focus(view); this.drawer(); this.sync(); const v = (content.views as Record<string, { story: string[] }>)[view]; if (v) for (const [i, id] of ['storyKicker', 'storyTitle', 'storyCopy'].entries()) byId(id).textContent = v.story[i]; }
@@ -55,6 +56,7 @@ export class UI {
   next(dir: number) { const order = ['entrance', 'control', 'compute', 'field', 'pond', 'aqua', 'north', 'overview']; this.tourIndex = (this.tourIndex + dir + order.length) % order.length; this.focus(order[this.tourIndex]); }
   action(name: string) {
     const s = this.state;
+    (document.querySelector('.hd-minimap')as HTMLElement).style.top=`${byId('weatherDock').getBoundingClientRect().bottom+14}px`;
     if(name.startsWith('view:')){this.focus(name.slice(5));return;}
     if (name === 'walk') {if(!s.walkMode)s.tour=false;this.controls.setWalk(!s.walkMode);}
     else if (name === 'person' && s.walkMode) this.controls.setPerson(s.person === 'first' ? 'third' : 'first');

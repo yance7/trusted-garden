@@ -38,9 +38,11 @@ export class Environment {
     const w = innerWidth, h = innerHeight;
     if (w === this.width && h === this.height) return;
     this.width = w; this.height = h;
-    const perf = this.quality === 'performance', cap = perf ? 1 : this.quality === 'photo' ? 2 : 1.5;
-    const budget = perf ? 1600 * 900 : this.quality === 'photo' ? 3840 * 2160 : 2560 * 1440;
-    const dpr = Math.min(devicePixelRatio, cap, Math.sqrt(budget / (w * h)));
+    const perf = this.quality === 'performance', cap = perf ? 1 : this.quality === 'photo' ? 3 : 2;
+    const budget = perf ? 1600 * 900 : this.quality === 'photo' ? 7680 * 4320 : 3840 * 2160;
+    const desired=this.quality==='photo'?Math.max(2,devicePixelRatio):devicePixelRatio;
+    const hardwareLimit=Math.min(this.renderer.capabilities.maxTextureSize,this.renderer.getContext().getParameter(this.renderer.getContext().MAX_RENDERBUFFER_SIZE));
+    const dpr = Math.min(desired, cap, Math.sqrt(budget / (w * h)),hardwareLimit/w,hardwareLimit/h);
     this.renderer.setPixelRatio(dpr); this.renderer.setSize(w, h, false); this.composer.setPixelRatio(dpr); this.composer.setSize(w, h);
     this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
   }
