@@ -9,7 +9,7 @@ export class Character {
   }
   static async load() { const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(assetURL('researcher-v0.8-hd.glb')); return new Character(gltf.scene); }
   update(position: T.Vector3, yaw: number, speed: number, dt: number, first: boolean, time: number) {
-    this.root.position.copy(position); this.root.rotation.y = yaw + Math.PI;
+    this.root.position.copy(position);this.root.position.y-=.0475; this.root.rotation.y = yaw + Math.PI;
     this.phase += dt * speed * 3.5; const stride = Math.min(1, speed / 2.0), swing = Math.sin(this.phase) * .52 * stride;
     this.bones.hipL.rotation.x = swing; this.bones.hipR.rotation.x = -swing;
     this.bones.kneeL.rotation.x = Math.max(0, -swing) * 1.4; this.bones.kneeR.rotation.x = Math.max(0, swing) * 1.4;

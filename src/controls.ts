@@ -1,12 +1,13 @@
 import * as T from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { createCollision, shortcut, type AppState, type Obstacle } from './state';
+import { createCollision, shortcut, groundHeightAt, type AppState, type Obstacle } from './state';
 import content from './content.json';
 export class Controls {
   orbit: OrbitControls; camera: T.PerspectiveCamera; state: AppState;
   keys = new Set<string>(); position = new T.Vector3(0, 0, 9); yaw = 0; pitch = .04; speed = 0;
   targetPosition = new T.Vector3(); targetLook = new T.Vector3(); transition = 0; dragging = false;
   collision = createCollision([]); ray = new T.Raycaster(); solids: T.Object3D[] = [];
+  ground:Obstacle[]=[];
   constructor(camera: T.PerspectiveCamera, canvas: HTMLCanvasElement, state: AppState, action: (name: string) => void) {
     this.camera = camera; this.state = state; this.orbit = new OrbitControls(camera, canvas); this.orbit.enableDamping = true; this.orbit.dampingFactor = .09; this.orbit.maxPolarAngle = Math.PI * .48; this.orbit.minDistance = 1; this.orbit.maxDistance = 85;
     this.orbit.addEventListener('start', () => this.transition = 0);
@@ -15,7 +16,7 @@ export class Controls {
       const k = e.key.toLowerCase(), command = shortcut(k, state); this.keys.add(k);
       if (command === 'move') { e.preventDefault(); return; }
       if (!e.repeat && command) action(command);
-      if (!state.walkMode && /^[1-8]$/.test(k)) this.focus(Object.keys(content.views)[Number(k) - 1]);
+      if (!state.walkMode && /^[1-8]$/.test(k)) action(`view:${Object.keys(content.views)[Number(k) - 1]}`);
     });
     window.addEventListener('keyup', e => this.keys.delete(e.key.toLowerCase()));
     window.addEventListener('blur', () => { this.keys.clear(); this.dragging = false; });
@@ -26,7 +27,7 @@ export class Controls {
     document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement) { this.keys.clear(); this.dragging = false; } });
     this.focus('overview', true);
   }
-  configure(boxes: Obstacle[], solids: T.Object3D[]) { this.collision = createCollision(boxes); this.solids = solids; if (!this.collision.isFree(this.position.x, this.position.z)) { for (let z = 12; z > -12; z -= .5) if (this.collision.isFree(0, z)) { this.position.set(0, 0, z); break; } } }
+  configure(boxes: Obstacle[], solids: T.Object3D[],ground:Obstacle[]=[]) { this.collision = createCollision(boxes); this.solids = solids;this.ground=ground; if (!this.collision.isFree(this.position.x, this.position.z)) { for (let z = 12; z > -12; z -= .5) if (this.collision.isFree(0, z)) { this.position.set(0, 0, z); break; } }this.position.y=groundHeightAt(this.position.x,this.position.z,ground); }
   focus(view: string, immediate = false) {
     const v = (content.views as Record<string, { eye: number[]; target: number[] }>)[view]; if (!v) return;
     this.setWalk(false); this.state.view = view; this.targetPosition.fromArray(v.eye); this.targetLook.fromArray(v.target); this.transition = 1;
@@ -46,7 +47,7 @@ export class Controls {
     const step = (this.keys.has('shift') ? 4.5 : 2.0) * dt;
     const dx = (-Math.sin(this.yaw) * f + Math.cos(this.yaw) * side) * step;
     const dz = (-Math.cos(this.yaw) * f - Math.sin(this.yaw) * side) * step;
-    const p = this.collision.resolve(this.position.x, this.position.z, dx, dz); this.speed = Math.hypot(p[0] - this.position.x, p[1] - this.position.z) / Math.max(dt, .001); this.position.set(p[0], 0, p[1]);
+    const p = this.collision.resolve(this.position.x, this.position.z, dx, dz); this.speed = Math.hypot(p[0] - this.position.x, p[1] - this.position.z) / Math.max(dt, .001); this.position.set(p[0], groundHeightAt(p[0],p[1],this.ground), p[1]);
     const eye = this.position.clone().add(new T.Vector3(0, 1.63, 0)); const forward = new T.Vector3(-Math.sin(this.yaw) * Math.cos(this.pitch), Math.sin(this.pitch), -Math.cos(this.yaw) * Math.cos(this.pitch));
     if (this.state.person === 'first') { this.camera.position.copy(eye); if (this.speed > .05 && !matchMedia('(prefers-reduced-motion: reduce)').matches) this.camera.position.y += Math.sin(performance.now() * .012) * .012; this.camera.lookAt(eye.clone().add(forward)); }
     else {

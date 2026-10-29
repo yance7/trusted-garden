@@ -1,5 +1,5 @@
 import * as T from 'three';
-import { createState } from './state';
+import { createState, shadowSignature } from './state';
 import { Controls } from './controls';
 import { Environment } from './environment';
 import { loadWorld, type World } from './world';
@@ -25,12 +25,13 @@ async function boot() {
       completedWorld = await loadWorld((value, message) => { byId<HTMLProgressElement>('hdProgress').value = value; byId('hdLoadMessage').textContent = message; });
       character = await Character.load();
     } catch (error) { completedWorld?.dispose(); environment.composer.dispose(); environment.pmrem.dispose(); environment.env.dispose(); renderer.dispose(); throw error; }
-    world = completedWorld; scene.add(world.root, character.root); controls.configure(world.obstacles, world.solids);
+    world = completedWorld; scene.add(world.root, character.root); controls.configure(world.obstacles, world.solids,world.ground);
     function snapshot() { environment.render(); canvas.toBlob(blob => { if (!blob) return; const link = document.createElement('a'), url = URL.createObjectURL(blob); link.href = url; link.download = `trusted-garden-v0.8-hd-${state.view}.png`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1500); }, 'image/png'); }
     ui = new UI(state, controls, snapshot); enter.disabled = false;
+    let lastShadowSignature='',shadowRevision=0;
     const stats = () => {
       const gl = renderer.getContext(), debug = gl.getExtension('WEBGL_debug_renderer_info');
-      return { triangles: world!.manifest.stats.triangles, meshes: world!.meshes.length, calls: renderer.info.render.calls, renderedTriangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, modelBytes: world!.manifest.stats.modelBytes, headVisible: !character.first, camera: camera.position.toArray(), position: controls.position.toArray(), renderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER), canvas: [canvas.width, canvas.height], quality: state.quality, visibleLayers: state.layers };
+      return { triangles: world!.manifest.stats.triangles, meshes: world!.meshes.length, calls: renderer.info.render.calls, renderedTriangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, modelBytes: world!.manifest.stats.modelBytes, headVisible: !character.first, camera: camera.position.toArray(), position: controls.position.toArray(), renderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER), canvas: [canvas.width, canvas.height], quality: state.quality, visibleLayers: state.layers, shadowRevision };
     };
     window.__garden = { ready: true, getState: () => ({ ...state, position: controls.position.toArray() }), stats, focus: view => ui.focus(view), setTime: time => { state.time = T.MathUtils.clamp(time, 0, 1); } };
     loading.style.display = 'none';
@@ -41,6 +42,7 @@ async function boot() {
       controls.update(dt); character.root.visible = state.layers.base; character.update(controls.position, controls.yaw, controls.speed, dt, state.walkMode && state.person === 'first', now / 1000);
       if (state.walkMode) renderer.shadowMap.needsUpdate = true;
       world!.update(state, now / 1000); environment.update(state, dt); ui.update(dt, camera);
+      const shadowKey=shadowSignature(state);if(shadowKey!==lastShadowSignature){renderer.shadowMap.needsUpdate=true;lastShadowSignature=shadowKey;shadowRevision++;}
       renderer.info.reset(); environment.render();
     });
     canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); renderer.setAnimationLoop(null); loading.style.display = 'grid'; loading.innerHTML = '<div>Graphics context interrupted.<br><button id="hdRetry">Reload scene</button></div>'; byId('hdRetry').onclick = () => location.reload(); });

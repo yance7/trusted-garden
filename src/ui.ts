@@ -1,6 +1,7 @@
 import * as T from 'three';
 import content from './content.json';
-import type { AppState, Quality } from './state';
+import { advanceTour, type AppState, type Quality } from './state';
+import { updateFlow } from './flow';
 import type { Controls } from './controls';
 export const byId = <E extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as E;
 export class UI {
@@ -16,6 +17,9 @@ export class UI {
     const bar = document.createElement('div'); bar.className = 'hd-toolbar'; bar.setAttribute('aria-label', 'Scene controls');
     bar.innerHTML = '<button id="v8Walk">Walk mode</button><button id="v7Sundial">Sundial</button><button id="v7Cinema">Cinematic</button><button id="v7Shot">Snapshot</button><button id="v7Full">Fullscreen</button><button id="v7Reset">Reset</button><button id="v7Photo">Photo</button><button id="v7Help">Keys</button>';
     document.body.append(bar);
+    const mobile=document.createElement('div');mobile.className='hd-mobile-controls';mobile.innerHTML=`<label>View<select id="hdMobileView" aria-label="Farm viewpoint">${Object.entries(content.views).map(([key,v])=>`<option value="${key}">${v.story[0]}</option>`).join('')}</select></label><label>Display<select id="hdMobileMode" aria-label="Farm display mode"><option value="spatial">Spatial model</option><option value="systems">Systems model</option><option value="flow">Data & control flow</option></select></label>`;document.body.append(mobile);
+    byId<HTMLSelectElement>('hdMobileView').onchange=e=>this.focus((e.target as HTMLSelectElement).value);byId<HTMLSelectElement>('hdMobileMode').onchange=e=>this.mode((e.target as HTMLSelectElement).value as AppState['mode']);
+    document.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach(b=>b.onclick=()=>this.mode(b.dataset.mode as AppState['mode']));
     const walk = document.createElement('div'); walk.id = 'hdWalkPanel'; walk.className = 'hd-walk-panel hidden'; walk.innerHTML = '<span>FIELD RESEARCHER</span><button id="v8First">First person</button><button id="v8Third">Third person</button><button id="v8Exit">Exit walk</button><small>WASD / arrows · Shift run · drag to look · V switch · Esc exit</small>'; document.body.append(walk);
     document.body.insertAdjacentHTML('beforeend', '<div class="hd-time"><label for="v7Tod">Time of day</label><input id="v7Tod" type="range" min="0" max="100" value="44"><output id="hdClock">12:10</output></div><div id="hdCrosshair" aria-hidden="true"></div><button id="v7ExitPhoto">Exit photo · H</button><div class="hd-minimap"><span>SITE PLAN <small>LIVE CAMERA</small></span><canvas id="hdMap" width="240" height="160"></canvas></div><div id="hd-toast" role="status"></div><dialog id="hdHelp"><h2>Explore Trusted Garden</h2><p>Drag: orbit · Scroll: zoom · Right drag: pan</p><p>1–8: viewpoints · T: guided tour · W: weather</p><p>G: walk · WASD / arrows: move · Shift: run · V: first / third person</p><p>S: snapshot · H: photo · Y: sundial · C: cinematic · F: fullscreen · R: reset</p><p>Double-click while walking: mouse lock · Esc: release / exit</p><button id="v7HelpClose">Close</button></dialog>');
     byId<HTMLInputElement>('v7Tod').oninput = e => { state.time = Number((e.target as HTMLInputElement).value) / 100; state.sundial = false; };
@@ -38,6 +42,7 @@ export class UI {
   }
   toast(message: string) { const el = byId('hd-toast'); el.textContent = message; el.classList.add('visible'); setTimeout(() => el.classList.remove('visible'), 2600); }
   focus(view: string) { this.controls.focus(view); this.drawer(); this.sync(); const v = (content.views as Record<string, { story: string[] }>)[view]; if (v) for (const [i, id] of ['storyKicker', 'storyTitle', 'storyCopy'].entries()) byId(id).textContent = v.story[i]; }
+  mode(mode:AppState['mode']){this.state.mode=mode;if(mode==='spatial')this.state.overlay=false;else{this.state.labels=true;this.focus('compute');if(mode==='flow'){byId('drawer').classList.add('open');byId('dataBtn').classList.add('active');}}this.sync();}
   weather(key: string) { this.state.weather = key; const w = (content.weather as Record<string, { name: string; temp: number; rh: number; wind: number; rain: number; action: string }>)[key]; byId('weatherName').textContent = w.name; for (const [id, value] of Object.entries({ wTemp: `${w.temp}°`, wRh: `${w.rh}%`, wWind: w.wind.toFixed(1), wRain: w.rain.toFixed(1) })) byId(id).textContent = value; byId('weatherAction').textContent = `${w.action} · Simulated`; this.sync(); }
   drawer() {
     const view = this.state.view, key = ({ field: 'plotB', entrance: 'overview', north: 'overview', overview: 'overview' } as Record<string, string>)[view] || view;
@@ -50,7 +55,8 @@ export class UI {
   next(dir: number) { const order = ['entrance', 'control', 'compute', 'field', 'pond', 'aqua', 'north', 'overview']; this.tourIndex = (this.tourIndex + dir + order.length) % order.length; this.focus(order[this.tourIndex]); }
   action(name: string) {
     const s = this.state;
-    if (name === 'walk') this.controls.setWalk(!s.walkMode);
+    if(name.startsWith('view:')){this.focus(name.slice(5));return;}
+    if (name === 'walk') {if(!s.walkMode)s.tour=false;this.controls.setWalk(!s.walkMode);}
     else if (name === 'person' && s.walkMode) this.controls.setPerson(s.person === 'first' ? 'third' : 'first');
     else if (name === 'weather') { const keys = Object.keys(content.weather); this.weather(keys[(keys.indexOf(s.weather) + 1) % keys.length]); }
     else if (name === 'drawer') byId('drawer').classList.toggle('open');
@@ -60,7 +66,7 @@ export class UI {
     else if (name === 'reset') { s.cinematic = false; this.focus('overview'); }
     else if (name === 'photo') { s.photo = !s.photo; document.body.classList.toggle('hd-photo', s.photo); }
     else if (name === 'help') byId<HTMLDialogElement>('hdHelp').showModal();
-    else if (name === 'escape') { if (s.walkMode) this.controls.setWalk(false); document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open')); }
+    else if (name === 'escape') { if (s.walkMode) this.controls.setWalk(false);s.tour=false;s.photo=false;document.body.classList.remove('hd-photo');document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open')); }
     else if (name === 'labels') s.labels = !s.labels;
     else if (name === 'sundial') s.sundial = !s.sundial;
     else if (name === 'cinematic') s.cinematic = !s.cinematic;
@@ -68,6 +74,7 @@ export class UI {
   }
   sync() {
     const s = this.state;
+    document.querySelectorAll<HTMLElement>('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===s.mode));byId<HTMLSelectElement>('hdMobileView').value=s.view;byId<HTMLSelectElement>('hdMobileMode').value=s.mode;
     document.querySelectorAll<HTMLElement>('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === s.view));
     document.querySelectorAll<HTMLElement>('[data-w]').forEach(b => b.classList.toggle('active', b.dataset.w === s.weather));
     document.querySelectorAll<HTMLElement>('[data-s]').forEach(b => b.classList.toggle('active', b.dataset.s === s.scenario));
@@ -78,9 +85,10 @@ export class UI {
     byId('labelSwitch').classList.toggle('on', s.labels); byId('dataOverlay').classList.toggle('on', s.overlay);
   }
   update(dt: number, camera: T.Camera) {
+    if(this.state.tour){const clock=advanceTour(this.tourTime,dt);this.tourTime=clock.time;for(let i=0;i<clock.steps;i++)this.next(1);}
     this.elapsed += dt; if (this.elapsed < .06) return; this.elapsed = 0;
     const s = this.state;
-    if (s.tour) { this.tourTime += dt * 4; if (this.tourTime > 9) { this.tourTime = 0; this.next(1); } }
+    updateFlow(s.mode,camera);
     byId('hdClock').textContent = `${String(Math.floor(6 + s.time * 14)).padStart(2, '0')}:${String(Math.floor((s.time * 14 % 1) * 60)).padStart(2, '0')}`;
     if (s.sundial) byId<HTMLInputElement>('v7Tod').value = String(s.time * 100);
     for (const label of this.labels) { const p = label.position.clone().project(camera); const visible = s.labels && !s.walkMode && p.z < 1 && p.z > -1 && Math.abs(p.x) < .97 && Math.abs(p.y) < .9; label.element.style.display = visible ? 'block' : 'none'; label.element.style.left = `${(p.x * .5 + .5) * innerWidth}px`; label.element.style.top = `${(-p.y * .5 + .5) * innerHeight}px`; }
