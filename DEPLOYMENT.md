@@ -1,48 +1,27 @@
-# GitHub Pages 部署
+# GitHub Actions / Pages
 
-本项目使用 **GitHub Actions** 构建并发布 GitHub Pages，工作流为 [pages.yml](.github/workflows/pages.yml)。
-
-## 首次配置
-
-1. 将项目上传到 [yance7/trusted-garden](https://github.com/yance7/trusted-garden) 的 `main` 分支。
-2. 打开仓库 **Settings → Pages**。
-3. 在 **Build and deployment → Source** 选择 **GitHub Actions**。
-4. 打开 **Actions → Deploy V0.8 to GitHub Pages**。首次推送会自动运行；若 Pages 启用较晚，可选择 **Run workflow**，分支为 `main`。
-5. 等待 `build`、`deploy` 均成功后访问 <https://trusted-garden.yance.me/>。仓库现已绑定此自定义域名，默认地址 <https://yance7.github.io/trusted-garden/> 会跳转到它。
-
-Pages 的自定义域名由仓库 Settings / API 管理；Actions 发布不依赖产物中的 `CNAME` 文件。迁移域名时同步检查 DNS 和 Pages 的 HTTPS 状态。
-
-如通过 API 配置 Pages，应选择 `build_type: workflow`。这是 Actions 发布，不使用分支目录发布。
-
-## 发布内容
-
-工作流运行 `node tools/build-site.mjs`，将当前 V0.8 交付文件复制到 `dist/`：
+源码合入 `main` 后，`.github/workflows/pages.yml` 使用 Node.js 22 运行：
 
 ```text
-dist/
-├── index.html                        V0.8 自包含展示页
-├── trusted-garden-v0.8-model.glb       模型文件
-└── .nojekyll
+npm ci
+npm test
+npm run build
 ```
 
-上传和部署只使用 `dist/`。首页没有重定向，也不依赖 `/` 开头的外部资源路径，适用于 `/trusted-garden/` 项目子路径。
+构建生成 `dist/`，通过 `actions/upload-pages-artifact` 和 `actions/deploy-pages` 发布。Pages 来源保持 **GitHub Actions**；不改自定义域名、DNS 或已有 HTTPS 设置。
 
-工作流仅在部署任务中请求 `pages: write` 与 `id-token: write`，使用 GitHub 提供的令牌，不需要自建 Token。
+本地可运行 `npm run build` 和 `npm run preview` 检查生产构建。`node tools/serve-preview.mjs` 额外提供 `/trusted-garden/` 子路径映射，供浏览器回归。
 
-## 更新网站
+## 资源约定
 
-1. 若修改增强层源码，先运行 `python tools/enhancement-v0.8/inject.py`，更新 V0.8 HTML。
-2. 本地打开展示页，或生成 `dist/` 后通过 HTTP 预览。
-3. 提交并推送到 `main`，Actions 会自动发布更新。
+- 页面、脚本、模型、WebP 纹理和 Meshopt 解码器全部同站点托管，无 CDN 运行依赖。
+- 使用相对发布路径，同时兼容默认项目地址和自定义域名根路径。
+- 4K 材质已经提交；CI 不必从素材站重新下载，也不需要图形工具。
+- 各资源独立存储，避免把全部高分辨率纹理塞进一个超过 Git 单文件限制的 GLB。
+- `public/assets/` 是完整资源包；部署或迁移时不可只复制模型文件而漏掉 `textures/`。
 
-仅修改 `tools/enhancement-v0.8/` 不会自动重建 HTML；工作流发布已提交的 V0.8 HTML。这样本地确认的交付物与线上首页一致。
+## 验收与回滚
 
-## 排查
+本次高清改造先在独立分支本地验收，尚未自动合入主分支或发布。上线前检查图像、移动录像、交互与资源加载；上线后对同一提交再次确认 Actions 和实际网站。
 
-- **Pages 未启用 / deploy 失败**：确认 Pages 的 Source 为 GitHub Actions，再重新运行工作流。
-- **权限或审批等待**：检查仓库 Actions 是否允许运行，以及 `github-pages` 环境是否配置了审批规则。
-- **404**：先确认 `deploy` 成功，再访问自定义域名首页或默认项目地址 `/trusted-garden/`；仓库上传成功不等于网站部署成功。
-- **场景卡顿**：切换 Performance 模式；优先使用桌面浏览器并启用硬件加速。
-- **本地依赖**：发布构建只使用 Node.js 标准库，无需 `npm install`；Playwright 仅用于可选的开发验证。
-
-官方说明：[自定义 GitHub Pages 工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)、[配置发布来源](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
+原线上 V0.8 基线提交为 `7e5a52926fce8d6759e56986610931139a32d70a`。需要回滚时使用评审后的恢复提交或重新发布已验收的产物，避免强制覆盖分支历史。

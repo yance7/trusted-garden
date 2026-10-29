@@ -483,9 +483,9 @@
       "doubleSided": true
     },
     {
-      "name": "source-32-water",
+      "name": "source-32-solid",
       "family": "metal",
-      "kind": "water",
+      "kind": "solid",
       "roughness": 0.55,
       "metallic": 0,
       "color": [
@@ -498,9 +498,9 @@
       "doubleSided": false
     },
     {
-      "name": "source-33-water",
+      "name": "source-33-solid",
       "family": "metal",
-      "kind": "water",
+      "kind": "solid",
       "roughness": 0.55,
       "metallic": 0,
       "color": [
@@ -1477,8 +1477,8 @@
   "inventory": "inventory.json",
   "stats": {
     "triangles": 947314,
-    "drawBatches": 297,
-    "modelBytes": 11644248,
+    "drawBatches": 311,
+    "modelBytes": 11531432,
     "originalObjects": 2624,
     "extraComponents": 286,
     "generatedGrassTriangles": 113856

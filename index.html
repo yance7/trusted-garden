@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Trusted Garden — V0.8 HD · Intelligent Reference Farm</title>
+<style>
+:root{
+  --ivory:#f2efe6;--paper:#f7f4ec;--ink:#17231c;--muted:#687067;--rule:rgba(31,47,37,.18);
+  --forest:#2f5140;--forest2:#496d58;--water:#4f8793;--clay:#9b7351;--amber:#b58b4d;--danger:#8d4a43;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:var(--ivory);color:var(--ink);font-family:var(--sans)}
+button,input{font:inherit;color:inherit}button{cursor:pointer}.hidden{display:none!important}
+#app{height:100%;position:relative;background:linear-gradient(#dfe7e0 0%,#eef0e6 50%,#d9d8c7 100%)}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.skywash{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(247,249,246,.18),transparent 38%,rgba(238,235,220,.08));mix-blend-mode:screen}
+
+/* Minimal exhibition chrome */
+.topbar{position:absolute;z-index:20;left:0;right:0;top:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-bottom:1px solid rgba(23,35,28,.13);background:linear-gradient(180deg,rgba(243,240,231,.93),rgba(243,240,231,.78));backdrop-filter:blur(14px)}
+.wordmark{display:flex;align-items:baseline;gap:15px}.wordmark strong{font:500 22px/1 var(--serif);letter-spacing:-.025em}.wordmark span{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.top-actions{display:flex;gap:8px;align-items:center}.topbtn{border:1px solid rgba(23,35,28,.18);background:rgba(247,244,236,.62);border-radius:999px;padding:8px 11px;font-size:10px;letter-spacing:.03em;backdrop-filter:blur(8px)}.topbtn:hover,.topbtn.active{background:#21372b;color:#fff;border-color:#21372b}
+
+.left-rail{position:absolute;z-index:15;left:22px;top:90px;width:196px;padding:0;background:rgba(247,244,236,.82);border:1px solid rgba(23,35,28,.14);backdrop-filter:blur(12px);box-shadow:0 18px 45px rgba(27,38,31,.08)}
+.rail-head{padding:13px 14px 10px;border-bottom:1px solid var(--rule);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.viewbtn{display:grid;grid-template-columns:25px 1fr;align-items:center;width:100%;border:0;border-bottom:1px solid rgba(23,35,28,.09);background:transparent;padding:10px 12px;text-align:left;font-size:11px}.viewbtn:last-child{border-bottom:0}.viewbtn i{font-style:normal;font:500 10px var(--serif);color:#8a9088}.viewbtn:hover{background:rgba(224,228,216,.55)}.viewbtn.active{background:#dfe6dc;color:#203a2c}
+
+.compass{position:absolute;z-index:8;right:22px;top:88px;width:52px;height:52px;border-radius:50%;border:1px solid rgba(23,35,28,.18);background:rgba(247,244,236,.62);backdrop-filter:blur(8px);display:grid;place-items:center;font:500 10px var(--serif);color:#435046}.compass:before{content:"";position:absolute;width:1px;height:18px;background:#405d4b;top:7px}.compass:after{content:"N";position:absolute;top:5px;font-size:8px}
+
+.bottom-story{position:absolute;z-index:12;left:244px;bottom:22px;width:min(600px,calc(100vw - 590px));min-height:92px;background:rgba(247,244,236,.88);backdrop-filter:blur(16px);border-left:3px solid var(--forest);padding:15px 18px 14px;box-shadow:0 18px 42px rgba(29,42,33,.08)}
+.story-kicker{font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:4px}.story-title{font:500 19px/1.18 var(--serif);letter-spacing:-.01em;margin-bottom:5px}.story-copy{font-size:11px;line-height:1.55;color:#4d584f;max-width:550px}.story-nav{position:absolute;right:12px;top:12px;display:flex;gap:5px}.roundbtn{width:29px;height:29px;border-radius:50%;border:1px solid var(--rule);background:rgba(255,255,255,.45);display:grid;place-items:center;font-size:13px}.roundbtn:hover{background:#20362a;color:#fff}
+
+.timebar{position:absolute;z-index:11;left:244px;right:336px;bottom:0;height:15px;background:rgba(247,244,236,.72);border-top:1px solid rgba(23,35,28,.12);display:flex;align-items:center;gap:10px;padding:0 12px}.timebar label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}.timebar input{width:100%;height:3px;accent-color:var(--forest)}.timebar span{font:500 9px var(--serif);white-space:nowrap}
+
+/* Data drawer */
+.drawer{position:absolute;z-index:18;top:66px;right:0;bottom:0;width:315px;background:rgba(247,244,236,.95);border-left:1px solid var(--rule);backdrop-filter:blur(14px);transform:translateX(100%);transition:transform .28s ease;overflow:auto}.drawer.open{transform:translateX(0)}
+.drawer-head{padding:20px 19px 16px;border-bottom:1px solid var(--rule)}.eyebrow{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}.drawer-head h2{font:500 25px/1.05 var(--serif);letter-spacing:-.02em;margin:5px 0 7px}.drawer-head p{margin:0;font-size:10px;line-height:1.5;color:var(--muted)}
+.drawer-section{padding:14px 19px;border-bottom:1px solid var(--rule)}.drawer-section h3{margin:0 0 10px;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:0}.metric{padding:9px 0;border-bottom:1px solid rgba(23,35,28,.09)}.metric:nth-child(odd){padding-right:12px;border-right:1px solid rgba(23,35,28,.09)}.metric:nth-child(even){padding-left:12px}.metric span{display:block;font-size:8px;color:var(--muted);margin-bottom:2px}.metric b{font:500 18px var(--serif)}.metric small{display:block;font-size:8px;color:#7b817a;margin-top:2px;line-height:1.35}
+.decision{font-size:10px;line-height:1.6;color:#3f4b42}.decision strong{font-weight:650}.tag{display:inline-block;border:1px solid var(--rule);padding:2px 5px;border-radius:2px;font-size:8px;margin:0 3px 4px 0;text-transform:uppercase;letter-spacing:.05em;background:#fbfaf5}
+.trace{display:grid;gap:8px}.trace-row{display:grid;grid-template-columns:40px 1fr;gap:8px;font-size:9px;line-height:1.45}.trace-row time{color:var(--muted)}.trace-row b{font-weight:650}.trace-row span{color:var(--muted)}
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.scenario{border:1px solid var(--rule);background:transparent;padding:7px 8px;text-align:left;font-size:9px}.scenario.active{background:#e0e7dd;border-color:#78907d;color:#244232}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:9px}.switch{width:28px;height:15px;border-radius:999px;border:1px solid #aeb4ac;background:#d6d8d1;position:relative}.switch:after{content:"";position:absolute;left:2px;top:2px;width:9px;height:9px;border-radius:50%;background:#fff;border:1px solid #a6aaa4;transition:.16s}.switch.on{background:#57745e;border-color:#57745e}.switch.on:after{left:15px;border-color:#fff}
+
+/* Hotspots */
+#labels{position:absolute;inset:0;pointer-events:none;z-index:7}.hotspot{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;color:#273b2f;font-size:9px;white-space:nowrap;opacity:.9}.hotspot:before{content:"";width:7px;height:7px;border-radius:50%;background:#f3efe5;border:2px solid #3d614c;box-shadow:0 0 0 4px rgba(244,241,232,.5)}.hotspot span{padding:3px 5px;background:rgba(247,244,236,.78);border:1px solid rgba(23,35,28,.10);backdrop-filter:blur(7px)}
+
+/* Hero / modal */
+.hero{position:absolute;z-index:40;inset:0;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr);background:linear-gradient(90deg,rgba(239,237,227,.98) 0%,rgba(239,237,227,.92) 45%,rgba(239,237,227,.08) 74%,rgba(239,237,227,0) 100%);transition:opacity .55s ease,visibility .55s}.hero.closed{opacity:0;visibility:hidden;pointer-events:none}.hero-copy{align-self:center;padding:80px 5vw 50px 7vw;max-width:800px}.hero-mark{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#6e776e;margin-bottom:20px}.hero h1{font:500 clamp(46px,6vw,86px)/.92 var(--serif);letter-spacing:-.045em;margin:0 0 22px;max-width:720px}.hero p{font-size:13px;line-height:1.75;color:#49554d;max-width:590px;margin:0 0 26px}.hero-facts{display:flex;gap:28px;padding:18px 0 25px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);max-width:590px}.hero-facts b{display:block;font:500 19px var(--serif)}.hero-facts span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.enter{margin-top:26px;border:0;background:#20372a;color:#fff;padding:12px 18px;font-size:10px;letter-spacing:.09em;text-transform:uppercase}.enter:hover{background:#2e4d3b}.hero-side{align-self:end;padding:0 38px 50px 0;color:#3d4a42}.hero-side b{font:500 16px var(--serif)}.hero-side p{font-size:10px;line-height:1.55;margin-top:5px;max-width:310px}
+.modal{position:absolute;z-index:35;inset:82px 70px 45px;background:rgba(247,244,236,.96);border:1px solid var(--rule);backdrop-filter:blur(16px);box-shadow:0 24px 70px rgba(28,41,32,.14);display:none;overflow:auto}.modal.open{display:block}.modal-inner{max-width:980px;margin:auto;padding:45px 48px 55px}.modal-head{display:flex;justify-content:space-between;gap:30px;border-bottom:1px solid var(--rule);padding-bottom:20px}.modal-head h2{font:500 36px var(--serif);letter-spacing:-.025em;margin:0}.closebtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--rule);background:transparent}.story-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:24px;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}.story-cell{padding:20px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}.story-cell b{font:500 18px var(--serif)}.story-cell p{font-size:10px;line-height:1.65;color:#59625b;margin:7px 0 0}.basis-list{margin-top:25px;display:grid;gap:12px}.basis{display:grid;grid-template-columns:160px 1fr;gap:18px;padding-bottom:12px;border-bottom:1px solid var(--rule)}.basis b{font:500 14px var(--serif)}.basis p{font-size:10px;line-height:1.6;color:#59625b;margin:0}
+
+.loading{position:absolute;z-index:60;inset:0;background:#e8e8de;display:grid;place-items:center;transition:opacity .4s}.loading.done{opacity:0;pointer-events:none}.loading div{font:500 18px var(--serif);text-align:center}.loading small{display:block;font:400 9px var(--sans);color:var(--muted);margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
+
+@media(max-width:1000px){.left-rail{display:none}.bottom-story{left:18px;width:calc(100vw - 36px);bottom:28px}.timebar{left:0;right:0}.drawer{width:300px}.hero{grid-template-columns:1fr}.hero-side{display:none}.hero-copy{padding:80px 7vw}.modal{inset:70px 18px 28px}.story-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.wordmark span{display:none}.top-actions .topbtn:nth-child(2){display:none}.bottom-story{min-height:105px}.story-copy{font-size:10px}.drawer{width:100%}.compass{display:none}}
+
+/* V0.5 refinement — quieter exhibition UI, clearer computational layer */
+:root{--shadow:0 14px 42px rgba(25,39,30,.09);--blueprint:#355d59;--surface:rgba(248,246,239,.92)}
+.topbar{height:70px;padding:0 30px;background:linear-gradient(180deg,rgba(246,243,235,.965),rgba(246,243,235,.86));box-shadow:0 1px 0 rgba(255,255,255,.65)}
+.wordmark{gap:18px}.wordmark strong{font-size:23px}.wordmark span{letter-spacing:.19em;color:#737a72}
+.top-actions{gap:3px}.topbtn{border:0;border-left:1px solid rgba(23,35,28,.14);border-radius:0;background:transparent;padding:10px 13px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;transition:.18s}.topbtn:first-child{border-left:0}.topbtn:hover,.topbtn.active{background:rgba(39,67,52,.08);color:#193225;border-color:rgba(23,35,28,.14)}
+.left-rail{left:28px;top:94px;width:208px;background:rgba(248,246,239,.88);border:1px solid rgba(23,35,28,.12);box-shadow:var(--shadow)}
+.rail-head{padding:14px 15px 11px;font-size:8px}.viewbtn{grid-template-columns:30px 1fr;padding:11px 14px;font-size:10px;transition:.16s}.viewbtn i{font-size:9px}.viewbtn.active{background:#e3e7df;box-shadow:inset 3px 0 0 var(--forest)}
+.compass{top:94px;right:26px;background:rgba(248,246,239,.75)}
+.bottom-story{left:258px;bottom:28px;width:min(640px,calc(100vw - 625px));min-height:100px;padding:16px 20px;border-left:2px solid var(--forest);box-shadow:var(--shadow)}
+.story-title{font-size:21px}.story-copy{font-size:10.5px;max-width:575px}.timebar{left:258px;right:356px;height:20px;padding:0 14px;background:rgba(248,246,239,.84)}
+.drawer{top:70px;width:336px;background:rgba(248,246,239,.97);box-shadow:-16px 0 38px rgba(28,42,33,.06)}
+.drawer-head{padding:24px 22px 19px}.drawer-head h2{font-size:27px}.drawer-section{padding:16px 22px}.metric b{font-size:19px}
+.hero{background:linear-gradient(90deg,rgba(242,239,230,.992) 0%,rgba(242,239,230,.95) 48%,rgba(242,239,230,.22) 71%,rgba(242,239,230,0) 100%)}
+.hero-copy{padding-left:7.5vw}.hero h1{font-size:clamp(48px,6.4vw,90px);max-width:780px}.hero p{max-width:630px}.enter{padding:13px 20px;background:#20392b}.hero-facts{max-width:630px;gap:34px}
+.hotspot span{padding:4px 7px;background:rgba(248,246,239,.86);border-color:rgba(23,35,28,.11);box-shadow:0 5px 18px rgba(25,38,30,.05)}
+.system-status{position:absolute;z-index:14;top:84px;left:50%;transform:translateX(-50%);display:flex;align-items:stretch;background:rgba(248,246,239,.82);backdrop-filter:blur(12px);border:1px solid rgba(23,35,28,.11);box-shadow:var(--shadow)}
+.status-item{padding:9px 15px;min-width:112px;border-right:1px solid rgba(23,35,28,.10)}.status-item:last-child{border-right:0}.status-item b{display:block;font:500 14px var(--serif);line-height:1.1}.status-item span{font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mode-switcher{position:absolute;z-index:14;right:26px;top:158px;width:142px;background:rgba(248,246,239,.84);border:1px solid rgba(23,35,28,.12);backdrop-filter:blur(12px);box-shadow:var(--shadow)}
+.mode-title{padding:9px 11px 7px;border-bottom:1px solid var(--rule);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.modebtn{width:100%;border:0;border-bottom:1px solid rgba(23,35,28,.08);background:transparent;text-align:left;padding:9px 11px;font-size:9px}.modebtn:last-child{border-bottom:0}.modebtn.active{background:#e1e6df;color:#1d3a2b}.modebtn small{display:block;color:#7d847d;font-size:7.5px;margin-top:2px;line-height:1.3}
+#dataflow{position:absolute;z-index:6;inset:0;width:100%;height:100%;pointer-events:none;display:none;overflow:visible}.flow-line{stroke:#315f58;stroke-width:1.25;fill:none;opacity:.62;stroke-dasharray:5 5;animation:dash 1.8s linear infinite}.flow-line.act{stroke:#9a7547}.flow-node{fill:#f5f1e7;stroke:#315f58;stroke-width:1.5}.flow-node.compute{fill:#315f58}.flow-label{font:500 8px var(--sans);fill:#29473d;letter-spacing:.05em}.flow-panel{position:absolute;z-index:14;left:258px;top:84px;padding:8px 11px;background:rgba(248,246,239,.88);border:1px solid rgba(23,35,28,.12);backdrop-filter:blur(10px);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#5d675f;display:none}
+@keyframes dash{to{stroke-dashoffset:-20}}
+.system-grid{display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--rule);border-top:1px solid var(--rule);margin-top:26px}.system-cell{padding:19px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-height:165px}.system-cell .num{font:500 12px var(--serif);color:#788078}.system-cell h3{font:500 19px var(--serif);margin:7px 0}.system-cell p{font-size:9.5px;line-height:1.62;color:#59635c;margin:0}.equipment-list{columns:2;column-gap:28px;margin-top:18px;border-top:1px solid var(--rule);padding-top:16px}.equipment-list div{break-inside:avoid;padding:7px 0;border-bottom:1px solid rgba(23,35,28,.08);font-size:9px;color:#4e5b53}.equipment-list b{font-weight:650;color:#23372c}
+.drawer-layers{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}.drawer-layers .toggle-row{border-bottom:1px solid rgba(23,35,28,.07)}
+@media(max-width:1180px){.system-status{display:none}.mode-switcher{top:92px}.bottom-story{width:min(570px,calc(100vw - 575px))}.system-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:1000px){.flow-panel{left:18px}.mode-switcher{right:18px}.system-grid{grid-template-columns:1fr}.equipment-list{columns:1}}
+
+/* ===== V0.6 refinement layer ===== */
+:root{--v6line:rgba(28,42,34,.16);--v6glass:rgba(247,244,236,.84);--v6green:#274536;--v6sky:#dce8e4}
+.topbar{box-shadow:0 1px 0 rgba(255,255,255,.75),0 10px 32px rgba(24,37,29,.04)}
+.topbtn{transition:background .18s,color .18s,opacity .18s}.topbtn:focus-visible,.viewbtn:focus-visible,.weather-chip:focus-visible{outline:2px solid rgba(39,69,54,.42);outline-offset:2px}
+.left-rail{box-shadow:0 14px 38px rgba(26,38,30,.07);border-color:rgba(23,35,28,.12)}
+.viewbtn{transition:background .16s,padding-left .16s}.viewbtn:hover{padding-left:15px;background:rgba(255,255,255,.46)}
+.drawer{box-shadow:-16px 0 44px rgba(24,37,29,.06)}
+.weather-dock{position:absolute;z-index:24;right:25px;top:83px;width:292px;background:rgba(247,244,236,.88);backdrop-filter:blur(16px);border:1px solid var(--v6line);box-shadow:0 16px 46px rgba(25,39,31,.08);padding:12px 14px}
+.weather-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.weather-head b{font:500 13px/1.1 var(--serif)}.weather-head span{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.weather-readout{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid rgba(23,35,28,.10)}
+.weather-readout div b{display:block;font-size:13px;font-weight:600}.weather-readout div small{display:block;font-size:8px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.08em}
+.weather-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}.weather-chip{border:1px solid rgba(23,35,28,.13);background:rgba(255,255,255,.35);padding:6px 8px;border-radius:0;font-size:9px}.weather-chip:hover,.weather-chip.active{background:var(--v6green);color:#fff;border-color:var(--v6green)}
+.weather-action{margin-top:10px;font-size:10px;line-height:1.48;color:#4f5c53;padding-left:10px;border-left:2px solid #7c9986}
+.quality-strip{position:absolute;z-index:24;right:25px;top:242px;display:flex;border:1px solid var(--v6line);background:rgba(247,244,236,.80);backdrop-filter:blur(12px)}
+.quality-strip button{border:0;border-right:1px solid var(--v6line);background:transparent;padding:7px 9px;font-size:8px;letter-spacing:.09em;text-transform:uppercase}.quality-strip button:last-child{border-right:0}.quality-strip button.active{background:#233b2f;color:#fff}
+.v6-tooltip{position:absolute;z-index:70;pointer-events:none;display:none;background:rgba(19,29,23,.92);color:#f4f2e9;padding:7px 9px;font-size:9px;letter-spacing:.02em;max-width:220px;line-height:1.35;box-shadow:0 8px 28px rgba(0,0,0,.16)}
+.screen-note{position:absolute;z-index:12;left:244px;bottom:118px;font-size:9px;color:rgba(31,46,37,.62);padding:5px 8px;background:rgba(247,244,236,.68);border-left:1px solid rgba(31,46,37,.2);backdrop-filter:blur(7px);pointer-events:none}
+.weather-vignette{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .6s;background:linear-gradient(180deg,rgba(89,105,103,.10),rgba(40,53,49,.02) 48%,rgba(32,42,37,.12))}.weather-vignette.on{opacity:1}
+@media(max-width:1180px){.weather-dock{right:18px;top:80px;width:260px}.quality-strip{right:18px;top:238px}.screen-note{display:none}}
+
+</style>
+<style id="v8-critical">
+/* ===== Trusted Garden V0.7 - critical (head, styles loading before parse) ===== */
+#loading{background:radial-gradient(125% 110% at 50% 36%,#f9f7f1 0%,#eaeadd 56%,#dbe0d2 100%)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+#loading div{font:500 21px/1.25 Georgia,"Times New Roman",serif!important;letter-spacing:-.01em;color:#1d2f25}
+#loading small{letter-spacing:.2em!important;margin-top:11px!important;color:#7d857d}
+#loading:after{content:"";position:absolute;left:50%;top:calc(50% + 56px);width:196px;height:2px;margin-left:-98px;background:linear-gradient(90deg,#2f5140,#7aa887);transform-origin:left;animation:v7load 1.45s cubic-bezier(.45,.05,.25,1) infinite}
+@keyframes v7load{0%{transform:scaleX(.05);opacity:.55}55%{transform:scaleX(.82);opacity:1}100%{transform:scaleX(1);opacity:.85}}
+
+</style>
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="gl"></canvas><div class="skywash"></div><div id="labels"></div>
+  <div class="loading" id="loading"><div>Preparing Reference Farm 001 / V0.8…<small>Detailed local models · physically based materials</small></div></div>
+
+  <div class="topbar">
+    <div class="wordmark"><strong>Trusted Garden</strong><span>Reference Farm 001 · Weather + Realism Showcase / V0.8</span></div>
+    <div class="top-actions">
+      <button class="topbtn" id="tourBtn">Guided tour</button>
+      <button class="topbtn" id="storyBtn">Project story</button>
+      <button class="topbtn" id="basisBtn">Design basis</button>
+      <button class="topbtn" id="systemBtn">Computational architecture</button>
+      <button class="topbtn" id="dataBtn">Field notes</button>
+    </div>
+  </div>
+
+  <div class="left-rail">
+    <div class="rail-head">View sequence</div>
+    <button class="viewbtn active" data-view="overview"><i>01</i><span>Master plan</span></button>
+    <button class="viewbtn" data-view="entrance"><i>02</i><span>Arrival / visitor spine</span></button>
+    <button class="viewbtn" data-view="compute"><i>03</i><span>Computational field layer</span></button>
+    <button class="viewbtn" data-view="field"><i>04</i><span>Maize trial plots</span></button>
+    <button class="viewbtn" data-view="pond"><i>05</i><span>Fish pond</span></button>
+    <button class="viewbtn" data-view="aqua"><i>06</i><span>Aquaponics loop</span></button>
+    <button class="viewbtn" data-view="control"><i>07</i><span>Control pavilion</span></button>
+    <button class="viewbtn" data-view="north"><i>08</i><span>Reference-farm vista</span></button>
+  </div>
+
+  <div class="compass"></div>
+  <div class="system-status">
+    <div class="status-item"><b>18</b><span>sensing endpoints</span></div>
+    <div class="status-item"><b>11</b><span>controlled actuators</span></div>
+    <div class="status-item"><b>3</b><span>robotic platforms</span></div>
+    <div class="status-item"><b>1</b><span>edge control fabric</span></div>
+  </div>
+  <div class="mode-switcher">
+    <div class="mode-title">Drawing mode</div>
+    <button class="modebtn active" data-mode="spatial">Spatial model<small>architecture + landscape</small></button>
+    <button class="modebtn" data-mode="systems">Systems model<small>sensors, compute, actuators</small></button>
+    <button class="modebtn" data-mode="flow">Data & control flow<small>sense → compute → act → verify</small></button>
+  </div>
+  <div class="flow-panel" id="flowPanel">Computational layer · live schematic overlay</div>
+  <svg id="dataflow" aria-hidden="true"></svg>
+
+  <div class="bottom-story" id="storyStrip">
+    <div class="story-kicker" id="storyKicker">01 / Reference implementation</div>
+    <div class="story-title" id="storyTitle">A farm designed to be read, tested and replicated.</div>
+    <div class="story-copy" id="storyCopy">Three maize treatments, one monitored fish system, an aquaponics loop and a human-supervised control pavilion share the same evidence trail.</div>
+    <div class="story-nav"><button class="roundbtn" id="prevTour">‹</button><button class="roundbtn" id="nextTour">›</button></div>
+  </div>
+
+  <div class="timebar"><label>Crop season</label><input id="daySlider" type="range" min="1" max="60" value="46"/><span id="dayText">Day 46 · reproductive stage</span></div>
+
+  <aside class="drawer" id="drawer">
+    <div class="drawer-head"><div class="eyebrow" id="drawerType">Site / reference implementation</div><h2 id="drawerTitle">Master plan</h2><p id="drawerDesc">A compact, replicable experimental farm where physical operations and digital records remain legible to visitors, researchers and farmers.</p></div>
+    <div class="drawer-section"><h3>Current condition</h3><div class="metrics" id="metrics"></div></div>
+    <div class="drawer-section"><h3>Control action</h3><div class="decision" id="decision"></div></div>
+    <div class="drawer-section"><h3>Evidence trail</h3><div class="trace" id="trace"></div></div>
+    <div class="drawer-section"><h3>Scenario</h3><div class="scenario-grid"><button class="scenario active" data-s="normal">Normal</button><button class="scenario" data-s="drought">High ET</button><button class="scenario" data-s="oxygen">Low DO</button><button class="scenario" data-s="nutrient">Nutrient watch</button></div></div>
+    <div class="drawer-section"><h3>Drawing layers</h3><div class="drawer-layers">
+      <div class="toggle-row"><span>Sensors</span><button class="switch on" data-layer="sensors"></button></div>
+      <div class="toggle-row"><span>Robotics</span><button class="switch on" data-layer="robotics"></button></div>
+      <div class="toggle-row"><span>Edge compute</span><button class="switch on" data-layer="compute"></button></div>
+      <div class="toggle-row"><span>Network</span><button class="switch on" data-layer="network"></button></div>
+      <div class="toggle-row"><span>Actuators</span><button class="switch on" data-layer="actuators"></button></div>
+      <div class="toggle-row"><span>Irrigation</span><button class="switch on" data-layer="irrigation"></button></div>
+      <div class="toggle-row"><span>Water loop</span><button class="switch on" data-layer="waterloop"></button></div>
+      <div class="toggle-row"><span>Risk overlay</span><button class="switch" id="dataOverlay"></button></div>
+      <div class="toggle-row"><span>Labels</span><button class="switch on" id="labelSwitch"></button></div>
+    </div></div>
+  </aside>
+
+
+  <div class="weather-vignette" id="weatherVignette"></div>
+  <section class="weather-dock" id="weatherDock">
+    <div class="weather-head"><div><span>Natural conditions</span><b id="weatherName">Clear / field morning</b></div><button class="topbtn" id="resetViewBtn" style="padding:6px 8px">Reset view</button></div>
+    <div class="weather-readout"><div><b id="wTemp">24.8°</b><small>air</small></div><div><b id="wRh">61%</b><small>RH</small></div><div><b id="wWind">2.4</b><small>m/s wind</small></div><div><b id="wRain">0.0</b><small>mm/h</small></div></div>
+    <div class="weather-row" id="weatherChoices"><button class="weather-chip active" data-w="clear">Clear</button><button class="weather-chip" data-w="cloud">Cloud</button><button class="weather-chip" data-w="rain">Rain</button><button class="weather-chip" data-w="storm">Storm</button><button class="weather-chip" data-w="heat">Heat</button><button class="weather-chip" data-w="wind">Wind</button><button class="weather-chip" data-w="fog">Fog</button></div>
+    <div class="weather-action" id="weatherAction">Routine sensing. Irrigation remains demand-driven.</div>
+  </section>
+  <div class="quality-strip"><button id="qualityHigh" class="active">High detail</button><button id="qualityPerf">Performance</button></div>
+  <div class="v6-tooltip" id="v6Tooltip"></div>
+  <div class="screen-note">Control-room displays update with weather, pond and field state.</div>
+
+  <div class="hero" id="hero">
+    <div class="hero-copy"><div class="hero-mark">Computational agriculture / physical–digital reference farm</div><h1>A farm where computing is part of the landscape.</h1><p>Trusted Garden is designed as a sample room for a reproducible experimental farm. Cameras, soil probes, robotic scouts, water-quality instruments, edge computers and actuators are not hidden behind a dashboard—they are placed into a visible chain from observation to decision to verified action.</p><div class="hero-facts"><div><b>≈ 1,180 m²</b><span>concept footprint</span></div><div><b>Sense → Compute → Act</b><span>visible control architecture</span></div><div><b>Human gate</b><span>bounded autonomy</span></div></div><button class="enter" id="enterBtn">Enter the reference farm</button></div>
+    <div class="hero-side"><b>Reference Farm 001</b><p>V0.8 is a refined design study for a buildable reference farm with a physical weather layer, higher-detail field hardware, and an instrumented control room. The 3D hardware layer is research-informed; operating values shown in the interface remain simulated until connected to physical sensors.</p></div>
+  </div>
+
+
+  <div class="modal" id="systemModal"><div class="modal-inner"><div class="modal-head"><div><div class="eyebrow">Computational architecture</div><h2>The computer is infrastructure, not decoration.</h2></div><button class="closebtn" data-close="systemModal">×</button></div>
+    <div class="system-grid">
+      <div class="system-cell"><div class="num">01</div><h3>Sense</h3><p>Paired-depth soil probes, weather context, RGB / thermal / multispectral imaging, flow meters, water-quality probes and acoustic–visual pond sensing create a synchronized state estimate.</p></div>
+      <div class="system-cell"><div class="num">02</div><h3>Compute</h3><p>A field gateway and pavilion edge racks handle local logging, model inference, device health and policy checks. RTK/GNSS and the site network keep observations spatially and temporally aligned.</p></div>
+      <div class="system-cell"><div class="num">03</div><h3>Act</h3><p>Motorized valves, pumps, aeration, feeding and circulation are exposed as bounded actuators. Low-risk actions may execute automatically; higher-impact changes cross a human gate.</p></div>
+      <div class="system-cell"><div class="num">04</div><h3>Verify</h3><p>Robotic scouting, fixed cameras and water sensors measure the biological response after an intervention, closing the loop and leaving a Trust Trace instead of a one-way recommendation.</p></div>
+    </div>
+    <div class="equipment-list">
+      <div><b>Field phenotyping portal</b> — RGB, thermal, multispectral, stereo and LiDAR carriage above Plot B.</div>
+      <div><b>Autonomous crop scout</b> — low-cost UGV concept with stereo vision, LiDAR and onboard edge compute.</div>
+      <div><b>UAV dock</b> — repeatable aerial imaging point linked to the local network.</div>
+      <div><b>Smart irrigation / fertigation skid</b> — flow metering, motorized valves, pump state and EC/pH sampling loop.</div>
+      <div><b>Field gateway + RTK base</b> — local connectivity, positioning and device heartbeat infrastructure.</div>
+      <div><b>Pond instrument mast + ROV</b> — optical, acoustic and water-quality monitoring above and below the surface.</div>
+      <div><b>Aquaponics vision rail</b> — repeatable crop imaging over DWC beds with PLC/pump supervision.</div>
+      <div><b>Edge control pavilion</b> — server racks, network switch, UPS, wall displays and manual override.</div>
+    </div>
+  </div></div>
+
+  <div class="modal" id="storyModal"><div class="modal-inner"><div class="modal-head"><div><div class="eyebrow">Research lineage</div><h2>One system, four lines of prior work.</h2></div><button class="closebtn" data-close="storyModal">×</button></div><div class="story-grid">
+    <div class="story-cell"><b>Maize experimentation</b><p>Treatment groups, biomass response and rhizosphere measurements become the experimental logic for the three field plots.</p></div>
+    <div class="story-cell"><b>Fish-feeding multimodal sensing</b><p>Audio + vision feeding-intensity modeling becomes a live sensing layer for the pond, paired with water-quality control.</p></div>
+    <div class="story-cell"><b>Lightweight explainable vision</b><p>The FishFreshNet line informs edge deployment, visual explanation and the idea that a research model should become an accessible tool.</p></div>
+    <div class="story-cell"><b>Value-sensitive agricultural technology</b><p>Affordability, usability and human oversight become constraints on automation rather than afterthoughts.</p></div>
+  </div></div></div>
+
+  <div class="modal" id="basisModal"><div class="modal-inner"><div class="modal-head"><div><div class="eyebrow">Reference-informed design</div><h2>The model borrows logic, not decoration.</h2></div><button class="closebtn" data-close="basisModal">×</button></div><div class="basis-list">
+    <div class="basis"><b>Maize geometry</b><p>Field rows use an approximately 0.76 m reference spacing, a common 30-inch research and production spacing cited by University of Minnesota Extension. Plant density is visually decimated for browser performance.</p></div>
+    <div class="basis"><b>Soil sensing</b><p>Each plot shows representative paired-depth soil sensing rather than a single “smart stick,” reflecting extension guidance to monitor more than one root-zone depth and more than one representative field location.</p></div>
+    <div class="basis"><b>Aquaponics</b><p>The east greenhouse combines a round fish system, aeration, solids separation, biofiltration, sump and deep-water-culture beds—an intentionally legible loop derived from FAO small-scale aquaponics guidance.</p></div>
+    <div class="basis"><b>Visitor choreography</b><p>A straight public/research spine, transparent growing spaces and framed views borrow planning lessons from agricultural research centers where education routes are integrated with working production and research areas.</p></div>
+    <div class="basis"><b>Robotic phenotyping</b><p>USDA-ARS projects describe autonomous field robots that combine GPS/IMU, LiDAR, computer vision and modular sensor payloads, as well as multimodal field phenotyping and UAV sensing. V0.5 turns those research patterns into a visible reference-farm equipment layer.</p></div>
+    <div class="basis"><b>Edge + machine vision</b><p>USDA-ARS has reported edge-computing video analysis for UAV crop monitoring, while commercial precision systems use camera-to-processor-to-actuator loops for site-specific operations. The model therefore shows field compute, machine-vision nodes and explicit actuator endpoints rather than a generic “AI cloud.”</p></div>
+  </div></div></div>
+</div>
+
+
+
+
+<style id="v8-theme">
+/* ============================================================
+   Trusted Garden - V0.7 Showcase layer
+   ============================================================ */
+:root{
+  --v7glass:rgba(247,244,236,.72);
+  --v7line:rgba(23,35,28,.14);
+  --v7line2:rgba(23,35,28,.08);
+  --v7shadow:0 14px 40px rgba(24,37,29,.10);
+  --v7shadow-lg:0 26px 70px rgba(24,37,29,.16);
+  --v7green:#26412f;
+  --v7accent:#4f7f63;
+}
+
+/* ---------- base polish ---------- */
+.skywash{display:none!important}
+::selection{background:rgba(47,81,64,.18)}
+.topbtn,.viewbtn,.weather-chip,.roundbtn,.modebtn,.scenario,.quality-strip button{transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.topbtn:hover,.roundbtn:hover{transform:translateY(-1px)}
+.drawer::-webkit-scrollbar{width:9px}
+.drawer::-webkit-scrollbar-track{background:transparent}
+.drawer::-webkit-scrollbar-thumb{background:rgba(31,47,37,.20);border-radius:9px}
+.drawer::-webkit-scrollbar-thumb:hover{background:rgba(31,47,37,.34)}
+
+/* hotspots a touch more refined */
+.hotspot:before{box-shadow:0 0 0 3px rgba(244,241,232,.55),0 2px 6px rgba(20,32,24,.18)}
+.hotspot span{box-shadow:0 4px 14px rgba(25,38,30,.06)}
+
+/* ---------- photo / cinematic mode ---------- */
+#app.v7-photo .topbar,
+#app.v7-photo .left-rail,
+#app.v7-photo .bottom-story,
+#app.v7-photo .timebar,
+#app.v7-photo .weather-dock,
+#app.v7-photo .quality-strip,
+#app.v7-photo .drawer,
+#app.v7-photo .system-status,
+#app.v7-photo .mode-switcher,
+#app.v7-photo .compass,
+#app.v7-photo #labels,
+#app.v7-photo .screen-note,
+#app.v7-photo .flow-panel,
+#app.v7-photo .v7-minimap,
+#app.v7-photo .v7-controls,
+#app.v7-photo .v7-time{
+  opacity:0!important;pointer-events:none!important;transition:opacity .5s ease;
+}
+#app.v7-photo .v7-controls{opacity:.0}
+#app.v7-photo #v7ExitPhoto{opacity:1!important;pointer-events:auto!important}
+
+/* ---------- control cluster ---------- */
+.v7-controls{position:absolute;z-index:26;left:22px;bottom:10px;display:flex;gap:7px;align-items:center;transition:opacity .5s ease}
+.v7-minimap,.v7-legend{transition:opacity .5s ease}
+#app.v7-intro .v7-controls,
+#app.v7-intro .v7-minimap,
+#app.v7-intro .v7-legend{opacity:0!important;pointer-events:none!important}
+.v7-btn{
+  display:flex;align-items:center;gap:6px;
+  border:1px solid var(--v7line);background:var(--v7glass);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:999px;padding:7px 12px 7px 10px;font-size:10px;letter-spacing:.03em;color:#2c3b31;
+  box-shadow:0 6px 18px rgba(24,37,29,.07);
+  transition:background .2s,color .2s,border-color .2s,transform .18s,box-shadow .2s;
+}
+.v7-btn svg{width:13px;height:13px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.v7-btn:hover{background:#233b2f;color:#fff;border-color:#233b2f;transform:translateY(-1px);box-shadow:0 10px 24px rgba(24,37,29,.16)}
+.v7-btn.on{background:#233b2f;color:#fff;border-color:#233b2f}
+.v7-btn .v7-ic-play{fill:currentColor;stroke:none}
+.v7-controls .v7-btn span{white-space:nowrap}
+@media(max-width:1180px){.v7-controls .v7-btn span{display:none}.v7-btn{padding:8px}}
+
+/* exit photo mode button */
+#v7ExitPhoto{position:absolute;z-index:40;right:24px;bottom:24px;display:none}
+#app.v7-photo #v7ExitPhoto{display:flex}
+
+/* ---------- minimap ---------- */
+.v7-minimap{
+  position:absolute;z-index:12;right:25px;top:332px;width:212px;
+  background:var(--v7glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--v7line);box-shadow:var(--v7shadow);
+  padding:9px 10px 10px;
+}
+.v7-minimap .v7-mm-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.v7-minimap .v7-mm-head b{font:500 10px/1 var(--serif);letter-spacing:.02em;color:#243329}
+.v7-minimap .v7-mm-head span{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7c847c}
+.v7-minimap canvas{display:block;width:192px;height:132px;border:1px solid var(--v7line2);background:rgba(255,255,255,.32)}
+@media(max-width:1180px){.v7-minimap{display:none}}
+
+/* ---------- time-of-day ---------- */
+.v7-tod{display:flex;align-items:center;gap:9px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(23,35,28,.10)}
+.v7-tod label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.v7-tod input{flex:1;height:3px;accent-color:#4f7f63;min-width:0}
+.v7-tod span{font:500 9px var(--serif);white-space:nowrap;color:#3b4a40;min-width:38px;text-align:right}
+
+/* ---------- toasts ---------- */
+.v7-toasts{position:absolute;z-index:90;left:50%;bottom:142px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.v7-toast{
+  max-width:min(430px,74vw);
+  background:rgba(20,31,24,.90);color:#f2f1e8;border:1px solid rgba(255,255,255,.10);
+  padding:9px 14px;font-size:10.5px;line-height:1.45;letter-spacing:.01em;
+  box-shadow:0 16px 40px rgba(12,20,15,.30);backdrop-filter:blur(8px);
+  opacity:0;transform:translateY(9px);transition:opacity .3s ease,transform .3s ease;
+}
+.v7-toast.on{opacity:1;transform:translateY(0)}
+.v7-toast b{font-weight:600;color:#fff}
+
+/* ---------- help modal ---------- */
+.v7-modal{
+  position:absolute;z-index:120;inset:0;display:none;place-items:center;
+  background:rgba(24,34,27,.34);backdrop-filter:blur(6px);
+}
+.v7-modal.open{display:grid}
+.v7-modal-inner{
+  width:min(560px,90vw);background:rgba(247,244,236,.98);border:1px solid var(--v7line);
+  box-shadow:var(--v7shadow-lg);padding:30px 34px 34px;
+}
+.v7-modal-inner h2{font:500 27px/1.1 var(--serif);letter-spacing:-.02em;margin:0 0 6px}
+.v7-modal-inner p.v7-sub{margin:0 0 20px;font-size:10px;color:var(--muted);letter-spacing:.02em}
+.v7-kbd-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+.v7-kbd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--v7line2);font-size:11px;color:#3c4a41}
+.v7-kbd-row:last-child{border-bottom:0}
+.v7-keys{display:flex;gap:4px}
+kbd{font:500 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(255,255,255,.7);border:1px solid var(--v7line);border-bottom-width:2px;border-radius:4px;padding:4px 7px;color:#2b3a30;min-width:22px;text-align:center}
+.v7-modal-close{position:absolute;top:16px;right:18px;border:1px solid var(--v7line);background:rgba(255,255,255,.5);width:30px;height:30px;border-radius:50%;font-size:16px;line-height:1;display:grid;place-items:center}
+.v7-modal-close:hover{background:#233b2f;color:#fff}
+.v7-modal-inner{position:relative}
+
+/* ---------- legend / info strip ---------- */
+.v7-legend{position:absolute;z-index:11;left:22px;bottom:64px;display:flex;flex-direction:column;gap:5px;font-size:9px;color:#5c675f;letter-spacing:.02em;pointer-events:none}
+.v7-legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:7px;border-radius:2px}
+@media(max-width:1180px){.v7-legend{display:none}}
+
+/* ---------- viewport frame tint (subtle premium vignette on chrome) ---------- */
+#app:after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;box-shadow:inset 0 0 150px rgba(24,37,29,.07)}
+#app.v7-photo:after{box-shadow:inset 0 0 200px rgba(12,20,15,.14)}
+
+/* drawer / story micro-polish */
+.bottom-story{border-left-width:3px;box-shadow:0 22px 54px rgba(24,37,29,.10)}
+.drawer{transition:transform .34s cubic-bezier(.32,.72,.28,1)}
+.weather-dock{box-shadow:0 18px 48px rgba(24,37,29,.09)}
+.quality-strip{box-shadow:0 10px 26px rgba(24,37,29,.07)}
+.left-rail{transition:box-shadow .3s}
+
+
+/* ============================================================
+   V0.8 - walk mode / character
+   ============================================================ */
+#app.v7-photo .v8-walkbar{opacity:0!important;pointer-events:none!important}
+#app.v8-walking .bottom-story{opacity:0;pointer-events:none;transition:opacity .45s ease}
+
+.v8-walkbar{
+  position:absolute;z-index:30;left:50%;bottom:32px;transform:translateX(-50%) translateY(14px);
+  width:min(600px,calc(100vw - 300px));
+  background:rgba(247,244,236,.90);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--v7line);box-shadow:0 22px 60px rgba(24,37,29,.16);
+  padding:13px 16px 14px;opacity:0;pointer-events:none;
+  transition:opacity .4s ease,transform .4s cubic-bezier(.32,.72,.28,1);
+}
+.v8-walkbar.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.v8-wb-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--v7line2);padding-bottom:9px}
+.v8-wb-head b{font:500 15px/1 var(--serif);letter-spacing:-.01em}
+.v8-wb-head span{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.v8-wb-views{display:flex;gap:6px;margin-top:11px}
+.v8-wb-views button{
+  flex:1;border:1px solid var(--v7line);background:rgba(255,255,255,.42);
+  padding:8px 10px;font-size:10px;letter-spacing:.03em;border-radius:2px;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.v8-wb-views button:hover{background:rgba(35,59,47,.10)}
+.v8-wb-views button.active{background:#233b2f;color:#fff;border-color:#233b2f}
+.v8-wb-keys{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:11px;font-size:9.5px;color:#4d584f}
+.v8-wb-keys span{display:flex;align-items:center;gap:4px}
+.v8-wb-keys kbd{font-size:9px;padding:3px 5px;min-width:18px}
+.v8-wb-exit{
+  margin-top:12px;width:100%;border:1px solid var(--v7line);background:transparent;
+  padding:8px;font-size:10px;letter-spacing:.05em;border-radius:2px;color:#3b4a40;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.v8-wb-exit:hover{background:#8d4a43;color:#fff;border-color:#8d4a43}
+
+/* character name tag: lighter than the fixed hotspots */
+.v8-charlabel{color:#1f3b2c;font-weight:500}
+.v8-charlabel span{background:rgba(247,244,236,.86);border-color:rgba(23,35,28,.16)}
+.v8-charlabel:before{background:#d8b26a;border-color:#7a5a1e}
+#app.v8-walking .v8-charlabel{opacity:0}
+
+/* crosshair for first person */
+#app.v8-first:after{
+  content:"";position:absolute;z-index:6;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:rgba(255,255,255,.72);box-shadow:0 0 0 1px rgba(20,32,24,.45),0 0 8px rgba(0,0,0,.35);
+  pointer-events:none;
+}
+
+</style>
+
+<script type="module" src="/src/main.ts"></script>
+</body></html>

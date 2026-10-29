@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prepare static site
-        run: node tools/build-site.mjs
+        run: npm ci && npm test && npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -29,7 +29,8 @@ export function createTechnician() {
   const softBox = (w, h, d, r = .015) => new RoundedBoxGeometry(w, h, d, 3, r);
   const limb = (r, h) => new T.CapsuleGeometry(r, h, 8, 20);
   add(softBox(.31, .22, .22, .045), hips, [0, -.03, 0], 1);
-  add(oval(.20, .245, .122), chest, [0, .21, 0], 0);
+  const jacket = new T.LatheGeometry([new T.Vector2(.143,-.13),new T.Vector2(.16,-.06),new T.Vector2(.177,.10),new T.Vector2(.195,.25),new T.Vector2(.18,.36),new T.Vector2(.09,.435),new T.Vector2(.052,.445)],40);jacket.scale(1,1,.66);
+  add(jacket, chest, [0,0,0], 0);
   add(softBox(.33, .31, .04), chest, [0, .25, -.112], 3);
   for (const x of [-.105, .105]) { add(softBox(.074, .26, .025), chest, [x, .25, .111], 3); add(softBox(.085, .055, .022, .005), chest, [x, .18, .13], 5); add(softBox(.078, .014, .007, .003), chest, [x, .33, .13], 6); }
   add(softBox(.014, .36, .011, .003), chest, [0, .23, .125], 6);
@@ -45,7 +46,7 @@ export function createTechnician() {
   add(softBox(.045, .017, .01, .004), neck, [0, .248, .086], 6, true);
   for (const [shoulder, elbow, hip, knee] of [[shoulderL, elbowL, hipL, kneeL], [shoulderR, elbowR, hipR, kneeR]]) {
     add(limb(.066, .16), shoulder, [0, -.125, 0], 0);
-    add(limb(.055, .17), elbow, [0, -.12, 0], 0);
+    add(limb(.057, .20), elbow, [0, -.11, 0], 0);
     add(softBox(.065, .07, .022, .009), shoulder, [0, -.10, .057], 3);
     add(softBox(.066, .018, .018, .004), elbow, [0, -.19, .047], 6);
     add(oval(.046, .06, .029), elbow, [0, -.28, .005], 4);

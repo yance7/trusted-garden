@@ -21,6 +21,7 @@ test('source inventory covers every named object in farm coordinates', () => {
   assert.ok(lo[0] < -21 && hi[2] > 16);
   const plot = source.objects.find(o => o.name === 'Plot_A_Soil');
   assert.ok(plot.bounds.center[2] > 3, 'Plot A must stay on the positive-Z side as in the displayed V0.8');
+  assert.ok(source.objects.filter(o=>/corn/i.test(o.name)).every(o=>/^plot[ABC]$/.test(o.region)), 'Hero corn must participate in its plot growth and scenario');
 });
 
 test('generated HD model covers all originals with normals, UVs, real material maps and richer equipment', () => {

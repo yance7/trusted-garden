@@ -1,0 +1,2247 @@
+{
+  "views": {
+    "overview": {
+      "eye": [
+        26,
+        22,
+        31
+      ],
+      "target": [
+        0,
+        0.8,
+        -0.5
+      ],
+      "story": [
+        "01 / Reference implementation",
+        "A farm designed to be read, tested and replicated.",
+        "Three maize treatments, one monitored fish system, an aquaponics loop and a human-supervised computational layer share the same evidence trail."
+      ],
+      "region": "overview"
+    },
+    "entrance": {
+      "eye": [
+        0,
+        4.2,
+        -28
+      ],
+      "target": [
+        0,
+        1.1,
+        -7.5
+      ],
+      "story": [
+        "02 / Arrival sequence",
+        "The visitor route is part of the research design.",
+        "A single circulation spine lets visitors read the system in order: human oversight, computational infrastructure, experiments and biological loops."
+      ],
+      "region": "overview"
+    },
+    "compute": {
+      "eye": [
+        3.3,
+        7.4,
+        -9.5
+      ],
+      "target": [
+        -3.9,
+        1.45,
+        -1.5
+      ],
+      "story": [
+        "03 / Computational field layer",
+        "Computing is physically distributed across the farm.",
+        "A phenotyping portal, autonomous scout, smart valves, fertigation controller, field gateway, RTK base and UAV dock connect sensing to local decisions and bounded actuation."
+      ],
+      "region": "compute"
+    },
+    "field": {
+      "eye": [
+        -1,
+        7.5,
+        13.8
+      ],
+      "target": [
+        -9.2,
+        1.15,
+        0.1
+      ],
+      "story": [
+        "04 / Experimental field",
+        "Three plots turn prior maize research into a live protocol.",
+        "The shared field geometry is now instrumented by repeatable imaging, paired-depth sensing, flow metering and plot-level actuator nodes so biological comparison and computational control remain linked."
+      ],
+      "region": "plotB"
+    },
+    "pond": {
+      "eye": [
+        18.2,
+        8.3,
+        14.6
+      ],
+      "target": [
+        9.5,
+        1.25,
+        5
+      ],
+      "story": [
+        "05 / Aquatic sensing",
+        "The fish pond is an experimental subsystem, not an ornament.",
+        "Feeding behavior, dissolved oxygen, pH, temperature, underwater video and control actions are recorded together; a small inspection ROV makes subsurface observation explicit."
+      ],
+      "region": "pond"
+    },
+    "aqua": {
+      "eye": [
+        18.8,
+        7.4,
+        -0.6
+      ],
+      "target": [
+        10,
+        1.4,
+        -6.9
+      ],
+      "story": [
+        "06 / Biological loop",
+        "The greenhouse makes the water and data cycles visible.",
+        "The DWC loop now includes a vision rail, PLC/pump supervision and repeatable sensing, connecting crop response to circulation state rather than treating the greenhouse as a static display."
+      ],
+      "region": "aqua"
+    },
+    "control": {
+      "eye": [
+        11.6,
+        5.8,
+        -19
+      ],
+      "target": [
+        3,
+        1.25,
+        -10.9
+      ],
+      "story": [
+        "07 / Human-supervised control",
+        "Automation is bounded by a physical and procedural human gate.",
+        "Server racks, local networking, operator displays, weather context, UAV/RTK support and manual override make the farm's computing infrastructure visible and inspectable."
+      ],
+      "region": "control"
+    },
+    "north": {
+      "eye": [
+        0,
+        5.2,
+        23.5
+      ],
+      "target": [
+        0,
+        1,
+        4
+      ],
+      "story": [
+        "08 / The sample-room idea",
+        "Reference Farm 001 is a blueprint with a living example attached.",
+        "The goal is not to prescribe one brand of hardware, but to make the interfaces between sensing, computing, actuation and verification concrete enough to copy."
+      ],
+      "region": "overview"
+    }
+  },
+  "data": {
+    "overview": {
+      "type": "Site / reference implementation",
+      "title": "Master plan",
+      "desc": "A compact reference farm that makes agricultural experimentation, aquatic sensing, water circulation and human oversight visible in one spatial system.",
+      "metrics": [
+        [
+          "Footprint",
+          "≈1,180 m²",
+          "conceptual site study"
+        ],
+        [
+          "Data streams",
+          "14",
+          "soil / weather / water / vision"
+        ],
+        [
+          "Low-risk automation",
+          "82%",
+          "simulated operating policy"
+        ],
+        [
+          "Replication index",
+          "0.91",
+          "modular interfaces + shared schema"
+        ]
+      ],
+      "decision": "<span class=\"tag\">routine</span><span class=\"tag\">human-supervised</span><br><strong>No high-impact intervention.</strong> The current state remains inside operating bands.",
+      "trace": [
+        [
+          "08:10",
+          "Verify",
+          "Plot C response returned to target band"
+        ],
+        [
+          "06:30",
+          "Act",
+          "Drip irrigation executed"
+        ],
+        [
+          "05:44",
+          "Decide",
+          "Water-balance trigger crossed"
+        ]
+      ]
+    },
+    "compute": {
+      "type": "Distributed sensing / edge automation",
+      "title": "Computational field layer",
+      "desc": "The farm exposes the chain from measurements to local inference to bounded action: fixed sensors, robotic phenotyping, field networking, smart irrigation and mobile imaging all converge on a common evidence trail.",
+      "metrics": [
+        [
+          "Sensing endpoints",
+          "18",
+          "soil / weather / optical / water / flow"
+        ],
+        [
+          "Robotic platforms",
+          "3",
+          "gantry / UGV / UAV"
+        ],
+        [
+          "Actuated endpoints",
+          "11",
+          "valves / pumps / feeder / aeration"
+        ],
+        [
+          "Edge nodes",
+          "2 + RTK",
+          "field gateway + pavilion"
+        ]
+      ],
+      "decision": "<span class=\"tag\">sense → compute → act</span><span class=\"tag\">human gate</span><br><strong>Keep computation local when possible.</strong> Measurements are synchronized, policies are checked at the edge, and higher-impact changes remain reviewable.",
+      "trace": [
+        [
+          "08:11",
+          "Sense",
+          "phenotyping portal completed Plot B pass"
+        ],
+        [
+          "08:12",
+          "Compute",
+          "field gateway reconciled soil + imaging state"
+        ],
+        [
+          "08:13",
+          "Act",
+          "no treatment change; valve policy remains armed"
+        ]
+      ]
+    },
+    "plotA": {
+      "type": "Maize plot / control",
+      "title": "Plot A · Control",
+      "desc": "The shared baseline for treatment comparison and model calibration.",
+      "metrics": [
+        [
+          "Soil VWC",
+          "27.8%",
+          "paired-depth field probes"
+        ],
+        [
+          "Canopy temp.",
+          "26.1 °C",
+          "RGB + weather context"
+        ],
+        [
+          "7-day growth",
+          "+8.6%",
+          "simulated estimate"
+        ],
+        [
+          "Water use",
+          "1.00×",
+          "reference baseline"
+        ]
+      ],
+      "decision": "<span class=\"tag\">baseline</span><br><strong>Leave the control unchanged.</strong> Interpretability depends on preserving the reference treatment.",
+      "trace": [
+        [
+          "07:56",
+          "Observe",
+          "soil + canopy snapshot"
+        ],
+        [
+          "07:58",
+          "Model",
+          "growth curve updated"
+        ],
+        [
+          "08:03",
+          "Verify",
+          "baseline unchanged"
+        ]
+      ]
+    },
+    "plotB": {
+      "type": "Maize plot / biological enhancer",
+      "title": "Plot B · COS",
+      "desc": "The field most directly connected to the prior maize enhancer experiment.",
+      "metrics": [
+        [
+          "Soil VWC",
+          "29.4%",
+          "within current band"
+        ],
+        [
+          "Canopy temp.",
+          "25.7 °C",
+          "0.4 °C below control"
+        ],
+        [
+          "7-day growth",
+          "+12.8%",
+          "simulated estimate"
+        ],
+        [
+          "Treatment",
+          "COS line",
+          "reference mapping"
+        ]
+      ],
+      "decision": "<span class=\"tag\">hold treatment</span><br><strong>No additional input today.</strong> The observed growth advantage does not justify changing the protocol.",
+      "trace": [
+        [
+          "07:42",
+          "Observe",
+          "RGB + soil profile"
+        ],
+        [
+          "07:45",
+          "Model",
+          "growth advantage remains positive"
+        ],
+        [
+          "07:49",
+          "Decide",
+          "hold treatment"
+        ]
+      ]
+    },
+    "plotC": {
+      "type": "Maize plot / low-input",
+      "title": "Plot C · Low input",
+      "desc": "A constrained-input plot used to test the boundary between resource efficiency and biological response.",
+      "metrics": [
+        [
+          "Soil VWC",
+          "23.1%",
+          "root-zone estimate"
+        ],
+        [
+          "Water deficit",
+          "Moderate",
+          "relative to site baseline"
+        ],
+        [
+          "7-day growth",
+          "+7.4%",
+          "simulated estimate"
+        ],
+        [
+          "Input index",
+          "0.72×",
+          "water + nutrient"
+        ]
+      ],
+      "decision": "<span class=\"tag\">low input</span><br><strong>Continue the constrained policy.</strong> No signal currently requires leaving the low-input treatment.",
+      "trace": [
+        [
+          "08:02",
+          "Observe",
+          "root-zone profile"
+        ],
+        [
+          "08:04",
+          "Model",
+          "8-hour water balance"
+        ],
+        [
+          "08:06",
+          "Decide",
+          "maintain policy"
+        ]
+      ]
+    },
+    "pond": {
+      "type": "Aquaculture / multimodal sensing",
+      "title": "Fish pond",
+      "desc": "Feeding behavior and water quality are observed as one operating state rather than separate research demonstrations.",
+      "metrics": [
+        [
+          "Dissolved O₂",
+          "6.3 mg/L",
+          "water-quality probe"
+        ],
+        [
+          "pH",
+          "6.8",
+          "continuous probe"
+        ],
+        [
+          "Water temp.",
+          "24.2 °C",
+          "continuous probe"
+        ],
+        [
+          "Feeding state",
+          "Moderate",
+          "audio + vision"
+        ]
+      ],
+      "decision": "<span class=\"tag\">feeding</span><br><strong>Reduce the next ration by 8%.</strong> The current multimodal feeding signal is moderate.",
+      "trace": [
+        [
+          "07:50",
+          "Observe",
+          "DO + pH + feeding signal"
+        ],
+        [
+          "07:52",
+          "Model",
+          "feeding intensity = moderate"
+        ],
+        [
+          "07:55",
+          "Decide",
+          "reduce ration"
+        ]
+      ]
+    },
+    "aqua": {
+      "type": "Recirculating aquaponics / DWC",
+      "title": "Aquaponics greenhouse",
+      "desc": "A legible water loop links settling, biofiltration, sump and deep-water-culture beds.",
+      "metrics": [
+        [
+          "Loop flow",
+          "42 L/min",
+          "simulated flow meter"
+        ],
+        [
+          "Dissolved O₂",
+          "6.1 mg/L",
+          "bed inlet"
+        ],
+        [
+          "pH",
+          "6.7",
+          "water loop"
+        ],
+        [
+          "Plant state",
+          "Stable",
+          "RGB + water"
+        ]
+      ],
+      "decision": "<span class=\"tag\">recirculation</span><br><strong>No change.</strong> Water and plant indicators are currently coherent.",
+      "trace": [
+        [
+          "07:36",
+          "Observe",
+          "filter + DWC inlet/outlet"
+        ],
+        [
+          "07:39",
+          "Model",
+          "loop state reconciled"
+        ],
+        [
+          "07:43",
+          "Verify",
+          "return flow stable"
+        ]
+      ]
+    },
+    "control": {
+      "type": "Edge compute / human oversight",
+      "title": "Control pavilion",
+      "desc": "The physical operating point for local inference, actuator state, weather context, rainwater storage and manual override.",
+      "metrics": [
+        [
+          "Edge status",
+          "Online",
+          "local inference + logging"
+        ],
+        [
+          "Actuators",
+          "9 / 9",
+          "valves / pump / aerator / feeder"
+        ],
+        [
+          "Manual gate",
+          "Active",
+          "high-impact changes"
+        ],
+        [
+          "Power",
+          "Solar + grid",
+          "reference configuration"
+        ]
+      ],
+      "decision": "<span class=\"tag\">bounded autonomy</span><br><strong>Autopilot stops at policy boundaries.</strong> High-risk water-quality and treatment changes remain behind a human gate.",
+      "trace": [
+        [
+          "08:08",
+          "Verify",
+          "actuator heartbeats received"
+        ],
+        [
+          "08:09",
+          "Policy",
+          "manual gate active"
+        ],
+        [
+          "08:10",
+          "Log",
+          "trace bundle committed"
+        ]
+      ]
+    }
+  },
+  "scenarios": {
+    "normal": {
+      "overview": {
+        "type": "Site / reference implementation",
+        "title": "Master plan",
+        "desc": "A compact reference farm that makes agricultural experimentation, aquatic sensing, water circulation and human oversight visible in one spatial system.",
+        "metrics": [
+          [
+            "Footprint",
+            "≈1,180 m²",
+            "conceptual site study"
+          ],
+          [
+            "Data streams",
+            "14",
+            "soil / weather / water / vision"
+          ],
+          [
+            "Low-risk automation",
+            "82%",
+            "simulated operating policy"
+          ],
+          [
+            "Replication index",
+            "0.91",
+            "modular interfaces + shared schema"
+          ]
+        ],
+        "decision": "<span class=\"tag\">routine</span><span class=\"tag\">human-supervised</span><br><strong>No high-impact intervention.</strong> The current state remains inside operating bands.",
+        "trace": [
+          [
+            "08:10",
+            "Verify",
+            "Plot C response returned to target band"
+          ],
+          [
+            "06:30",
+            "Act",
+            "Drip irrigation executed"
+          ],
+          [
+            "05:44",
+            "Decide",
+            "Water-balance trigger crossed"
+          ]
+        ]
+      },
+      "compute": {
+        "type": "Distributed sensing / edge automation",
+        "title": "Computational field layer",
+        "desc": "The farm exposes the chain from measurements to local inference to bounded action: fixed sensors, robotic phenotyping, field networking, smart irrigation and mobile imaging all converge on a common evidence trail.",
+        "metrics": [
+          [
+            "Sensing endpoints",
+            "18",
+            "soil / weather / optical / water / flow"
+          ],
+          [
+            "Robotic platforms",
+            "3",
+            "gantry / UGV / UAV"
+          ],
+          [
+            "Actuated endpoints",
+            "11",
+            "valves / pumps / feeder / aeration"
+          ],
+          [
+            "Edge nodes",
+            "2 + RTK",
+            "field gateway + pavilion"
+          ]
+        ],
+        "decision": "<span class=\"tag\">sense → compute → act</span><span class=\"tag\">human gate</span><br><strong>Keep computation local when possible.</strong> Measurements are synchronized, policies are checked at the edge, and higher-impact changes remain reviewable.",
+        "trace": [
+          [
+            "08:11",
+            "Sense",
+            "phenotyping portal completed Plot B pass"
+          ],
+          [
+            "08:12",
+            "Compute",
+            "field gateway reconciled soil + imaging state"
+          ],
+          [
+            "08:13",
+            "Act",
+            "no treatment change; valve policy remains armed"
+          ]
+        ]
+      },
+      "plotA": {
+        "type": "Maize plot / control",
+        "title": "Plot A · Control",
+        "desc": "The shared baseline for treatment comparison and model calibration.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "27.8%",
+            "paired-depth field probes"
+          ],
+          [
+            "Canopy temp.",
+            "26.1 °C",
+            "RGB + weather context"
+          ],
+          [
+            "7-day growth",
+            "+8.6%",
+            "simulated estimate"
+          ],
+          [
+            "Water use",
+            "1.00×",
+            "reference baseline"
+          ]
+        ],
+        "decision": "<span class=\"tag\">baseline</span><br><strong>Leave the control unchanged.</strong> Interpretability depends on preserving the reference treatment.",
+        "trace": [
+          [
+            "07:56",
+            "Observe",
+            "soil + canopy snapshot"
+          ],
+          [
+            "07:58",
+            "Model",
+            "growth curve updated"
+          ],
+          [
+            "08:03",
+            "Verify",
+            "baseline unchanged"
+          ]
+        ]
+      },
+      "plotB": {
+        "type": "Maize plot / biological enhancer",
+        "title": "Plot B · COS",
+        "desc": "The field most directly connected to the prior maize enhancer experiment.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "29.4%",
+            "within current band"
+          ],
+          [
+            "Canopy temp.",
+            "25.7 °C",
+            "0.4 °C below control"
+          ],
+          [
+            "7-day growth",
+            "+12.8%",
+            "simulated estimate"
+          ],
+          [
+            "Treatment",
+            "COS line",
+            "reference mapping"
+          ]
+        ],
+        "decision": "<span class=\"tag\">hold treatment</span><br><strong>No additional input today.</strong> The observed growth advantage does not justify changing the protocol.",
+        "trace": [
+          [
+            "07:42",
+            "Observe",
+            "RGB + soil profile"
+          ],
+          [
+            "07:45",
+            "Model",
+            "growth advantage remains positive"
+          ],
+          [
+            "07:49",
+            "Decide",
+            "hold treatment"
+          ]
+        ]
+      },
+      "plotC": {
+        "type": "Maize plot / low-input",
+        "title": "Plot C · Low input",
+        "desc": "A constrained-input plot used to test the boundary between resource efficiency and biological response.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "23.1%",
+            "root-zone estimate"
+          ],
+          [
+            "Water deficit",
+            "Moderate",
+            "relative to site baseline"
+          ],
+          [
+            "7-day growth",
+            "+7.4%",
+            "simulated estimate"
+          ],
+          [
+            "Input index",
+            "0.72×",
+            "water + nutrient"
+          ]
+        ],
+        "decision": "<span class=\"tag\">low input</span><br><strong>Continue the constrained policy.</strong> No signal currently requires leaving the low-input treatment.",
+        "trace": [
+          [
+            "08:02",
+            "Observe",
+            "root-zone profile"
+          ],
+          [
+            "08:04",
+            "Model",
+            "8-hour water balance"
+          ],
+          [
+            "08:06",
+            "Decide",
+            "maintain policy"
+          ]
+        ]
+      },
+      "pond": {
+        "type": "Aquaculture / multimodal sensing",
+        "title": "Fish pond",
+        "desc": "Feeding behavior and water quality are observed as one operating state rather than separate research demonstrations.",
+        "metrics": [
+          [
+            "Dissolved O₂",
+            "6.3 mg/L",
+            "water-quality probe"
+          ],
+          [
+            "pH",
+            "6.8",
+            "continuous probe"
+          ],
+          [
+            "Water temp.",
+            "24.2 °C",
+            "continuous probe"
+          ],
+          [
+            "Feeding state",
+            "Moderate",
+            "audio + vision"
+          ]
+        ],
+        "decision": "<span class=\"tag\">feeding</span><br><strong>Reduce the next ration by 8%.</strong> The current multimodal feeding signal is moderate.",
+        "trace": [
+          [
+            "07:50",
+            "Observe",
+            "DO + pH + feeding signal"
+          ],
+          [
+            "07:52",
+            "Model",
+            "feeding intensity = moderate"
+          ],
+          [
+            "07:55",
+            "Decide",
+            "reduce ration"
+          ]
+        ]
+      },
+      "aqua": {
+        "type": "Recirculating aquaponics / DWC",
+        "title": "Aquaponics greenhouse",
+        "desc": "A legible water loop links settling, biofiltration, sump and deep-water-culture beds.",
+        "metrics": [
+          [
+            "Loop flow",
+            "42 L/min",
+            "simulated flow meter"
+          ],
+          [
+            "Dissolved O₂",
+            "6.1 mg/L",
+            "bed inlet"
+          ],
+          [
+            "pH",
+            "6.7",
+            "water loop"
+          ],
+          [
+            "Plant state",
+            "Stable",
+            "RGB + water"
+          ]
+        ],
+        "decision": "<span class=\"tag\">recirculation</span><br><strong>No change.</strong> Water and plant indicators are currently coherent.",
+        "trace": [
+          [
+            "07:36",
+            "Observe",
+            "filter + DWC inlet/outlet"
+          ],
+          [
+            "07:39",
+            "Model",
+            "loop state reconciled"
+          ],
+          [
+            "07:43",
+            "Verify",
+            "return flow stable"
+          ]
+        ]
+      },
+      "control": {
+        "type": "Edge compute / human oversight",
+        "title": "Control pavilion",
+        "desc": "The physical operating point for local inference, actuator state, weather context, rainwater storage and manual override.",
+        "metrics": [
+          [
+            "Edge status",
+            "Online",
+            "local inference + logging"
+          ],
+          [
+            "Actuators",
+            "9 / 9",
+            "valves / pump / aerator / feeder"
+          ],
+          [
+            "Manual gate",
+            "Active",
+            "high-impact changes"
+          ],
+          [
+            "Power",
+            "Solar + grid",
+            "reference configuration"
+          ]
+        ],
+        "decision": "<span class=\"tag\">bounded autonomy</span><br><strong>Autopilot stops at policy boundaries.</strong> High-risk water-quality and treatment changes remain behind a human gate.",
+        "trace": [
+          [
+            "08:08",
+            "Verify",
+            "actuator heartbeats received"
+          ],
+          [
+            "08:09",
+            "Policy",
+            "manual gate active"
+          ],
+          [
+            "08:10",
+            "Log",
+            "trace bundle committed"
+          ]
+        ]
+      }
+    },
+    "drought": {
+      "overview": {
+        "type": "Site / reference implementation",
+        "title": "Master plan",
+        "desc": "A compact reference farm that makes agricultural experimentation, aquatic sensing, water circulation and human oversight visible in one spatial system.",
+        "metrics": [
+          [
+            "Footprint",
+            "≈1,180 m²",
+            "conceptual site study"
+          ],
+          [
+            "Data streams",
+            "14",
+            "soil / weather / water / vision"
+          ],
+          [
+            "Low-risk automation",
+            "82%",
+            "simulated operating policy"
+          ],
+          [
+            "Replication index",
+            "0.91",
+            "modular interfaces + shared schema"
+          ]
+        ],
+        "decision": "<span class=\"tag\">routine</span><span class=\"tag\">human-supervised</span><br><strong>No high-impact intervention.</strong> The current state remains inside operating bands.",
+        "trace": [
+          [
+            "08:10",
+            "Verify",
+            "Plot C response returned to target band"
+          ],
+          [
+            "06:30",
+            "Act",
+            "Drip irrigation executed"
+          ],
+          [
+            "05:44",
+            "Decide",
+            "Water-balance trigger crossed"
+          ]
+        ]
+      },
+      "compute": {
+        "type": "Distributed sensing / edge automation",
+        "title": "Computational field layer",
+        "desc": "The farm exposes the chain from measurements to local inference to bounded action: fixed sensors, robotic phenotyping, field networking, smart irrigation and mobile imaging all converge on a common evidence trail.",
+        "metrics": [
+          [
+            "Sensing endpoints",
+            "18",
+            "soil / weather / optical / water / flow"
+          ],
+          [
+            "Robotic platforms",
+            "3",
+            "gantry / UGV / UAV"
+          ],
+          [
+            "Actuated endpoints",
+            "11",
+            "valves / pumps / feeder / aeration"
+          ],
+          [
+            "Edge nodes",
+            "2 + RTK",
+            "field gateway + pavilion"
+          ]
+        ],
+        "decision": "<span class=\"tag\">sense → compute → act</span><span class=\"tag\">human gate</span><br><strong>Keep computation local when possible.</strong> Measurements are synchronized, policies are checked at the edge, and higher-impact changes remain reviewable.",
+        "trace": [
+          [
+            "08:11",
+            "Sense",
+            "phenotyping portal completed Plot B pass"
+          ],
+          [
+            "08:12",
+            "Compute",
+            "field gateway reconciled soil + imaging state"
+          ],
+          [
+            "08:13",
+            "Act",
+            "no treatment change; valve policy remains armed"
+          ]
+        ]
+      },
+      "plotA": {
+        "type": "Maize plot / control",
+        "title": "Plot A · Control",
+        "desc": "The shared baseline for treatment comparison and model calibration.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "27.8%",
+            "paired-depth field probes"
+          ],
+          [
+            "Canopy temp.",
+            "26.1 °C",
+            "RGB + weather context"
+          ],
+          [
+            "7-day growth",
+            "+8.6%",
+            "simulated estimate"
+          ],
+          [
+            "Water use",
+            "1.00×",
+            "reference baseline"
+          ]
+        ],
+        "decision": "<span class=\"tag\">baseline</span><br><strong>Leave the control unchanged.</strong> Interpretability depends on preserving the reference treatment.",
+        "trace": [
+          [
+            "07:56",
+            "Observe",
+            "soil + canopy snapshot"
+          ],
+          [
+            "07:58",
+            "Model",
+            "growth curve updated"
+          ],
+          [
+            "08:03",
+            "Verify",
+            "baseline unchanged"
+          ]
+        ]
+      },
+      "plotB": {
+        "type": "Maize plot / biological enhancer",
+        "title": "Plot B · COS",
+        "desc": "The field most directly connected to the prior maize enhancer experiment.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "29.4%",
+            "within current band"
+          ],
+          [
+            "Canopy temp.",
+            "25.7 °C",
+            "0.4 °C below control"
+          ],
+          [
+            "7-day growth",
+            "+12.8%",
+            "simulated estimate"
+          ],
+          [
+            "Treatment",
+            "COS line",
+            "reference mapping"
+          ]
+        ],
+        "decision": "<span class=\"tag\">hold treatment</span><br><strong>No additional input today.</strong> The observed growth advantage does not justify changing the protocol.",
+        "trace": [
+          [
+            "07:42",
+            "Observe",
+            "RGB + soil profile"
+          ],
+          [
+            "07:45",
+            "Model",
+            "growth advantage remains positive"
+          ],
+          [
+            "07:49",
+            "Decide",
+            "hold treatment"
+          ]
+        ]
+      },
+      "plotC": {
+        "type": "Maize plot / low-input",
+        "title": "Plot C · Low input",
+        "desc": "A constrained-input plot used to test the boundary between resource efficiency and biological response.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "18.9%",
+            "root-zone estimate"
+          ],
+          [
+            "Water deficit",
+            "High",
+            "relative to site baseline"
+          ],
+          [
+            "7-day growth",
+            "+7.4%",
+            "simulated estimate"
+          ],
+          [
+            "Input index",
+            "0.72×",
+            "water + nutrient"
+          ]
+        ],
+        "decision": "<span class=\"tag\">review required</span><br><strong>Split irrigation into two pulses.</strong> Verify the root-zone response before the second pulse.",
+        "trace": [
+          [
+            "08:02",
+            "Observe",
+            "root-zone profile"
+          ],
+          [
+            "08:04",
+            "Model",
+            "8-hour water balance"
+          ],
+          [
+            "08:06",
+            "Decide",
+            "split irrigation"
+          ]
+        ]
+      },
+      "pond": {
+        "type": "Aquaculture / multimodal sensing",
+        "title": "Fish pond",
+        "desc": "Feeding behavior and water quality are observed as one operating state rather than separate research demonstrations.",
+        "metrics": [
+          [
+            "Dissolved O₂",
+            "6.3 mg/L",
+            "water-quality probe"
+          ],
+          [
+            "pH",
+            "6.8",
+            "continuous probe"
+          ],
+          [
+            "Water temp.",
+            "24.2 °C",
+            "continuous probe"
+          ],
+          [
+            "Feeding state",
+            "Moderate",
+            "audio + vision"
+          ]
+        ],
+        "decision": "<span class=\"tag\">feeding</span><br><strong>Reduce the next ration by 8%.</strong> The current multimodal feeding signal is moderate.",
+        "trace": [
+          [
+            "07:50",
+            "Observe",
+            "DO + pH + feeding signal"
+          ],
+          [
+            "07:52",
+            "Model",
+            "feeding intensity = moderate"
+          ],
+          [
+            "07:55",
+            "Decide",
+            "reduce ration"
+          ]
+        ]
+      },
+      "aqua": {
+        "type": "Recirculating aquaponics / DWC",
+        "title": "Aquaponics greenhouse",
+        "desc": "A legible water loop links settling, biofiltration, sump and deep-water-culture beds.",
+        "metrics": [
+          [
+            "Loop flow",
+            "42 L/min",
+            "simulated flow meter"
+          ],
+          [
+            "Dissolved O₂",
+            "6.1 mg/L",
+            "bed inlet"
+          ],
+          [
+            "pH",
+            "6.7",
+            "water loop"
+          ],
+          [
+            "Plant state",
+            "Stable",
+            "RGB + water"
+          ]
+        ],
+        "decision": "<span class=\"tag\">recirculation</span><br><strong>No change.</strong> Water and plant indicators are currently coherent.",
+        "trace": [
+          [
+            "07:36",
+            "Observe",
+            "filter + DWC inlet/outlet"
+          ],
+          [
+            "07:39",
+            "Model",
+            "loop state reconciled"
+          ],
+          [
+            "07:43",
+            "Verify",
+            "return flow stable"
+          ]
+        ]
+      },
+      "control": {
+        "type": "Edge compute / human oversight",
+        "title": "Control pavilion",
+        "desc": "The physical operating point for local inference, actuator state, weather context, rainwater storage and manual override.",
+        "metrics": [
+          [
+            "Edge status",
+            "Online",
+            "local inference + logging"
+          ],
+          [
+            "Actuators",
+            "9 / 9",
+            "valves / pump / aerator / feeder"
+          ],
+          [
+            "Manual gate",
+            "Active",
+            "high-impact changes"
+          ],
+          [
+            "Power",
+            "Solar + grid",
+            "reference configuration"
+          ]
+        ],
+        "decision": "<span class=\"tag\">bounded autonomy</span><br><strong>Autopilot stops at policy boundaries.</strong> High-risk water-quality and treatment changes remain behind a human gate.",
+        "trace": [
+          [
+            "08:08",
+            "Verify",
+            "actuator heartbeats received"
+          ],
+          [
+            "08:09",
+            "Policy",
+            "manual gate active"
+          ],
+          [
+            "08:10",
+            "Log",
+            "trace bundle committed"
+          ]
+        ]
+      }
+    },
+    "oxygen": {
+      "overview": {
+        "type": "Site / reference implementation",
+        "title": "Master plan",
+        "desc": "A compact reference farm that makes agricultural experimentation, aquatic sensing, water circulation and human oversight visible in one spatial system.",
+        "metrics": [
+          [
+            "Footprint",
+            "≈1,180 m²",
+            "conceptual site study"
+          ],
+          [
+            "Data streams",
+            "14",
+            "soil / weather / water / vision"
+          ],
+          [
+            "Low-risk automation",
+            "82%",
+            "simulated operating policy"
+          ],
+          [
+            "Replication index",
+            "0.91",
+            "modular interfaces + shared schema"
+          ]
+        ],
+        "decision": "<span class=\"tag\">routine</span><span class=\"tag\">human-supervised</span><br><strong>No high-impact intervention.</strong> The current state remains inside operating bands.",
+        "trace": [
+          [
+            "08:10",
+            "Verify",
+            "Plot C response returned to target band"
+          ],
+          [
+            "06:30",
+            "Act",
+            "Drip irrigation executed"
+          ],
+          [
+            "05:44",
+            "Decide",
+            "Water-balance trigger crossed"
+          ]
+        ]
+      },
+      "compute": {
+        "type": "Distributed sensing / edge automation",
+        "title": "Computational field layer",
+        "desc": "The farm exposes the chain from measurements to local inference to bounded action: fixed sensors, robotic phenotyping, field networking, smart irrigation and mobile imaging all converge on a common evidence trail.",
+        "metrics": [
+          [
+            "Sensing endpoints",
+            "18",
+            "soil / weather / optical / water / flow"
+          ],
+          [
+            "Robotic platforms",
+            "3",
+            "gantry / UGV / UAV"
+          ],
+          [
+            "Actuated endpoints",
+            "11",
+            "valves / pumps / feeder / aeration"
+          ],
+          [
+            "Edge nodes",
+            "2 + RTK",
+            "field gateway + pavilion"
+          ]
+        ],
+        "decision": "<span class=\"tag\">sense → compute → act</span><span class=\"tag\">human gate</span><br><strong>Keep computation local when possible.</strong> Measurements are synchronized, policies are checked at the edge, and higher-impact changes remain reviewable.",
+        "trace": [
+          [
+            "08:11",
+            "Sense",
+            "phenotyping portal completed Plot B pass"
+          ],
+          [
+            "08:12",
+            "Compute",
+            "field gateway reconciled soil + imaging state"
+          ],
+          [
+            "08:13",
+            "Act",
+            "no treatment change; valve policy remains armed"
+          ]
+        ]
+      },
+      "plotA": {
+        "type": "Maize plot / control",
+        "title": "Plot A · Control",
+        "desc": "The shared baseline for treatment comparison and model calibration.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "27.8%",
+            "paired-depth field probes"
+          ],
+          [
+            "Canopy temp.",
+            "26.1 °C",
+            "RGB + weather context"
+          ],
+          [
+            "7-day growth",
+            "+8.6%",
+            "simulated estimate"
+          ],
+          [
+            "Water use",
+            "1.00×",
+            "reference baseline"
+          ]
+        ],
+        "decision": "<span class=\"tag\">baseline</span><br><strong>Leave the control unchanged.</strong> Interpretability depends on preserving the reference treatment.",
+        "trace": [
+          [
+            "07:56",
+            "Observe",
+            "soil + canopy snapshot"
+          ],
+          [
+            "07:58",
+            "Model",
+            "growth curve updated"
+          ],
+          [
+            "08:03",
+            "Verify",
+            "baseline unchanged"
+          ]
+        ]
+      },
+      "plotB": {
+        "type": "Maize plot / biological enhancer",
+        "title": "Plot B · COS",
+        "desc": "The field most directly connected to the prior maize enhancer experiment.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "29.4%",
+            "within current band"
+          ],
+          [
+            "Canopy temp.",
+            "25.7 °C",
+            "0.4 °C below control"
+          ],
+          [
+            "7-day growth",
+            "+12.8%",
+            "simulated estimate"
+          ],
+          [
+            "Treatment",
+            "COS line",
+            "reference mapping"
+          ]
+        ],
+        "decision": "<span class=\"tag\">hold treatment</span><br><strong>No additional input today.</strong> The observed growth advantage does not justify changing the protocol.",
+        "trace": [
+          [
+            "07:42",
+            "Observe",
+            "RGB + soil profile"
+          ],
+          [
+            "07:45",
+            "Model",
+            "growth advantage remains positive"
+          ],
+          [
+            "07:49",
+            "Decide",
+            "hold treatment"
+          ]
+        ]
+      },
+      "plotC": {
+        "type": "Maize plot / low-input",
+        "title": "Plot C · Low input",
+        "desc": "A constrained-input plot used to test the boundary between resource efficiency and biological response.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "23.1%",
+            "root-zone estimate"
+          ],
+          [
+            "Water deficit",
+            "Moderate",
+            "relative to site baseline"
+          ],
+          [
+            "7-day growth",
+            "+7.4%",
+            "simulated estimate"
+          ],
+          [
+            "Input index",
+            "0.72×",
+            "water + nutrient"
+          ]
+        ],
+        "decision": "<span class=\"tag\">low input</span><br><strong>Continue the constrained policy.</strong> No signal currently requires leaving the low-input treatment.",
+        "trace": [
+          [
+            "08:02",
+            "Observe",
+            "root-zone profile"
+          ],
+          [
+            "08:04",
+            "Model",
+            "8-hour water balance"
+          ],
+          [
+            "08:06",
+            "Decide",
+            "maintain policy"
+          ]
+        ]
+      },
+      "pond": {
+        "type": "Aquaculture / multimodal sensing",
+        "title": "Fish pond",
+        "desc": "Feeding behavior and water quality are observed as one operating state rather than separate research demonstrations.",
+        "metrics": [
+          [
+            "Dissolved O₂",
+            "4.3 mg/L",
+            "water-quality probe"
+          ],
+          [
+            "pH",
+            "6.8",
+            "continuous probe"
+          ],
+          [
+            "Water temp.",
+            "24.2 °C",
+            "continuous probe"
+          ],
+          [
+            "Feeding state",
+            "Weak",
+            "audio + vision"
+          ]
+        ],
+        "decision": "<span class=\"tag\">human gate</span><span class=\"tag\">water quality</span><br><strong>Start aeration and pause the next feed.</strong> Resume feeding only after dissolved oxygen recovery is verified.",
+        "trace": [
+          [
+            "07:50",
+            "Observe",
+            "DO + pH + feeding signal"
+          ],
+          [
+            "07:52",
+            "Model",
+            "2-hour DO enters alert band"
+          ],
+          [
+            "07:55",
+            "Decide",
+            "aerate / pause feed"
+          ]
+        ]
+      },
+      "aqua": {
+        "type": "Recirculating aquaponics / DWC",
+        "title": "Aquaponics greenhouse",
+        "desc": "A legible water loop links settling, biofiltration, sump and deep-water-culture beds.",
+        "metrics": [
+          [
+            "Loop flow",
+            "42 L/min",
+            "simulated flow meter"
+          ],
+          [
+            "Dissolved O₂",
+            "6.1 mg/L",
+            "bed inlet"
+          ],
+          [
+            "pH",
+            "6.7",
+            "water loop"
+          ],
+          [
+            "Plant state",
+            "Stable",
+            "RGB + water"
+          ]
+        ],
+        "decision": "<span class=\"tag\">recirculation</span><br><strong>No change.</strong> Water and plant indicators are currently coherent.",
+        "trace": [
+          [
+            "07:36",
+            "Observe",
+            "filter + DWC inlet/outlet"
+          ],
+          [
+            "07:39",
+            "Model",
+            "loop state reconciled"
+          ],
+          [
+            "07:43",
+            "Verify",
+            "return flow stable"
+          ]
+        ]
+      },
+      "control": {
+        "type": "Edge compute / human oversight",
+        "title": "Control pavilion",
+        "desc": "The physical operating point for local inference, actuator state, weather context, rainwater storage and manual override.",
+        "metrics": [
+          [
+            "Edge status",
+            "Online",
+            "local inference + logging"
+          ],
+          [
+            "Actuators",
+            "9 / 9",
+            "valves / pump / aerator / feeder"
+          ],
+          [
+            "Manual gate",
+            "Active",
+            "high-impact changes"
+          ],
+          [
+            "Power",
+            "Solar + grid",
+            "reference configuration"
+          ]
+        ],
+        "decision": "<span class=\"tag\">bounded autonomy</span><br><strong>Autopilot stops at policy boundaries.</strong> High-risk water-quality and treatment changes remain behind a human gate.",
+        "trace": [
+          [
+            "08:08",
+            "Verify",
+            "actuator heartbeats received"
+          ],
+          [
+            "08:09",
+            "Policy",
+            "manual gate active"
+          ],
+          [
+            "08:10",
+            "Log",
+            "trace bundle committed"
+          ]
+        ]
+      }
+    },
+    "nutrient": {
+      "overview": {
+        "type": "Site / reference implementation",
+        "title": "Master plan",
+        "desc": "A compact reference farm that makes agricultural experimentation, aquatic sensing, water circulation and human oversight visible in one spatial system.",
+        "metrics": [
+          [
+            "Footprint",
+            "≈1,180 m²",
+            "conceptual site study"
+          ],
+          [
+            "Data streams",
+            "14",
+            "soil / weather / water / vision"
+          ],
+          [
+            "Low-risk automation",
+            "82%",
+            "simulated operating policy"
+          ],
+          [
+            "Replication index",
+            "0.91",
+            "modular interfaces + shared schema"
+          ]
+        ],
+        "decision": "<span class=\"tag\">routine</span><span class=\"tag\">human-supervised</span><br><strong>No high-impact intervention.</strong> The current state remains inside operating bands.",
+        "trace": [
+          [
+            "08:10",
+            "Verify",
+            "Plot C response returned to target band"
+          ],
+          [
+            "06:30",
+            "Act",
+            "Drip irrigation executed"
+          ],
+          [
+            "05:44",
+            "Decide",
+            "Water-balance trigger crossed"
+          ]
+        ]
+      },
+      "compute": {
+        "type": "Distributed sensing / edge automation",
+        "title": "Computational field layer",
+        "desc": "The farm exposes the chain from measurements to local inference to bounded action: fixed sensors, robotic phenotyping, field networking, smart irrigation and mobile imaging all converge on a common evidence trail.",
+        "metrics": [
+          [
+            "Sensing endpoints",
+            "18",
+            "soil / weather / optical / water / flow"
+          ],
+          [
+            "Robotic platforms",
+            "3",
+            "gantry / UGV / UAV"
+          ],
+          [
+            "Actuated endpoints",
+            "11",
+            "valves / pumps / feeder / aeration"
+          ],
+          [
+            "Edge nodes",
+            "2 + RTK",
+            "field gateway + pavilion"
+          ]
+        ],
+        "decision": "<span class=\"tag\">sense → compute → act</span><span class=\"tag\">human gate</span><br><strong>Keep computation local when possible.</strong> Measurements are synchronized, policies are checked at the edge, and higher-impact changes remain reviewable.",
+        "trace": [
+          [
+            "08:11",
+            "Sense",
+            "phenotyping portal completed Plot B pass"
+          ],
+          [
+            "08:12",
+            "Compute",
+            "field gateway reconciled soil + imaging state"
+          ],
+          [
+            "08:13",
+            "Act",
+            "no treatment change; valve policy remains armed"
+          ]
+        ]
+      },
+      "plotA": {
+        "type": "Maize plot / control",
+        "title": "Plot A · Control",
+        "desc": "The shared baseline for treatment comparison and model calibration.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "27.8%",
+            "paired-depth field probes"
+          ],
+          [
+            "Canopy temp.",
+            "26.1 °C",
+            "RGB + weather context"
+          ],
+          [
+            "7-day growth",
+            "+8.6%",
+            "simulated estimate"
+          ],
+          [
+            "Water use",
+            "1.00×",
+            "reference baseline"
+          ]
+        ],
+        "decision": "<span class=\"tag\">baseline</span><br><strong>Leave the control unchanged.</strong> Interpretability depends on preserving the reference treatment.",
+        "trace": [
+          [
+            "07:56",
+            "Observe",
+            "soil + canopy snapshot"
+          ],
+          [
+            "07:58",
+            "Model",
+            "growth curve updated"
+          ],
+          [
+            "08:03",
+            "Verify",
+            "baseline unchanged"
+          ]
+        ]
+      },
+      "plotB": {
+        "type": "Maize plot / biological enhancer",
+        "title": "Plot B · COS",
+        "desc": "The field most directly connected to the prior maize enhancer experiment.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "29.4%",
+            "within current band"
+          ],
+          [
+            "Canopy temp.",
+            "25.7 °C",
+            "0.4 °C below control"
+          ],
+          [
+            "7-day growth",
+            "+12.8%",
+            "simulated estimate"
+          ],
+          [
+            "Treatment",
+            "COS line",
+            "reference mapping"
+          ]
+        ],
+        "decision": "<span class=\"tag\">hold treatment</span><br><strong>No additional input today.</strong> The observed growth advantage does not justify changing the protocol.",
+        "trace": [
+          [
+            "07:42",
+            "Observe",
+            "RGB + soil profile"
+          ],
+          [
+            "07:45",
+            "Model",
+            "growth advantage remains positive"
+          ],
+          [
+            "07:49",
+            "Decide",
+            "hold treatment"
+          ]
+        ]
+      },
+      "plotC": {
+        "type": "Maize plot / low-input",
+        "title": "Plot C · Low input",
+        "desc": "A constrained-input plot used to test the boundary between resource efficiency and biological response.",
+        "metrics": [
+          [
+            "Soil VWC",
+            "23.1%",
+            "root-zone estimate"
+          ],
+          [
+            "Water deficit",
+            "Moderate",
+            "relative to site baseline"
+          ],
+          [
+            "7-day growth",
+            "+7.4%",
+            "simulated estimate"
+          ],
+          [
+            "Input index",
+            "0.72×",
+            "water + nutrient"
+          ]
+        ],
+        "decision": "<span class=\"tag\">low input</span><br><strong>Continue the constrained policy.</strong> No signal currently requires leaving the low-input treatment.",
+        "trace": [
+          [
+            "08:02",
+            "Observe",
+            "root-zone profile"
+          ],
+          [
+            "08:04",
+            "Model",
+            "8-hour water balance"
+          ],
+          [
+            "08:06",
+            "Decide",
+            "maintain policy"
+          ]
+        ]
+      },
+      "pond": {
+        "type": "Aquaculture / multimodal sensing",
+        "title": "Fish pond",
+        "desc": "Feeding behavior and water quality are observed as one operating state rather than separate research demonstrations.",
+        "metrics": [
+          [
+            "Dissolved O₂",
+            "6.3 mg/L",
+            "water-quality probe"
+          ],
+          [
+            "pH",
+            "6.8",
+            "continuous probe"
+          ],
+          [
+            "Water temp.",
+            "24.2 °C",
+            "continuous probe"
+          ],
+          [
+            "Feeding state",
+            "Moderate",
+            "audio + vision"
+          ]
+        ],
+        "decision": "<span class=\"tag\">feeding</span><br><strong>Reduce the next ration by 8%.</strong> The current multimodal feeding signal is moderate.",
+        "trace": [
+          [
+            "07:50",
+            "Observe",
+            "DO + pH + feeding signal"
+          ],
+          [
+            "07:52",
+            "Model",
+            "feeding intensity = moderate"
+          ],
+          [
+            "07:55",
+            "Decide",
+            "reduce ration"
+          ]
+        ]
+      },
+      "aqua": {
+        "type": "Recirculating aquaponics / DWC",
+        "title": "Aquaponics greenhouse",
+        "desc": "A legible water loop links settling, biofiltration, sump and deep-water-culture beds.",
+        "metrics": [
+          [
+            "Loop flow",
+            "42 L/min",
+            "simulated flow meter"
+          ],
+          [
+            "Dissolved O₂",
+            "6.1 mg/L",
+            "bed inlet"
+          ],
+          [
+            "pH",
+            "6.3",
+            "water loop"
+          ],
+          [
+            "Plant state",
+            "Watch",
+            "RGB + water"
+          ]
+        ],
+        "decision": "<span class=\"tag\">diagnose first</span><br><strong>Do not dose blindly.</strong> Reconcile pH, nitrogen and visual symptoms before changing the loop.",
+        "trace": [
+          [
+            "07:36",
+            "Observe",
+            "filter + DWC inlet/outlet"
+          ],
+          [
+            "07:39",
+            "Model",
+            "loop state reconciled"
+          ],
+          [
+            "07:43",
+            "Verify",
+            "return flow stable"
+          ]
+        ]
+      },
+      "control": {
+        "type": "Edge compute / human oversight",
+        "title": "Control pavilion",
+        "desc": "The physical operating point for local inference, actuator state, weather context, rainwater storage and manual override.",
+        "metrics": [
+          [
+            "Edge status",
+            "Online",
+            "local inference + logging"
+          ],
+          [
+            "Actuators",
+            "9 / 9",
+            "valves / pump / aerator / feeder"
+          ],
+          [
+            "Manual gate",
+            "Active",
+            "high-impact changes"
+          ],
+          [
+            "Power",
+            "Solar + grid",
+            "reference configuration"
+          ]
+        ],
+        "decision": "<span class=\"tag\">bounded autonomy</span><br><strong>Autopilot stops at policy boundaries.</strong> High-risk water-quality and treatment changes remain behind a human gate.",
+        "trace": [
+          [
+            "08:08",
+            "Verify",
+            "actuator heartbeats received"
+          ],
+          [
+            "08:09",
+            "Policy",
+            "manual gate active"
+          ],
+          [
+            "08:10",
+            "Log",
+            "trace bundle committed"
+          ]
+        ]
+      }
+    }
+  },
+  "weather": {
+    "clear": {
+      "name": "Clear / field morning",
+      "temp": 24.8,
+      "rh": 61,
+      "wind": 2.4,
+      "rain": 0,
+      "wet": 0,
+      "fog": [
+        38,
+        78
+      ],
+      "sun": [
+        0.58,
+        0.9,
+        0.37
+      ],
+      "sky": [
+        0.86,
+        0.91,
+        0.89
+      ],
+      "fogColor": [
+        0.86,
+        0.9,
+        0.88
+      ],
+      "cloud": 0.12,
+      "action": "Routine sensing. Irrigation remains demand-driven."
+    },
+    "cloud": {
+      "name": "Partly cloudy",
+      "temp": 22.6,
+      "rh": 69,
+      "wind": 3.1,
+      "rain": 0,
+      "wet": 0.04,
+      "fog": [
+        32,
+        66
+      ],
+      "sun": [
+        0.42,
+        0.74,
+        0.36
+      ],
+      "sky": [
+        0.76,
+        0.82,
+        0.8
+      ],
+      "fogColor": [
+        0.78,
+        0.83,
+        0.81
+      ],
+      "cloud": 0.56,
+      "action": "Lower solar load. Crop-water model reduces short-term evapotranspiration demand."
+    },
+    "rain": {
+      "name": "Light rain",
+      "temp": 19.8,
+      "rh": 88,
+      "wind": 4.2,
+      "rain": 3.8,
+      "wet": 0.76,
+      "fog": [
+        24,
+        54
+      ],
+      "sun": [
+        0.22,
+        0.46,
+        0.28
+      ],
+      "sky": [
+        0.61,
+        0.68,
+        0.68
+      ],
+      "fogColor": [
+        0.64,
+        0.7,
+        0.69
+      ],
+      "cloud": 0.95,
+      "action": "Rain input detected. Routine irrigation is suspended; drainage and pond inflow are watched."
+    },
+    "storm": {
+      "name": "Convective storm",
+      "temp": 18.9,
+      "rh": 94,
+      "wind": 11.6,
+      "rain": 21,
+      "wet": 1,
+      "fog": [
+        17,
+        43
+      ],
+      "sun": [
+        0.12,
+        0.3,
+        0.2
+      ],
+      "sky": [
+        0.43,
+        0.5,
+        0.51
+      ],
+      "fogColor": [
+        0.48,
+        0.54,
+        0.55
+      ],
+      "cloud": 1,
+      "action": "High wind + heavy rain: UAV launch inhibited, gantry parked, irrigation locked out, human review required."
+    },
+    "heat": {
+      "name": "Hot / high ET",
+      "temp": 34.7,
+      "rh": 38,
+      "wind": 3.8,
+      "rain": 0,
+      "wet": 0,
+      "fog": [
+        38,
+        78
+      ],
+      "sun": [
+        0.72,
+        0.96,
+        0.36
+      ],
+      "sky": [
+        0.91,
+        0.88,
+        0.78
+      ],
+      "fogColor": [
+        0.91,
+        0.88,
+        0.79
+      ],
+      "cloud": 0.06,
+      "action": "High evapotranspiration risk. Soil-water forecast shortens the next decision horizon."
+    },
+    "wind": {
+      "name": "Dry wind event",
+      "temp": 27.1,
+      "rh": 46,
+      "wind": 9.7,
+      "rain": 0,
+      "wet": 0,
+      "fog": [
+        35,
+        74
+      ],
+      "sun": [
+        0.53,
+        0.82,
+        0.33
+      ],
+      "sky": [
+        0.8,
+        0.86,
+        0.83
+      ],
+      "fogColor": [
+        0.82,
+        0.87,
+        0.84
+      ],
+      "cloud": 0.26,
+      "action": "Wind threshold exceeded for small UAVs. Ground sensing stays active; crop-motion compensation is enabled."
+    },
+    "fog": {
+      "name": "Cool morning fog",
+      "temp": 15.7,
+      "rh": 97,
+      "wind": 0.7,
+      "rain": 0.1,
+      "wet": 0.35,
+      "fog": [
+        8,
+        30
+      ],
+      "sun": [
+        0.22,
+        0.4,
+        0.27
+      ],
+      "sky": [
+        0.76,
+        0.8,
+        0.78
+      ],
+      "fogColor": [
+        0.78,
+        0.82,
+        0.8
+      ],
+      "cloud": 0.72,
+      "action": "Low-visibility state. Vision confidence is down-weighted until contrast recovers; soil and water sensors continue normally."
+    }
+  },
+  "labels": [
+    [
+      "Plot A · Control",
+      [
+        -9.4,
+        2.9,
+        7.2
+      ]
+    ],
+    [
+      "Plot B · COS",
+      [
+        -9.4,
+        3,
+        0
+      ]
+    ],
+    [
+      "Plot C · Low input",
+      [
+        -9.4,
+        2.7,
+        -7.4
+      ]
+    ],
+    [
+      "Phenotyping portal",
+      [
+        -9.5,
+        3.65,
+        0
+      ]
+    ],
+    [
+      "Autonomous scout",
+      [
+        -2.9,
+        1.95,
+        -5.15
+      ]
+    ],
+    [
+      "Field gateway",
+      [
+        -1.85,
+        3.95,
+        4.25
+      ]
+    ],
+    [
+      "Fish pond",
+      [
+        9.5,
+        4,
+        5.1
+      ]
+    ],
+    [
+      "Aquaponics",
+      [
+        10,
+        4.8,
+        -6.9
+      ]
+    ],
+    [
+      "UAV dock",
+      [
+        9.55,
+        2.1,
+        -12.1
+      ]
+    ],
+    [
+      "Control pavilion",
+      [
+        3,
+        4.2,
+        -10.9
+      ]
+    ]
+  ]
+}

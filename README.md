@@ -1,61 +1,43 @@
-# Trusted Garden — Reference Farm 001 / V0.8
+# Trusted Garden — V0.8 HD
 
-一个「物理—数字参考农场」的交互式 3D 概念展示项目。当前仅保留 **V0.8**，包含天气与日照、人物漫游、第一 / 第三人称视角、碰撞检测和渲染增强。
+在原 V0.8 农场布局与交互基础上升级的高清三维参考农场：物理材质、原生 4K 表面贴图、更精细的曲面与硬表面、叶簇树冠、曲面草叶、骨骼人物和模拟控制屏。
 
-> 所有运行数值均为模拟值，接入真实传感器前不代表实际运行情况。
+> 界面中的运行读数均为模拟值，不代表真实传感器、设备健康度或实际控制命令。
 
-- 仓库：[yance7/trusted-garden](https://github.com/yance7/trusted-garden)
-- 线上地址：<https://trusted-garden.yance.me/>（仓库 Pages 已配置此自定义域名）
-- GitHub Pages 默认地址：<https://yance7.github.io/trusted-garden/>（使用自定义域名时由 GitHub 跳转）
-- 版本详情：[V0.8 说明](v0.8/README.md)
-- 历史记录：[CHANGELOG.md](CHANGELOG.md)（历史文字保留，V0.6 / V0.7 文件已移除）
-
-## 本地打开
-
-直接用桌面 Chrome / Edge / Safari 打开：
-
-```text
-v0.8/trusted-garden-v0.8-showcase.html
-```
-
-展示页为约 12.1 MB 的自包含 HTML，不依赖外部 3D 库或在线资源，也不需要安装依赖。GLB 文件供 Blender 等 3D 软件检查，页面运行时不需要单独加载它。
-
-基本操作：拖拽旋转、滚轮缩放、右键平移、双击聚焦；`G` 进入漫游，`W A S D` 移动，`Shift` 奔跑，`V` 切换视角，`?` 查看快捷键。建议使用支持 WebGL 2 的桌面浏览器；画面较慢时切换 Performance 模式。
-
-## 目录
-
-```text
-Trusted Garden/
-├── README.md
-├── CHANGELOG.md                    历史变更记录
-├── DEPLOYMENT.md                   GitHub Actions / Pages 配置
-├── .github/workflows/pages.yml     自动部署工作流
-├── v0.8/
-│   ├── README.md
-│   ├── trusted-garden-v0.8-showcase.html
-│   └── trusted-garden-v0.8-model.glb
-├── tools/
-│   ├── README.md
-│   ├── build-site.mjs              生成网站发布目录
-│   ├── enhancement-v0.8/           V0.8 增强层源码与重建脚本
-│   ├── render-check/               浏览器与几何诊断工具
-│   └── screenshots/v0.8/           本地迭代截图，不提交 Git
-└── dist/                          生成的发布目录，不提交 Git
-```
-
-## GitHub Actions 部署
-
-首次在仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**。
-
-推送到 `main` 或在 Actions 页面手动运行 **Deploy V0.8 to GitHub Pages**，工作流会生成 `dist/` 并发布。无需 npm 依赖、额外密钥或单独的部署分支。
-
-本地生成与预览相同的网站文件：
+## 本地使用
 
 ```powershell
-node tools/build-site.mjs
-python -m http.server 8000 --directory dist
+npm ci
+npm run dev
 ```
 
-打开 <http://localhost:8000/>。生成的 `dist/index.html` 与 V0.8 展示页内容相同，网站首页直接展示场景。
+按终端显示的地址打开。新版本由页面、模型与材质资源组成，使用 HTTP 预览；不能双击单个 HTML 代替预览服务。
 
-完整步骤与故障排查见 [DEPLOYMENT.md](DEPLOYMENT.md)。开发和重建见 [tools/README.md](tools/README.md)。
+```powershell
+npm test
+npm run build
+npm run preview
+```
+
+`npm run build` 从已提交的材质和原版模型生成高清模型，再检查类型并构建 `dist/`，无需下载外部运行资源或安装 Blender。重新制作材质需要 Python、Pillow、NumPy；见 [资产说明](docs/hd-assets.md)。
+
+## 操作
+
+拖拽旋转、滚轮缩放、右键平移；`1–8` 切换视点，`T` 导览，`W` 切换天气，`G` 进入漫游，`WASD` 移动，`Shift` 奔跑，`V` 切换第一 / 第三人称。漫游中拖拽转头，双击锁定鼠标，`Esc` 退出。`S` 截图、`H` 隐藏界面拍照、`Y` 日晷、`?` 快捷键。
+
+High detail 为完整材质与接触阴影；Performance 降低输出和阴影分辨率、关闭 SSAO，保留几何与原生材质；Photo HD 提高输出像素上限。画质仍受设备支持的分辨率与内存约束。
+
+## 结构与交付
+
+- `src/`：渲染、天气、界面、相机、碰撞与人物动画。
+- `tools/assets/`：资产读取、模型增强、材质制作与导出工具。
+- `public/assets/`：网站实际使用的模型、材质、对象清单和来源记录。
+- `tests/`：资产与状态契约；`tools/verify-hd.mjs`：真实浏览器交互回归。
+- `v0.8/`：原版交付与高清生成流程的源模型，不是新版网站入口。
+- `dist/`：生成的网站，GitHub Actions 发布此目录。
+
+高清静态模型为 `public/assets/trusted-garden-v0.8-hd.glb`，骨骼人物为 `researcher-v0.8-hd.glb`。复制 / 下载静态模型时必须保留同目录的 `textures/`；模型包含网格压缩，查看器需支持 Meshopt、WebP 和 glTF 物理材质。
+
+网站仍使用 [GitHub 仓库](https://github.com/yance7/trusted-garden) 和 GitHub Actions / Pages。生产域名为 [trusted-garden.yance.me](https://trusted-garden.yance.me/)。开发分支上的改造不会自动更新线上，见 [部署说明](DEPLOYMENT.md)。
+
+设计、实施和验证分别见 [设计方案](docs/superpowers/specs/2026-10-29-v08-visual-quality-design.md)、[实施计划](docs/superpowers/plans/2026-10-29-v08-hd.md)、[验证记录](docs/hd-verification.md)。

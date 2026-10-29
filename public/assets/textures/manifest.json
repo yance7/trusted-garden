@@ -127,5 +127,14 @@
       }
     }
   },
-  "sources": "sources.json"
+  "sources": "sources.json",
+  "water": {
+    "normal": {
+      "url": "textures/water-normal.webp",
+      "width": 4096,
+      "height": 4096,
+      "bytes": 775022
+    },
+    "source": "Original periodic multi-frequency surface-normal synthesis in water.py"
+  }
 }

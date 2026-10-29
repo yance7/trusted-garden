@@ -15,7 +15,7 @@ function add(geometry, opt) {
 for (const [index, object] of source.objects.entries()) {
   const result = upgradeGeometry(object, index + 901), family = familyFor(object);
   const mat = object.material.pbrMetallicRoughness, color = ['wood','bark','soil'].includes(family) ? [.92,.92,.92,1] : mat.baseColorFactor || [.6, .6, .6, 1];
-  const kind = /glass/.test(object.material.name.toLowerCase()) ? 'glass' : /water surface|pond water|water/.test(object.material.name.toLowerCase()) && !/fish/.test(object.name.toLowerCase()) ? 'water' : 'solid';
+  const kind = /glass/.test(object.material.name.toLowerCase()) ? 'glass' : /^(?:deep water|water|water surface|pond water)$/.test(object.material.name.toLowerCase()) && !/fish/.test(object.name.toLowerCase()) ? 'water' : 'solid';
   add(result.geometry, { materialKey: `source-${object.materialIndex}`, color, family, kind, region: object.region, layer: object.layer, category: object.category, roughness: mat.roughnessFactor, metallic: mat.metallicFactor, doubleSided: object.material.doubleSided || ['plant', 'tree', 'shrub', 'ground'].includes(object.category) });
   inventory.push({ id: object.id, name: object.name, region: object.region, layer: object.layer, category: object.category, family, inputTriangles: object.indices.length / 3, outputTriangles: result.geometry.getAttribute('position').count / 3, method: result.method, bounds: object.bounds });
   const b = object.bounds;
@@ -85,8 +85,9 @@ for(const[family,maps]of Object.entries(textures.families))for(const[kind,map]of
  compressedDoc.textures.push({sampler:0,extensions:{EXT_texture_webp:{source:compressedDoc.images.length-1}}});
  textureIds.set(`${family}-${kind}`,compressedDoc.textures.length-1);
 }
+if(textures.water){const map=textures.water.normal;compressedDoc.images.push({uri:map.url,mimeType:'image/webp'});compressedDoc.textures.push({sampler:0,extensions:{EXT_texture_webp:{source:compressedDoc.images.length-1}}});textureIds.set('water-normal',compressedDoc.textures.length-1);}
 for(const material of compressedDoc.materials){
- const family=material.extras.family;if(material.extras.kind!=='solid')continue;
+ const family=material.extras.family;if(material.extras.kind==='water'){material.normalTexture={index:textureIds.get('water-normal'),scale:.55};continue;}if(material.extras.kind!=='solid')continue;
  material.pbrMetallicRoughness.baseColorTexture={index:textureIds.get(`${family}-color`)};
  material.pbrMetallicRoughness.metallicRoughnessTexture={index:textureIds.get(`${family}-orm`)};
  material.normalTexture={index:textureIds.get(`${family}-normal`),scale:family==='metal'?.25:.6};

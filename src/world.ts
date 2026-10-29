@@ -1,0 +1,68 @@
+import * as T from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { growth, growthTransform, type AppState, type Obstacle } from './state';
+import { createTelemetry } from './telemetry';
+export const assetURL = (path: string) => new URL(`assets/${path}`, document.baseURI).href;
+export interface World { root: T.Group; meshes: T.Mesh[]; solids: T.Object3D[]; obstacles: Obstacle[]; manifest: { stats: Record<string, number> }; update(state: AppState, time: number): void; dispose(): void }
+export async function loadWorld(onProgress: (value: number, message: string) => void): Promise<World> {
+  const json = async (file: string) => { const r = await fetch(assetURL(file)); if (!r.ok) throw new Error(`${file}: HTTP ${r.status}`); return r.json(); };
+  const [manifest, inventory] = await Promise.all([json('manifest.json'), json('inventory.json')]);
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  const gltf = await loader.loadAsync(assetURL(manifest.model), e => onProgress(Math.min(.9, e.loaded / manifest.stats.modelBytes * .9), 'Loading detailed farm and materials'));
+  const root = gltf.scene, meshes: T.Mesh[] = [], solids: T.Object3D[] = [], materialCache = new Map<string, T.Material>(), timeUniform = { value: 0 };
+  root.traverse(object => {
+    if (!(object instanceof T.Mesh)) return;
+    const meta = object.userData, original = object.material as T.MeshStandardMaterial;
+    meta.baseScale=object.scale.toArray(); meta.basePosition=object.position.toArray();
+    const materialKey=`${original.uuid}-${meta.region}`;
+    let material = materialCache.get(materialKey) as T.MeshStandardMaterial | undefined;
+    if (!material) {
+      const desc = original.userData;
+      if (desc.kind === 'glass') {
+        material = new T.MeshPhysicalMaterial({ color: 0xe6f4ee, roughness: .12, metalness: 0, transmission: .72, thickness: .012, ior: 1.46, transparent: true, opacity: .24, envMapIntensity: .85, side: T.DoubleSide, depthWrite: false });
+      } else if (desc.kind === 'water') {
+        material = new T.MeshPhysicalMaterial({ color: 0x4b9097, metalness: .12, roughness: .10, normalMap:original.normalMap,normalScale:new T.Vector2(.55,.55),transparent: true, opacity: .68, transmission: .10, thickness: .3, ior: 1.333, envMapIntensity: 1.1, depthWrite: false });
+      } else {
+        material = original.clone(); material.envMapIntensity = .65;
+        if (desc.family === 'metal') { material.normalScale.setScalar(.22); material.roughness = Math.max(.22, material.roughness); }
+        if (desc.family === 'leaf') { material.side = T.DoubleSide; material.roughness = .84; }
+        for (const tex of [material.map, material.normalMap, material.roughnessMap, material.metalnessMap]) if (tex) tex.anisotropy = 8;
+        if (desc.emissive) { material.emissive.copy(material.color); material.emissiveIntensity = .8; }
+      }
+      material.userData.originalColor = material.color.clone(); materialCache.set(materialKey, material);
+      material.onBeforeCompile = shader => {
+        shader.uniforms.uGardenTime = timeUniform;
+        shader.vertexShader = 'uniform float uGardenTime;\n' + shader.vertexShader;
+        if (desc.family === 'leaf') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nfloat breeze = sin(position.x*1.4+position.z*.8+uGardenTime*1.4)*0.018 * clamp(position.y-.3,0.,2.); transformed.x += breeze;');
+        if (desc.kind === 'water') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y += sin(position.x*4.+uGardenTime)*cos(position.z*3.2+uGardenTime*.7)*.012;');
+      };
+      material.customProgramCacheKey = () => `garden-${desc.family}-${desc.kind}`;
+    }
+    object.material = material; object.castShadow = meta.kind === 'solid' && !meta.grass; object.receiveShadow = true;
+    meshes.push(object);
+    if (meta.kind === 'solid' && !['plant', 'tree', 'shrub', 'ground', 'water'].includes(meta.category)) solids.push(object);
+  });
+  const telemetry=createTelemetry(root,inventory);
+  onProgress(1, 'Farm ready');
+  return { root, meshes, solids, obstacles: inventory.collisions, manifest,
+    update(state, time) {
+      telemetry.update(state);
+      timeUniform.value = time;
+      for(const material of materialCache.values()){const m=material as T.MeshStandardMaterial;if(m instanceof T.MeshPhysicalMaterial&&m.ior===1.333&&m.normalMap)m.normalMap.offset.set(time*.003,time*.002);}
+      for (const mesh of meshes) {
+        const m = mesh.userData;
+        mesh.visible = state.layers[m.layer] !== false;
+        if (m.category === 'plant' && /^plot/.test(m.region)) { const scale = growth(state.day) * (m.region === 'plotB' ? 1.045 : m.region === 'plotC' ? .93 : 1); const transform=growthTransform(m.basePosition,m.baseScale,scale); mesh.position.fromArray(transform.position);mesh.scale.fromArray(transform.scale); }
+        const mat = mesh.material as T.MeshStandardMaterial;
+        const base = mat.userData.originalColor as T.Color;
+        if (base) {
+          const risk = state.scenario === 'drought' && ['plotB', 'plotC'].includes(m.region) || state.scenario === 'oxygen' && m.region === 'pond' || state.scenario === 'nutrient' && ['aqua', 'plotA'].includes(m.region);
+          // Shared material instances must not receive per-object overlay colors.
+          if (state.overlay) mat.color.copy(base).lerp(new T.Color(risk ? 0xd3843e : 0x477c69), .22); else mat.color.copy(base);
+        }
+      }
+    },
+    dispose() { telemetry.dispose(); const textures = new Set<T.Texture>(); root.traverse(o => { if (o instanceof T.Mesh) { o.geometry.dispose(); const m = o.material as T.MeshStandardMaterial; for (const v of Object.values(m)) if (v instanceof T.Texture) textures.add(v); } }); textures.forEach(t => t.dispose()); new Set(meshes.map(m => m.material as T.Material)).forEach(m => m.dispose()); }
+  };
+}
