@@ -10,6 +10,8 @@ npm run build
 
 构建生成 `dist/`，通过 `actions/upload-pages-artifact` 和 `actions/deploy-pages` 发布。Pages 来源保持 **GitHub Actions**；不改自定义域名、DNS 或已有 HTTPS 设置。
 
+Vite 使用五个真实 HTML 入口，输出 `index.html`、`story.html`、`design.html`、`architecture.html`、`notes.html`。使用同级相对链接，兼容自定义域名和 `/trusted-garden/` 项目路径；直接打开或刷新说明页不需要服务器路由回退。首页以外的说明页不初始化 3D。
+
 本地可运行 `npm run build` 和 `npm run preview` 检查生产构建。`node tools/serve-preview.mjs` 额外提供 `/trusted-garden/` 子路径映射，供浏览器回归。
 
 ## 资源约定

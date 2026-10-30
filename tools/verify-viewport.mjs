@@ -18,7 +18,7 @@ try {
   await page.waitForFunction(() => window.__garden?.ready, null, { timeout: 300000 });
   await page.click('#enterBtn');
   const results = [];
-  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }, {width:360,height:720}, {width:320,height:720}]) {
     await page.setViewportSize(viewport);
     // Reproduce focus/scroll-into-view shifting a body with overflow:hidden.
     await page.evaluate(() => { document.body.scrollLeft = 28; });
@@ -29,6 +29,9 @@ try {
     }));
     assert.equal(initial.bodyLeft, 0, 'closed drawer must not create a horizontally scrollable body');
     assert.equal(initial.appLeft, 0, 'farm must stay aligned with viewport');
+    const hit=await page.locator('#daySlider').evaluate(slider=>{const r=slider.getBoundingClientRect();return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.id;});
+    assert.equal(hit,'daySlider',`crop-season slider must receive pointer input at ${viewport.width}px`);
+    if(viewport.width<760){const panels=await page.evaluate(()=>({view:document.querySelector('.hd-mobile-controls').getBoundingClientRect().right,weather:document.querySelector('#weatherDock').getBoundingClientRect().left}));assert.ok(panels.view+8<=panels.weather,'view controls must not cover weather readouts');}
     await page.evaluate(() => document.querySelector('#dataBtn').click());
     await page.waitForTimeout(400);
     const bounds = await page.locator('#drawer').boundingBox();

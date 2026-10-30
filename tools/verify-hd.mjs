@@ -39,8 +39,8 @@ try {
   for(const layer of ['sensors','robotics','compute','network','actuators','irrigation','waterloop'])await page.click(`[data-layer="${layer}"]`);
   for(const scenario of ['drought','oxygen','nutrient','normal']){await page.click(`[data-s="${scenario}"]`);assert.equal((await state()).scenario,scenario);}
   await page.click('#dataBtn');steps.push('layers, scenarios, drawer and quality persistence');
-  for(const button of ['system','story','basis']){await page.click(`#${button}Btn`);assert.ok(await page.locator(`#${button}Modal`).evaluate(e=>e.classList.contains('open')));await page.locator(`#${button}Modal .closebtn`).click();}
-  steps.push('three authored dialogs');
+  for(const [key,file] of [['architecture','architecture.html'],['story','story.html'],['design','design.html']])assert.ok((await page.locator(`#siteNav [data-page-link="${key}"]`).getAttribute('href')).includes(file));
+  steps.push('three independent explanatory page links');
   await page.click('#tourBtn');assert.equal((await state()).tour,true);await page.click('#nextTour');await page.click('#tourBtn');assert.equal((await state()).tour,false);steps.push('guided tour');
   await page.locator('#v7Tod').fill('75');await page.locator('#v7Tod').dispatchEvent('input');assert.equal((await state()).time,.75);
   await page.locator('#daySlider').fill('20');await page.locator('#daySlider').dispatchEvent('input');assert.equal((await state()).day,20);

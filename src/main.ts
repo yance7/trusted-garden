@@ -1,4 +1,7 @@
 import * as T from 'three';
+import './styles/scene.css';
+import './style.css';
+import {initNavigation} from './pages/navigation';
 import { createState, shadowSignature } from './state';
 import { Controls } from './controls';
 import { Environment } from './environment';
@@ -10,6 +13,7 @@ import {showTextureStatus} from './textures';
 interface GardenAPI { ready: boolean; getState(): unknown; stats(): Record<string, unknown>; focus(view: string): void; setTime(time: number): void }
 declare global { interface Window { __garden?: GardenAPI } }
 const canvas = byId<HTMLCanvasElement>('gl'), state = createState();
+initNavigation();
 if (new URLSearchParams(location.search).get('quality') === 'performance') state.quality = 'performance';
 let renderer: T.WebGLRenderer, world: World | undefined, character: Character, ui: UI;
 const loading = byId('loading'), enter = byId<HTMLButtonElement>('enterBtn'); enter.disabled = true;

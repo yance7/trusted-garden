@@ -3,19 +3,22 @@ import content from './content.json';
 import { advanceTour, type AppState, type Quality } from './state';
 import { updateFlow } from './flow';
 import type { Controls } from './controls';
+import {sceneSelection,documentHref,updatePageLinks} from './navigation';
 export const byId = <E extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as E;
 export class UI {
   state: AppState; controls: Controls; labels: { element: HTMLElement; position: T.Vector3 }[] = []; snapshot: () => void;
   tourIndex = 0; tourTime = 0; elapsed = 0;
+  entry=sceneSelection(new URLSearchParams(location.search));
   constructor(state: AppState, controls: Controls, snapshot: () => void) {
     this.state = state; this.controls = controls; this.snapshot = snapshot;
+    state.scenario=this.entry.scenario;
     document.querySelector('.wordmark span')!.textContent = 'REFERENCE FARM 001 · INTELLIGENT LANDSCAPE / V0.8 HD';
     byId('hero').querySelectorAll('p').forEach(p => { if (/self-contained|V0\.8/.test(p.textContent || '')) p.textContent = 'A high-detail reference farm. Explore the physical systems, biological loops and human-supervised intelligence. All live readings are simulated.'; });
     byId('qualityHigh').id = 'quality-high'; byId('qualityPerf').id = 'quality-performance';
     byId('quality-high').textContent = 'High detail'; byId('quality-performance').textContent = 'Performance';
     byId('quality-high').parentElement!.insertAdjacentHTML('beforeend', '<button id="quality-photo">Photo HD</button>');
     const bar = document.createElement('div'); bar.className = 'hd-toolbar'; bar.setAttribute('aria-label', 'Scene controls');
-    bar.innerHTML = '<button id="v8Walk">Walk mode</button><button id="v7Sundial">Sundial</button><button id="v7Cinema">Cinematic</button><button id="v7Shot">Snapshot</button><button id="v7Full">Fullscreen</button><button id="v7Reset">Reset</button><button id="v7Photo">Photo</button><button id="v7Help">Keys</button>';
+    bar.innerHTML = '<button id="tourBtn">Guided tour</button><button id="dataBtn" aria-controls="drawer" aria-expanded="false">Live controls</button><button id="v8Walk">Walk mode</button><button id="v7Sundial">Sundial</button><button id="v7Cinema">Cinematic</button><button id="v7Shot">Snapshot</button><button id="v7Full">Fullscreen</button><button id="v7Reset">Reset</button><button id="v7Photo">Photo</button><button id="v7Help">Keys</button>';
     document.body.append(bar);
     const mobile=document.createElement('div');mobile.className='hd-mobile-controls';mobile.innerHTML=`<label>View<select id="hdMobileView" aria-label="Farm viewpoint">${Object.entries(content.views).map(([key,v])=>`<option value="${key}">${v.story[0]}</option>`).join('')}</select></label><label>Display<select id="hdMobileMode" aria-label="Farm display mode"><option value="spatial">Spatial model</option><option value="systems">Systems model</option><option value="flow">Data & control flow</option></select></label>`;document.body.append(mobile);
     byId<HTMLSelectElement>('hdMobileView').onchange=e=>this.focus((e.target as HTMLSelectElement).value);byId<HTMLSelectElement>('hdMobileMode').onchange=e=>this.mode((e.target as HTMLSelectElement).value as AppState['mode']);
@@ -32,14 +35,13 @@ export class UI {
     for (const [id, action] of Object.entries({ v8Walk: 'walk', v8Exit: 'walk', v7Sundial: 'sundial', v7Cinema: 'cinematic', v7Shot: 'snapshot', v7Full: 'fullscreen', v7Reset: 'reset', resetViewBtn: 'reset', v7Photo: 'photo', v7ExitPhoto: 'photo', v7Help: 'help', dataBtn: 'drawer', tourBtn: 'tour' })) byId(id).onclick = () => this.action(action);
     byId('v8First').onclick = () => { controls.setPerson('first'); this.sync(); }; byId('v8Third').onclick = () => { controls.setPerson('third'); this.sync(); };
     byId('v7HelpClose').onclick = () => byId<HTMLDialogElement>('hdHelp').close();
-    for (const [button, modal] of [['storyBtn', 'storyModal'], ['basisBtn', 'basisModal'], ['systemBtn', 'systemModal']]) byId(button).onclick = () => byId(modal).classList.add('open');
-    document.querySelectorAll<HTMLElement>('.modal').forEach(modal => { modal.querySelector<HTMLElement>('.closebtn')!.onclick = () => modal.classList.remove('open'); modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); }); });
+    byId('drawer').insertAdjacentHTML('beforeend','<div class="drawer-section"><a id="drawerNotes" href="./notes.html">Read these field notes ↗</a></div>');
     byId('prevTour').onclick = () => this.next(-1); byId('nextTour').onclick = () => this.next(1);
     byId('labelSwitch').onclick = () => { state.labels = !state.labels; this.sync(); }; byId('dataOverlay').onclick = () => { state.overlay = !state.overlay; this.sync(); };
-    byId('enterBtn').onclick = () => { byId('hero').classList.add('hidden'); document.body.classList.add('hd-entered'); this.focus('overview'); };
+    byId('enterBtn').onclick = () => { byId('hero').classList.add('hidden'); document.body.classList.add('hd-entered'); this.focus(this.entry.view); };
     for (const [text, position] of content.labels) { const el = document.createElement('button'); el.className = 'hotspot'; el.textContent = String(text).replaceAll('�', '·'); el.onclick = () => { const near = Object.entries(content.views).sort((a, b) => new T.Vector3(...a[1].target as [number,number,number]).distanceTo(new T.Vector3(...position as [number,number,number])) - new T.Vector3(...b[1].target as [number,number,number]).distanceTo(new T.Vector3(...position as [number,number,number])))[0][0]; this.focus(near); }; byId('labels').append(el); this.labels.push({ element: el, position: new T.Vector3(...position as [number, number, number]) }); }
     byId('weatherDock').append(byId('quality-high').parentElement!,document.querySelector('.hd-time')!);
-    this.focus('overview'); this.weather('clear');window.addEventListener('resize',()=>this.sync());
+    this.focus(this.entry.view); this.weather('clear');window.addEventListener('resize',()=>this.sync());
   }
   toast(message: string) { const el = byId('hd-toast'); el.textContent = message; el.classList.add('visible'); setTimeout(() => el.classList.remove('visible'), 2600); }
   focus(view: string) { this.controls.focus(view); this.drawer(); this.sync(); const v = (content.views as Record<string, { story: string[] }>)[view]; if (v) for (const [i, id] of ['storyKicker', 'storyTitle', 'storyCopy'].entries()) byId(id).textContent = v.story[i]; }
@@ -76,6 +78,11 @@ export class UI {
   }
   sync() {
     const s = this.state;
+    document.documentElement.style.setProperty('--scene-toolbar-height',`${Math.ceil(document.querySelector('.hd-toolbar')!.getBoundingClientRect().height)}px`);
+    updatePageLinks(s.view,s.scenario);byId<HTMLAnchorElement>('drawerNotes').href=documentHref('notes',s.view,s.scenario);
+    const url=new URL(location.href);url.searchParams.set('view',s.view);url.searchParams.set('scenario',s.scenario);if(url.href!==location.href)history.replaceState(history.state,'',url);
+    const drawerOpen=byId('drawer').classList.contains('open');byId('dataBtn').setAttribute('aria-expanded',String(drawerOpen));byId('dataBtn').classList.toggle('active',drawerOpen);
+    for(const [id,pressed]of Object.entries({tourBtn:s.tour,v8Walk:s.walkMode,v7Sundial:s.sundial,v7Cinema:s.cinematic,v7Photo:s.photo}))byId(id).setAttribute('aria-pressed',String(pressed));
     document.querySelectorAll<HTMLElement>('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===s.mode));byId<HTMLSelectElement>('hdMobileView').value=s.view;byId<HTMLSelectElement>('hdMobileMode').value=s.mode;
     document.querySelectorAll<HTMLElement>('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === s.view));
     document.querySelectorAll<HTMLElement>('[data-w]').forEach(b => b.classList.toggle('active', b.dataset.w === s.weather));
