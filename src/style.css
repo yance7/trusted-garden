@@ -1,4 +1,5 @@
 :root{--hd-accent:#406b62;--hd-panel:rgba(247,246,238,.93)}
+#app{overflow:clip}
 .wordmark span{letter-spacing:.15em!important}
 button:focus-visible,input:focus-visible{outline:2px solid #3f786b;outline-offset:3px}
 button:disabled{opacity:.45;cursor:wait}
