@@ -1,0 +1,196 @@
+{
+  "revision": "progressive-4k-uastc-1",
+  "encoder": "basisu 1.16.3 UASTC level 3, no RDO, mipmaps, Zstandard 18",
+  "textures": [
+    {
+      "source": "textures/concrete-color.webp",
+      "preview": "previews/concrete-color.webp",
+      "compressed": "textures/concrete-color.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 495442,
+      "bytes": 20349117
+    },
+    {
+      "source": "textures/concrete-normal.webp",
+      "preview": "previews/concrete-normal.webp",
+      "compressed": "textures/concrete-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 677440,
+      "bytes": 20788445
+    },
+    {
+      "source": "textures/concrete-orm.webp",
+      "preview": "previews/concrete-orm.webp",
+      "compressed": "textures/concrete-orm.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 162260,
+      "bytes": 14925136
+    },
+    {
+      "source": "textures/wood-color.webp",
+      "preview": "previews/wood-color.webp",
+      "compressed": "textures/wood-color.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 422390,
+      "bytes": 20674335
+    },
+    {
+      "source": "textures/wood-normal.webp",
+      "preview": "previews/wood-normal.webp",
+      "compressed": "textures/wood-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 83046,
+      "bytes": 16298603
+    },
+    {
+      "source": "textures/wood-orm.webp",
+      "preview": "previews/wood-orm.webp",
+      "compressed": "textures/wood-orm.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 138064,
+      "bytes": 15151050
+    },
+    {
+      "source": "textures/soil-color.webp",
+      "preview": "previews/soil-color.webp",
+      "compressed": "textures/soil-color.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 395156,
+      "bytes": 19300215
+    },
+    {
+      "source": "textures/soil-normal.webp",
+      "preview": "previews/soil-normal.webp",
+      "compressed": "textures/soil-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 582666,
+      "bytes": 20336513
+    },
+    {
+      "source": "textures/soil-orm.webp",
+      "preview": "previews/soil-orm.webp",
+      "compressed": "textures/soil-orm.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 345136,
+      "bytes": 12629335
+    },
+    {
+      "source": "textures/bark-color.webp",
+      "preview": "previews/bark-color.webp",
+      "compressed": "textures/bark-color.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 497952,
+      "bytes": 20480809
+    },
+    {
+      "source": "textures/bark-normal.webp",
+      "preview": "previews/bark-normal.webp",
+      "compressed": "textures/bark-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 515102,
+      "bytes": 20507189
+    },
+    {
+      "source": "textures/bark-orm.webp",
+      "preview": "previews/bark-orm.webp",
+      "compressed": "textures/bark-orm.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 253538,
+      "bytes": 15180924
+    },
+    {
+      "source": "textures/leaf-color.webp",
+      "preview": "previews/leaf-color.webp",
+      "compressed": "textures/leaf-color.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 100428,
+      "bytes": 7056116
+    },
+    {
+      "source": "textures/leaf-normal.webp",
+      "preview": "previews/leaf-normal.webp",
+      "compressed": "textures/leaf-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 71670,
+      "bytes": 2651833
+    },
+    {
+      "source": "textures/leaf-orm.webp",
+      "preview": "previews/leaf-orm.webp",
+      "compressed": "textures/leaf-orm.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 202940,
+      "bytes": 3946236
+    },
+    {
+      "source": "textures/metal-color.webp",
+      "preview": "previews/metal-color.webp",
+      "compressed": "textures/metal-color.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 27518,
+      "bytes": 1176265
+    },
+    {
+      "source": "textures/metal-normal.webp",
+      "preview": "previews/metal-normal.webp",
+      "compressed": "textures/metal-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 2478,
+      "bytes": 3984
+    },
+    {
+      "source": "textures/metal-orm.webp",
+      "preview": "previews/metal-orm.webp",
+      "compressed": "textures/metal-orm.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 208820,
+      "bytes": 3787941
+    },
+    {
+      "source": "textures/water-normal.webp",
+      "preview": "previews/water-normal.webp",
+      "compressed": "textures/water-normal.ktx2",
+      "width": 4096,
+      "height": 4096,
+      "previewWidth": 1024,
+      "previewBytes": 65182,
+      "bytes": 8101942
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 :root{--hd-accent:#406b62;--hd-panel:rgba(247,246,238,.93)}
 #app{overflow:clip}
+#hdTextureStatus{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;color:#5e7162;font-size:9px;min-height:14px}#hdTextureStatus button{font:inherit;color:#294d42;background:transparent;border:1px solid #69857066;padding:3px 5px;cursor:pointer}
 .wordmark span{letter-spacing:.15em!important}
 button:focus-visible,input:focus-visible{outline:2px solid #3f786b;outline-offset:3px}
 button:disabled{opacity:.45;cursor:wait}

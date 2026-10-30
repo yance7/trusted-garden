@@ -14,11 +14,11 @@ npm run build
 
 ## 资源约定
 
-- 页面、脚本、模型、WebP 纹理和 Meshopt 解码器全部同站点托管，无 CDN 运行依赖。
+- 页面、脚本、模型、WebP 预览、KTX2 高清纹理及 Meshopt / Basis 解码器全部同站点托管，无 CDN 运行依赖。
 - 使用相对发布路径，同时兼容默认项目地址和自定义域名根路径。
 - 4K 材质已经提交；CI 不必从素材站重新下载，也不需要图形工具。
 - 各资源独立存储，避免把全部高分辨率纹理塞进一个超过 Git 单文件限制的 GLB。
-- `public/assets/` 是完整资源包；部署或迁移时不可只复制模型文件而漏掉 `textures/`。
+- `public/assets/` 是完整资源包；部署或迁移时不可只复制模型文件而漏掉 `textures/`、`previews/`、`basis/` 或 `delivery.json`。
 
 ## 验收与回滚
 

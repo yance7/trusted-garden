@@ -9,3 +9,6 @@
 *.json text eol=lf
 *.glb binary
 *.png binary
+*.webp binary
+*.ktx2 binary
+*.wasm binary

@@ -3,14 +3,25 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { growth, growthTransform, type AppState, type Obstacle } from './state';
 import { createTelemetry } from './telemetry';
+import { readAsset, readJSON } from './network';
+import { preparePreviews, TextureDelivery, type DeliveryManifest } from './textures';
 export const assetURL = (path: string) => new URL(`assets/${path}`, document.baseURI).href;
-export interface World { root: T.Group; meshes: T.Mesh[]; solids: T.Object3D[]; obstacles: Obstacle[]; ground:Obstacle[]; manifest: { stats: Record<string, number> }; update(state: AppState, time: number): void; dispose(): void }
-export async function loadWorld(onProgress: (value: number, message: string) => void): Promise<World> {
-  const json = async (file: string) => { const r = await fetch(assetURL(file)); if (!r.ok) throw new Error(`${file}: HTTP ${r.status}`); return r.json(); };
-  const [manifest, inventory] = await Promise.all([json('manifest.json'), json('inventory.json')]);
+export interface World { root: T.Group; meshes: T.Mesh[]; solids: T.Object3D[]; obstacles: Obstacle[]; ground:Obstacle[]; manifest: { stats: Record<string, number> }; delivery:TextureDelivery; update(state: AppState, time: number): void; dispose(): void }
+export async function loadWorld(onProgress: (value: number, message: string) => void, renderer:T.WebGLRenderer): Promise<World> {
+  const json = (file: string) => readJSON<any>(assetURL(file));
+  const [manifest, inventory, deliveryManifest] = await Promise.all([json('manifest.json'), json('inventory.json'),readJSON<DeliveryManifest>(assetURL('delivery.json'))]);
+  let modelProgress=0,previewProgress=0;
+  const report=()=>onProgress(.08+.60*modelProgress+.20*previewProgress,modelProgress<1?'Loading detailed farm geometry':`Preparing materials · ${Math.round(previewProgress*deliveryManifest.textures.length)} / ${deliveryManifest.textures.length}`);
+  const previewPromise=preparePreviews(deliveryManifest,assetURL,completed=>{previewProgress=completed/deliveryManifest.textures.length;report();});
+  let model:ArrayBuffer,previews:Awaited<typeof previewPromise>;
+  try{[model,previews]=await Promise.all([
+    readAsset(assetURL(manifest.model),{expectedBytes:manifest.stats.modelBytes,onProgress:(loaded,total)=>{modelProgress=Math.min(1,loaded/total);report();}}),
+    previewPromise
+  ]);}catch(error){void previewPromise.then(p=>p.dispose(),()=>{});throw error;}
   const resourceErrors:string[]=[];const manager=new T.LoadingManager();manager.onError=url=>resourceErrors.push(url);
+  manager.setURLModifier(previews.resolve);
   const loader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);
-  const gltf = await loader.loadAsync(assetURL(manifest.model), e => onProgress(Math.min(.9, e.loaded / manifest.stats.modelBytes * .9), 'Loading detailed farm and materials'));
+  const gltf = await loader.parseAsync(model,assetURL('')).finally(previews.dispose);
   if(resourceErrors.length){gltf.scene.traverse(o=>{if(o instanceof T.Mesh){o.geometry.dispose();for(const m of(Array.isArray(o.material)?o.material:[o.material])){for(const value of Object.values(m))if(value instanceof T.Texture)value.dispose();m.dispose();}}});throw new Error(`Required texture/resource could not be loaded: ${resourceErrors.map(u=>u.split('/').pop()).join(', ')}`);}
   const root = gltf.scene, meshes: T.Mesh[] = [], solids: T.Object3D[] = [], materialCache = new Map<string, T.Material>(), timeUniform = { value: 0 }, windUniform={value:.35};
   root.traverse(object => {
@@ -47,9 +58,10 @@ export async function loadWorld(onProgress: (value: number, message: string) => 
     if (meta.kind === 'solid' && !['plant', 'tree', 'shrub', 'ground', 'water'].includes(meta.category)) solids.push(object);
   });
   const telemetry=createTelemetry(root,inventory);
-  onProgress(1, 'Farm ready');
+  const delivery=new TextureDelivery(renderer,root,deliveryManifest,assetURL);
+  onProgress(.9, 'Preparing field technician');
   const ground=inventory.sourceObjects.filter((o:{name:string,bounds:{size:number[],hi:number[]}})=>/soil|row_|meadow|grass|spine|court|crosswalk|boardwalk|deck|platform|paving|link/i.test(o.name)&&o.bounds.hi[1]<=.65&&o.bounds.size[0]>.4&&o.bounds.size[2]>.4).map((o:{bounds:{lo:number[],hi:number[]}})=>({min:o.bounds.lo,max:o.bounds.hi}));
-  return { root, meshes, solids, obstacles: inventory.collisions, ground, manifest,
+  return { root, meshes, solids, obstacles: inventory.collisions, ground, manifest, delivery,
     update(state, time) {
       telemetry.update(state);
       timeUniform.value = time;
@@ -68,6 +80,6 @@ export async function loadWorld(onProgress: (value: number, message: string) => 
         }
       }
     },
-    dispose() { telemetry.dispose(); const textures = new Set<T.Texture>(); root.traverse(o => { if (o instanceof T.Mesh) { o.geometry.dispose(); const m = o.material as T.MeshStandardMaterial; for (const v of Object.values(m)) if (v instanceof T.Texture) textures.add(v); } }); textures.forEach(t => t.dispose()); new Set(meshes.map(m => m.material as T.Material)).forEach(m => m.dispose()); }
+    dispose() { delivery.dispose();telemetry.dispose(); const textures = new Set<T.Texture>(); root.traverse(o => { if (o instanceof T.Mesh) { o.geometry.dispose(); const m = o.material as T.MeshStandardMaterial; for (const v of Object.values(m)) if (v instanceof T.Texture) textures.add(v); } }); textures.forEach(t => t.dispose()); new Set(meshes.map(m => m.material as T.Material)).forEach(m => m.dispose()); }
   };
 }
