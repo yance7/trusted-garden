@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 const target = process.argv[2] || 'http://127.0.0.1:4173/';
 const out = process.env.EVIDENCE_DIR || 'evidence'; mkdirSync(out, { recursive: true });
 const args = process.env.SOFTWARE_RENDERING ? ['--use-angle=swiftshader','--enable-unsafe-swiftshader','--no-sandbox'] : ['--use-angle=d3d11','--ignore-gpu-blocklist','--disable-gpu-sandbox','--no-sandbox'];
-const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args, headless: true });
+const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', args, headless: true, ...(process.env.BROWSER_PROXY ? { proxy: { server: process.env.BROWSER_PROXY } } : {}) });
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
   const page = await context.newPage(), errors = [];
