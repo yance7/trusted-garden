@@ -34,21 +34,24 @@ export async function loadWorld(onProgress: (value: number, message: string) => 
       const desc = original.userData;
       if (desc.kind === 'glass') {
         material = new T.MeshPhysicalMaterial({ color: 0xe6f4ee, roughness: .12, metalness: 0, transmission: .72, thickness: .012, ior: 1.46, transparent: true, opacity: .24, envMapIntensity: .85, side: T.DoubleSide, depthWrite: false });
+      } else if (desc.kind === 'bubble') {
+        material = new T.MeshPhysicalMaterial({ color: 0xe8f4f6, roughness: .05, metalness: 0, transparent: true, opacity: .30, transmission: .55, thickness: .02, ior: 1.1, envMapIntensity: 1.4, depthWrite: false });
       } else if (desc.kind === 'water') {
-        material = new T.MeshPhysicalMaterial({ color: 0x4b9097, metalness: .12, roughness: .10, normalMap:original.normalMap,normalScale:new T.Vector2(.55,.55),transparent: true, opacity: .68, transmission: .10, thickness: .3, ior: 1.333, envMapIntensity: 1.1, depthWrite: false });
+        material = new T.MeshPhysicalMaterial({ color: 0x0f363c, metalness: .04, roughness: .22, normalMap:original.normalMap,normalScale:new T.Vector2(.7,.7),transparent: true, opacity: .93, transmission: .10, thickness: .6, ior: 1.333, envMapIntensity: .6, clearcoat: .4, clearcoatRoughness: .22, depthWrite: false, side: T.DoubleSide });
+        if (material.normalMap) material.normalMap.anisotropy = 8;
       } else {
         material = original.clone(); material.envMapIntensity = .65;
-        if (desc.family === 'metal') { material.normalScale.setScalar(.22); material.roughness = Math.max(.22, material.roughness); }
-        if (desc.family === 'leaf') { material.side = T.DoubleSide; material.roughness = .84; }
-        for (const tex of [material.map, material.normalMap, material.roughnessMap, material.metalnessMap]) if (tex) tex.anisotropy = 8;
-        if (desc.emissive) { material.emissive.copy(material.color); material.emissiveIntensity = .8; }
+        if (desc.family === 'metal') { material.normalScale.setScalar(.12); material.roughness = Math.max(.22, material.roughness); }
+        if (desc.cutout) { material.side = T.DoubleSide; material.alphaTest = .42; material.transparent = false; material.roughness = .82; }
+        for (const tex of [material.map, material.normalMap, material.roughnessMap, material.metalnessMap]) if (tex) tex.anisotropy = desc.family === 'metal' ? 4 : 8;
+        if (desc.emissive) { material.emissive.copy(material.color); material.emissiveIntensity = 4.5; }
       }
       material.userData.originalColor = material.color.clone(); materialCache.set(materialKey, material);
       material.onBeforeCompile = shader => {
         shader.uniforms.uGardenTime = timeUniform;
         shader.uniforms.uGardenWind=windUniform;
         shader.vertexShader = 'uniform float uGardenTime;\nuniform float uGardenWind;\n' + shader.vertexShader;
-        if (desc.family === 'leaf') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvec3 gardenWorld=(modelMatrix*vec4(transformed,1.)).xyz; float breeze=sin(gardenWorld.x*1.4+gardenWorld.z*.8+uGardenTime*1.4)*.028*uGardenWind*clamp(gardenWorld.y-.15,0.,2.);transformed.x+=breeze/max(length(modelMatrix[0].xyz),.0001);transformed.z+=breeze*.45/max(length(modelMatrix[2].xyz),.0001);');
+        if (desc.family === 'leaf' || desc.family === 'grass') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvec3 gardenWorld=(modelMatrix*vec4(transformed,1.)).xyz; float breeze=sin(gardenWorld.x*1.4+gardenWorld.z*.8+uGardenTime*1.4)*.028*uGardenWind*clamp(gardenWorld.y-.15,0.,2.);transformed.x+=breeze/max(length(modelMatrix[0].xyz),.0001);transformed.z+=breeze*.45/max(length(modelMatrix[2].xyz),.0001);');
         if (desc.kind === 'water') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y += sin(position.x*4.+uGardenTime)*cos(position.z*3.2+uGardenTime*.7)*.012;');
       };
       material.customProgramCacheKey = () => `garden-${desc.family}-${desc.kind}`;

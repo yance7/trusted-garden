@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const target=process.argv[2]||'http://127.0.0.1:4174/';mkdirSync('evidence',{recursive:true});
 const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=d3d11','--ignore-gpu-blocklist','--disable-gpu-sandbox','--no-sandbox']});
 try{
- const context=await browser.newContext({viewport:{width:1920,height:1080},recordVideo:{dir:'evidence/video',size:{width:1280,height:720}}});
+ const context=await browser.newContext({viewport:{width:1920,height:1080},...(process.env.CAPTURE_ONLY?{}:{recordVideo:{dir:'evidence/video',size:{width:1280,height:720}}})});
  const page=await context.newPage();await page.goto(target);await page.waitForFunction(()=>window.__garden?.ready,null,{timeout:120000});await page.click('#enterBtn');
  await page.click('#v7Photo');
  for(const view of ['overview','compute','control','pond','aqua','field']){await page.evaluate(v=>window.__garden.focus(v),view);await page.waitForTimeout(2200);await page.screenshot({path:`evidence/clean-${view}.png`});}

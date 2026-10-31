@@ -2,9 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync,openSync,readSync,closeSync} from 'node:fs';
 
+const textureDoc=JSON.parse(readFileSync('public/assets/textures/manifest.json'));
+const expectedMaps=Object.values(textureDoc.families).flatMap(f=>Object.values(f).filter(v=>typeof v==='object')).length+1;
 test('fast entry maps have matching native-resolution GPU textures with mipmaps',()=>{
  const manifest=JSON.parse(readFileSync('public/assets/delivery.json'));
- assert.equal(manifest.textures.length,19);
+ assert.equal(manifest.textures.length,expectedMaps);
  for(const map of manifest.textures){
   assert.ok(existsSync(`public/assets/${map.preview}`));
   assert.ok(existsSync(`public/assets/${map.compressed}`),map.compressed);

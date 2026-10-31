@@ -6,7 +6,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 export function createTechnician() {
   const root = new T.Group(); root.name = 'Field_Researcher_HD';
   const palette = [
-    ['technical-jacket', 0x59776c, .85], ['work-trousers', 0x303c3b, .91], ['skin', 0xbe9273, .68], ['safety-vest', 0xb1b970, .76], ['boots-gloves', 0x272f2c, .84], ['equipment', 0x5e7477, .42], ['reflective-piping', 0xc4dad7, .48], ['visor', 0x283b43, .20]
+    ['technical-jacket', 0x59776c, .85], ['work-trousers', 0x303c3b, .91], ['skin', 0xbe9273, .68], ['safety-vest', 0xcf7a1e, .74], ['boots-gloves', 0x272f2c, .84], ['equipment', 0x5e7477, .42], ['reflective-piping', 0xd8e6e2, .42], ['visor', 0x283b43, .20], ['hair', 0x37291f, .82]
   ];
   const materials = palette.map(([name, color, roughness]) => { const m = new T.MeshStandardMaterial({ color, roughness }); m.name = name; return m; });
   const bones = [], named = {};
@@ -31,9 +31,13 @@ export function createTechnician() {
   add(softBox(.31, .22, .22, .045), hips, [0, -.03, 0], 1);
   const jacket = new T.LatheGeometry([new T.Vector2(.143,-.13),new T.Vector2(.16,-.06),new T.Vector2(.177,.10),new T.Vector2(.195,.25),new T.Vector2(.18,.36),new T.Vector2(.09,.435),new T.Vector2(.052,.445)],40);jacket.scale(1,1,.66);
   add(jacket, chest, [0,0,0], 0);
-  add(softBox(.33, .31, .04), chest, [0, .25, -.112], 3);
-  for (const x of [-.105, .105]) { add(softBox(.074, .26, .025), chest, [x, .25, .111], 3); add(softBox(.085, .055, .022, .005), chest, [x, .18, .13], 5); add(softBox(.078, .014, .007, .003), chest, [x, .33, .13], 6); }
-  add(softBox(.014, .36, .011, .003), chest, [0, .23, .125], 6);
+  // The vest wraps the torso instead of sitting on it as a flat plate.
+  const vestBand = new T.CylinderGeometry(.200, .213, .30, 32, 1, true); vestBand.scale(1, 1, .70);
+  add(vestBand, chest, [0, .235, 0], 3);
+  add(new T.TorusGeometry(.078, .024, 10, 24).rotateX(Math.PI / 2), neck, [0, .015, 0], 0);
+  for (const x of [-.105, .105]) { add(softBox(.085, .055, .022, .005), chest, [x, .18, .146], 5); add(softBox(.078, .016, .012, .004), chest, [x, .315, .146], 6); }
+  add(softBox(.24, .016, .012, .004), chest, [0, .20, .152], 6);
+  add(softBox(.014, .36, .011, .003), chest, [0, .23, .141], 6);
   add(softBox(.29, .036, .235, .008), hips, [0, .025, 0], 4);
   add(softBox(.048, .036, .017, .005), hips, [0, .025, .125], 5);
   add(limb(.045, .07), neck, [0, .035, 0], 2);
@@ -41,8 +45,8 @@ export function createTechnician() {
   add(oval(.066, .047, .071), neck, [0, .085, .020], 2, true);
   add(oval(.018, .028, .019), neck, [0, .145, .086], 2, true);
   for (const x of [-1, 1]) { add(oval(.015, .025, .014), neck, [x * .087, .145, 0], 2, true); add(oval(.018, .007, .006), neck, [x * .033, .167, .077], 7, true); add(softBox(.04, .005, .005, .001), neck, [x * .034, .184, .076], 4, true); }
-  add(oval(.092, .06, .091), neck, [0, .235, -.003], 3, true);
-  add(softBox(.19, .014, .12, .012), neck, [0, .205, .051], 3, true);
+  add(oval(.092, .062, .091), neck, [0, .235, -.003], 8, true);
+  add(softBox(.19, .014, .12, .012), neck, [0, .205, .051], 8, true);
   add(softBox(.045, .017, .01, .004), neck, [0, .248, .086], 6, true);
   for (const [shoulder, elbow, hip, knee] of [[shoulderL, elbowL, hipL, kneeL], [shoulderR, elbowR, hipR, kneeR]]) {
     add(limb(.066, .16), shoulder, [0, -.125, 0], 0);

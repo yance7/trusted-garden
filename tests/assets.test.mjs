@@ -30,7 +30,8 @@ test('generated HD model covers all originals with normals, UVs, real material m
   const inventory = JSON.parse(readFileSync('public/assets/inventory.json'));
   assert.equal(inventory.sourceObjects.length, 2624);
   assert.equal(new Set(inventory.sourceObjects.map(o => o.id)).size, 2624);
-  assert.ok(inventory.sourceObjects.every(o => o.method && o.family && o.outputTriangles > 0));
+  assert.ok(inventory.sourceObjects.every(o => o.method && o.family && (o.outputTriangles > 0 || o.method.startsWith('superseded'))));
+  assert.ok(inventory.sourceObjects.filter(o => o.method.startsWith('superseded')).length >= 39, 'generated corn, water surface and fish tails must replace their low-detail sources');
   assert.ok(inventory.sourceObjects.filter(o => o.category === 'equipment').some(o => o.outputTriangles > o.inputTriangles));
   assert.ok(manifest.stats.triangles > 355244);
   const file=readFileSync('public/assets/'+manifest.model);
@@ -42,9 +43,9 @@ test('generated HD model covers all originals with normals, UVs, real material m
     assert.equal(pos.count,nor.count);
   }
   const textureDoc=JSON.parse(readFileSync('public/assets/textures/manifest.json'));
-  assert.equal(Object.keys(textureDoc.families).length,6);
+  assert.equal(Object.keys(textureDoc.families).length,8);
   for(const family of Object.values(textureDoc.families))for(const map of Object.values(family))if(typeof map==='object')assert.ok(existsSync('public/assets/'+map.url));
-  for(const family of Object.values(textureDoc.families))assert.equal(family.color.width,4096);
+  for(const [name,family] of Object.entries(textureDoc.families))assert.equal(family.color.width,(name==='grass'||name==='turf')?2048:4096,'turf and turf cards are screen-small; every other surface keeps native 4K color');
 });
 
 test('accessor reader honors interleaved stride and view/accessor offsets', () => {

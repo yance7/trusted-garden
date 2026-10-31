@@ -1,5 +1,5 @@
 {
-  "revision": "hd-materials-5",
+  "revision": "hd-materials-11",
   "source": "Poly Haven CC0 photographic surfaces plus original procedural leaf/metal materials",
   "families": {
     "concrete": {
@@ -91,7 +91,7 @@
         "url": "textures/leaf-color.webp",
         "width": 4096,
         "height": 4096,
-        "bytes": 685540
+        "bytes": 329700
       },
       "normal": {
         "url": "textures/leaf-normal.webp",
@@ -117,13 +117,53 @@
         "url": "textures/metal-normal.webp",
         "width": 4096,
         "height": 4096,
-        "bytes": 68546
+        "bytes": 120364
       },
       "orm": {
         "url": "textures/metal-orm.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 805714
+        "bytes": 797494
+      }
+    },
+    "grass": {
+      "color": {
+        "url": "textures/grass-color.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 148198
+      },
+      "normal": {
+        "url": "textures/grass-normal.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 880132
+      },
+      "orm": {
+        "url": "textures/grass-orm.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 344530
+      }
+    },
+    "turf": {
+      "color": {
+        "url": "textures/turf-color.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 82208
+      },
+      "normal": {
+        "url": "textures/turf-normal.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 1019750
+      },
+      "orm": {
+        "url": "textures/turf-orm.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 761358
       }
     }
   },

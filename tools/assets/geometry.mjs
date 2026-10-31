@@ -22,21 +22,102 @@ export function join(geometries) { return mergeGeometries(geometries.map(g => fi
 export function leaf(length = .35, width = .10, segments = 8, bend = .12) {
   const p = [], uv = [], idx = [];
   for (let j = 0; j <= segments; j++) {
-    const t = j / segments, w = Math.max(.002, Math.pow(Math.sin(Math.PI * t), .8) * width);
+    const t = j / segments, w = Math.max(.002, Math.pow(Math.sin(Math.PI * Math.pow(t, .85)), .7) * width * 1.14);
     for (let k = 0; k < 3; k++) { const s = k - 1; p.push(s * w, Math.sin(t * Math.PI) * bend - t * t * bend * .7 - Math.abs(s) * width * .08, t * length); uv.push(k / 2, t); }
   }
   for (let j = 0; j < segments; j++) for (let k = 0; k < 2; k++) { const i = j * 3 + k; idx.push(i, i + 3, i + 1, i + 1, i + 3, i + 4); }
   const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(p, 3)); g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return finish(g);
 }
+/** Crossed alpha cards: dense turf silhouette for a fraction of blade geometry. */
+export function grassCard(size, seed) {
+  const r = rng(seed), quads = [];
+  for (let k = 0; k < 2; k++) {
+    const g = new T.PlaneGeometry(size * (.85 + r() * .3), size * (.8 + r() * .45), 1, 1);
+    const pos = g.getAttribute('position');
+    for (let i = 0; i < pos.count; i++) { const t = (pos.getY(i) + size * .5) / size; pos.setX(i, pos.getX(i) + (r() - .5) * .02 + t * t * (r() - .5) * size * .3); pos.setY(i, pos.getY(i) + size * .5); }
+    g.rotateY(k * Math.PI / 2 + r() * .8); quads.push(g);
+  }
+  return join(quads);
+}
+export function discGrid(radius, rings, segments) {
+  const p = [], uv = [], idx = [];
+  for (let i = 0; i <= rings; i++) for (let j = 0; j <= segments; j++) {
+    const a = j / segments * Math.PI * 2, rr = radius * i / rings;
+    p.push(Math.cos(a) * rr, 0, Math.sin(a) * rr); uv.push(Math.cos(a) * rr, Math.sin(a) * rr);
+  }
+  for (let i = 0; i < rings; i++) for (let j = 0; j < segments; j++) {
+    const a = i * (segments + 1) + j, b = a + segments + 1; idx.push(a, b, a + 1, a + 1, b, b + 1);
+  }
+  const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(p, 3)); g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return finish(g, 1);
+}
+/** Recover authored plant positions from the merged stem cylinders. */
+export function cornStemPlants(object) {
+  const p = object.positions, idx = object.indices, key = new Map(), parent = [];
+  const id = i => { const k = `${Math.round(p[i * 3] * 900)},${Math.round(p[i * 3 + 1] * 900)},${Math.round(p[i * 3 + 2] * 900)}`; if (!key.has(k)) { key.set(k, parent.length); parent.push(parent.length); } return key.get(k); };
+  const find = a => { while (parent[a] !== a) { parent[a] = parent[parent[a]]; a = parent[a]; } return a; };
+  for (let i = 0; i < idx.length; i += 3) { const a = find(id(idx[i])), b = find(id(idx[i + 1])), c = find(id(idx[i + 2])); if (a !== b) parent[b] = a; if (find(c) !== a) parent[find(c)] = a; }
+  const groups = new Map();
+  for (let i = 0; i < p.length / 3; i++) { const g = find(id(i)); if (!groups.has(g)) groups.set(g, { lo: [9, 9, 9], hi: [-9, -9, -9], n: 0 }); const b = groups.get(g); for (let k = 0; k < 3; k++) { b.lo[k] = Math.min(b.lo[k], p[i * 3 + k]); b.hi[k] = Math.max(b.hi[k], p[i * 3 + k]); } b.n++; }
+  return [...groups.values()].filter(b => b.n >= 8 && b.hi[1] - b.lo[1] > .5).map(b => ({ base: [(b.lo[0] + b.hi[0]) / 2, b.lo[1], (b.lo[2] + b.hi[2]) / 2], height: b.hi[1] - b.lo[1] }));
+}
+export function cornPlant(plant, seed) {
+  const r = rng(seed), parts = [], h = plant.height, lean = (r() - .5) * .12;
+  const stem = new T.CylinderGeometry(.020, .034, h, 8, 3, true);
+  const sp = stem.getAttribute('position');
+  for (let i = 0; i < sp.count; i++) { const t = (sp.getY(i) + h / 2) / h; sp.setX(i, sp.getX(i) + lean * t * t); sp.setZ(i, sp.getZ(i) + lean * .6 * t * t); }
+  stem.translate(plant.base[0] + lean * .5, plant.base[1] + h / 2, plant.base[2] + lean * .3); parts.push({ geometry: stem, part: 'stem' });
+  for (let j = 0; j < 9; j++) {
+    const t = .28 + j * .082 + r() * .03, length = (.36 + r() * .24) * (1 - Math.abs(t - .62) * .8);
+    const g = leaf(length, .060 + r() * .018, 5, length * (.30 + t * .55));
+    g.rotateX(-.35 - t * .9 - r() * .25); g.rotateY(j * 2.39996 + r() * .5); g.rotateZ((r() - .5) * .3);
+    g.translate(plant.base[0] + lean * t * t, plant.base[1] + h * t, plant.base[2] + lean * .6 * t * t); parts.push({ geometry: g, part: 'leaf' });
+  }
+  if (r() > .12) {
+    const earY = plant.base[1] + h * .58, az = r() * 6.28;
+    const ear = new T.CylinderGeometry(.020, .034, .19, 8, 2, true); ear.rotateZ(.5); ear.rotateY(az);
+    ear.translate(plant.base[0] + Math.cos(az) * .07, earY, plant.base[2] + Math.sin(az) * .07); parts.push({ geometry: ear, part: 'ear' });
+    for (let k = 0; k < 4; k++) { const husk = leaf(.24, .030, 4, .10); husk.rotateX(-.9 - k * .12); husk.rotateY(az + k * 1.7); husk.translate(plant.base[0] + Math.cos(az) * .05, earY - .06, plant.base[2] + Math.sin(az) * .05); parts.push({ geometry: husk, part: 'husk' }); }
+    for (let k = 0; k < 5; k++) { const silk = new T.ConeGeometry(.0035, .10, 4, 1, true); silk.rotateZ((r() - .5) * .9); silk.rotateY(r() * 6.28); silk.translate(plant.base[0] + Math.cos(az) * .12, earY + .11, plant.base[2] + Math.sin(az) * .12); parts.push({ geometry: silk, part: 'silk' }); }
+  }
+  const top = plant.base[1] + h + .02;
+  const spike = new T.ConeGeometry(.010, .22, 5, 2, true); spike.translate(plant.base[0] + lean, top + .10, plant.base[2] + lean * .6); parts.push({ geometry: spike, part: 'tassel' });
+  for (let k = 0; k < 6; k++) {
+    const g = new T.ConeGeometry(.007, .13, 4, 1, true); const az = k * 1.047 + r() * .4;
+    g.rotateZ(.55 + r() * .3); g.rotateY(az); g.translate(plant.base[0] + lean + Math.cos(az) * .05, top + .05, plant.base[2] + lean * .6 + Math.sin(az) * .05); parts.push({ geometry: g, part: 'tassel' });
+  }
+  return parts;
+}
+export function fishFin(body, tail) {
+  const bc = body.bounds.center, tc = tail.bounds.center;
+  const dir = new T.Vector3(tc[0] - bc[0], 0, tc[2] - bc[2]);
+  if (dir.lengthSq() < 1e-6) dir.set(1, 0, 0); dir.normalize();
+  const h = .13, w = .075;
+  const c = new T.Vector3(tc[0], bc[1] - .28, tc[2]);
+  const p = [], idx = [];
+  const push = v => { p.push(v.x, v.y, v.z); return p.length / 3 - 1; };
+  const a = push(c.clone()), b = push(c.clone().addScaledVector(dir, w).add(new T.Vector3(0, h, 0))), d = push(c.clone().addScaledVector(dir, w * 1.5)), e = push(c.clone().addScaledVector(dir, w).add(new T.Vector3(0, -h * .8, 0)));
+  idx.push(a, b, d, a, d, e);
+  const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(p, 3)); g.setIndex(idx); g.computeVertexNormals();
+  return finish(g, 3);
+}
 function spray(o, seed) {
   const r = rng(seed), c = o.bounds.center, sz = o.bounds.size;
-  const count = /crown/i.test(o.name) ? 150 : o.category === 'shrub' ? 55 : 32, leaves = [];
+  const shells = /crown/i.test(o.name) ? 2 : 1, leaves = [];
+  const count = (/crown/i.test(o.name) ? 190 : o.category === 'shrub' ? 62 : 32) * shells;
   for (let j = 0; j < count; j++) {
-    const phi = r() * Math.PI * 2, z = r() * 2 - 1, radius = Math.pow(r(), .25), v = Math.sqrt(1 - z * z);
-    const length = o.category === 'shrub' ? .10 + r() * .11 : Math.min(.28, Math.max(.10, sz[1] * .17));
-    const g = leaf(length, length * .34, 5, length * .14);
-    g.rotateX((r() - .5) * 2); g.rotateY(phi); g.rotateZ((r() - .5) * 1.2);
-    g.translate(c[0] + Math.cos(phi) * v * sz[0] * .43 * radius, c[1] + z * sz[1] * .43 * radius, c[2] + Math.sin(phi) * v * sz[2] * .43 * radius); leaves.push(g);
+    const shell = shells === 2 ? (j % 2 ? .62 : 1) : .55 + r() * .45;
+    const phi = r() * Math.PI * 2, z = r() * 2 - 1, radius = Math.pow(r(), .22), v = Math.sqrt(1 - z * z);
+    const length = o.category === 'shrub' ? .09 + r() * .10 : Math.min(.30, Math.max(.11, sz[1] * .16)) * (.7 + r() * .6);
+    const g = leaf(length, length * .40, 4, length * .16);
+    // Leaves hang outward and slightly down so the canopy reads as layered foliage.
+    g.rotateX(-.5 - r() * 1.1); g.rotateY(phi); g.rotateZ((r() - .5) * .9);
+    g.translate(c[0] + Math.cos(phi) * v * sz[0] * .45 * radius * shell, c[1] + z * sz[1] * .45 * radius * shell, c[2] + Math.sin(phi) * v * sz[2] * .45 * radius * shell); leaves.push(g);
+  }
+  if (o.category === 'shrub') for (let j = 0; j < 7; j++) {
+    const s = new T.CylinderGeometry(.004, .007, sz[1] * .8, 5, 1, true);
+    // Twigs share the leaf batch, so pin their UVs to the silhouette's opaque spine.
+    const suv = s.getAttribute('uv'); for (let i = 0; i < suv.count; i++) suv.setXY(i, .5, .5);
+    s.rotateZ((r() - .5) * .8); s.rotateX((r() - .5) * .8); s.translate(c[0] + (r() - .5) * sz[0] * .5, c[1] - sz[1] * .1, c[2] + (r() - .5) * sz[2] * .5); leaves.push(s);
   }
   return join(leaves);
 }
@@ -68,6 +149,15 @@ function original(o) {
 }
 export function upgradeGeometry(o, seed) {
   const n = o.name.toLowerCase();
+  if (/corn_(leaves|ears|husks|tassels|stems)/.test(n)) return { geometry: null, method: 'superseded-by-generated-corn' };
+  if (n === 'pond_water') return { geometry: null, method: 'superseded-by-generated-water-surface' };
+  if (/^fish_\d+_tail$/.test(n)) return { geometry: null, method: 'superseded-by-caudal-fin' };
+  if (/^aeration_bubble_/.test(n)) {
+    const index = Number(n.split('_').pop()), c = o.bounds.center;
+    const g = new T.SphereGeometry(.028 + (index % 3) * .012, 10, 8);
+    g.translate(c[0], .58 + ((index * 37) % 60) / 100, c[2]); return { geometry: finish(g), method: 'submerged-aeration-bubble' };
+  }
+  if (/^fish/.test(n)) { const g = original(o); g.translate(0, -.28, 0); return { geometry: g, method: 'repaired-normals-physical-uv-submerged' }; }
   if (/crown|foliage/.test(n) || o.category === 'shrub') return { geometry: spray(o, seed), method: 'curved-leaf-canopy' };
   if (/aqua_leaf/.test(n)) {
     const s = o.bounds.size, g = leaf(Math.max(s[0], s[2]), Math.min(s[0], s[2]) * .5, 10, s[1] * .65);
@@ -87,12 +177,18 @@ export function upgradeGeometry(o, seed) {
   if (o.shape === 'box' && o.positions.length === 24 && !/glass|water|soil|meadow|base|row_/i.test(o.material.name + n)) {
     const g = rounded(o); if (g) return { geometry: g, method: 'oriented-beveled-solid' };
   }
+  if (o.category === 'ground' || /meadow|site_base/i.test(n)) {
+    // Source ground UVs span the whole 38x31 m site, which stretches one material tile across it.
+    const g = original(o); g.deleteAttribute('uv');
+    return { geometry: finish(g, .5), method: 'repaired-normals-world-scaled-ground-uv' };
+  }
   return { geometry: original(o), method: 'repaired-normals-physical-uv' };
 }
 
 export function familyFor(o) {
   const n = (o.material.name + ' ' + o.name).toLowerCase();
-  if (/leaf|foliage|grass|meadow|corn|shrub|reed|plant|lettuce/.test(n)) return 'leaf';
+  if (/meadow|lawn|turf/.test(n)) return 'turf';
+  if (/leaf|foliage|corn|shrub|reed|plant|lettuce/.test(n)) return 'leaf';
   if (/wood|boardwalk|timber|deck/.test(n)) return 'wood';
   if (/bark|trunk|branch/.test(n) && o.category === 'tree') return 'bark';
   if (/soil|earth|mulch/.test(n)) return 'soil';
@@ -133,14 +229,23 @@ export function extraGeometry(objects) {
 }
 
 export function grassGeometry(objects) {
-  const random = rng(20261029), blades = [], ground = objects.filter(o => /meadow|lawn|grass/i.test(o.name) && o.bounds.size[1] < .3);
-  // Ground-mapped placement: preserve paths, beds and water by only using meadow footprints.
+  const random = rng(20261029), cards = [], blades = [], ground = objects.filter(o => /meadow|lawn|grass/i.test(o.name) && o.bounds.size[1] < .3);
+  let cardSeed = 7000;
   for (const o of ground) {
-    const [sx, , sz] = o.bounds.size, count = Math.min(7000, Math.ceil(sx * sz * 12));
-    for (let j = 0; j < count; j++) {
+    const [sx, , sz] = o.bounds.size, top = o.bounds.hi[1] + .004;
+    const cardCount = Math.ceil(sx * sz * 24);
+    for (let j = 0; j < cardCount; j++) {
+      const g = grassCard(.20 + random() * .12, cardSeed++);
+      g.translate(o.bounds.lo[0] + sx * random(), top, o.bounds.lo[2] + sz * random()); cards.push(g);
+    }
+    const bladeCount = Math.ceil(sx * sz * 2);
+    for (let j = 0; j < bladeCount; j++) {
       const x = o.bounds.lo[0] + sx * random(), z = o.bounds.lo[2] + sz * random();
-      for (let b = 0; b < 3; b++) { const g = leaf(.10 + random() * .16, .009 + random() * .009, 4, .035); g.rotateX(-1.15 + random() * .28); g.rotateY(random() * 6.28); g.translate(x, o.bounds.hi[1] + .006, z); blades.push(g); }
+      for (let b = 0; b < 3; b++) { const g = leaf(.12 + random() * .18, .010 + random() * .010, 4, .04); g.rotateX(-1.12 + random() * .26); g.rotateY(random() * 6.28); g.translate(x, top, z); blades.push(g); }
     }
   }
-  return blades.length ? join(blades) : null;
+  const out = [];
+  if (cards.length) out.push({ geometry: join(cards), family: 'grass', key: 'grass-cards' });
+  if (blades.length) out.push({ geometry: join(blades), family: 'leaf', key: 'grass-blades' });
+  return out;
 }

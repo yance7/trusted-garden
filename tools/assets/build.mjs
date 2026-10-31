@@ -2,21 +2,33 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import * as T from 'three';
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { readSource, classify } from './source.mjs';
-import { upgradeGeometry, familyFor, extraGeometry, grassGeometry, finish } from './geometry.mjs';
+import { upgradeGeometry, familyFor, extraGeometry, grassGeometry, finish, cornStemPlants, cornPlant, fishFin, discGrid } from './geometry.mjs';
 
 const out = 'public/assets'; mkdirSync(out, { recursive: true });
 const source = readSource('v0.8/trusted-garden-v0.8-model.glb');
 const batches = new Map(), inventory = [], collisions = [];
+const cornPlants = new Map(), fishBodies = new Map();
+for (const object of source.objects) {
+  if (/corn_stems/i.test(object.name)) cornPlants.set(object.region, cornStemPlants(object));
+  const fish = object.name.match(/^fish_(\d+)_body$/i); if (fish) fishBodies.set(Number(fish[1]), object);
+}
 function add(geometry, opt) {
-  const key = [opt.materialKey, opt.region, opt.layer, opt.kind, opt.category === 'plant' ? 'plant' : 'solid'].join('|');
+  const key = [opt.materialKey, opt.region, opt.layer, opt.kind, opt.cutout ? 'cutout' : 'opaque', opt.category === 'plant' ? 'plant' : 'solid'].join('|');
   if (!batches.has(key)) batches.set(key, { geometries: [], ...opt });
   batches.get(key).geometries.push(finish(geometry));
 }
 for (const [index, object] of source.objects.entries()) {
   const result = upgradeGeometry(object, index + 901), family = familyFor(object);
-  const mat = object.material.pbrMetallicRoughness, color = ['wood','bark','soil'].includes(family) ? [.92,.92,.92,1] : mat.baseColorFactor || [.6, .6, .6, 1];
-  const kind = /glass/.test(object.material.name.toLowerCase()) ? 'glass' : /^(?:deep water|water|water surface|pond water)$/.test(object.material.name.toLowerCase()) && !/fish/.test(object.name.toLowerCase()) ? 'water' : 'solid';
-  add(result.geometry, { materialKey: `source-${object.materialIndex}`, color, family, kind, region: object.region, layer: object.layer, category: object.category, roughness: mat.roughnessFactor, metallic: mat.metallicFactor, doubleSided: object.material.doubleSided || ['plant', 'tree', 'shrub', 'ground'].includes(object.category) });
+  const mat = object.material.pbrMetallicRoughness, base = ['wood','bark','soil'].includes(family) ? [.92,.92,.92,1] : (mat.baseColorFactor || [.6, .6, .6, 1]).slice();
+  // The darkest authored foliage greens vanish against the lawn once masked by the leaf silhouette.
+  const lift = family === 'leaf' && base[1] > 0 && base[1] < .34 ? .34 / base[1] : 1;
+  const color = base.map((v, i) => i < 3 ? Math.min(1, v * lift) : v);
+  const kind = /^aeration_bubble_/i.test(object.name) ? 'bubble' : /glass/.test(object.material.name.toLowerCase()) ? 'glass' : /^(?:deep water|water|water surface|pond water)$/.test(object.material.name.toLowerCase()) && !/fish/.test(object.name.toLowerCase()) ? 'water' : 'solid';
+  if (!result.geometry) {
+    inventory.push({ id: object.id, name: object.name, region: object.region, layer: object.layer, category: object.category, family, inputTriangles: object.indices.length / 3, outputTriangles: 0, method: result.method, bounds: object.bounds });
+    continue;
+  }
+  add(result.geometry, { materialKey: `source-${object.materialIndex}`, color, family, kind, cutout: result.method === 'curved-leaf-canopy' || result.method === 'curved-leaf-rebuild', region: object.region, layer: object.layer, category: object.category, roughness: mat.roughnessFactor, metallic: mat.metallicFactor, doubleSided: object.material.doubleSided || ['plant', 'tree', 'shrub', 'ground'].includes(object.category) });
   inventory.push({ id: object.id, name: object.name, region: object.region, layer: object.layer, category: object.category, family, inputTriangles: object.indices.length / 3, outputTriangles: result.geometry.getAttribute('position').count / 3, method: result.method, bounds: object.bounds });
   const b = object.bounds;
   if (b.lo[1] < .70 && b.hi[1] > .85 && !['ground', 'plant', 'shrub', 'water'].includes(object.category) && !/crown|foliage|roof|canopy|overhead/i.test(object.name)) {
@@ -24,10 +36,29 @@ for (const [index, object] of source.objects.entries()) {
     if (b.size[0] < 12 && b.size[2] < 12) collisions.push({ min: b.lo, max: b.hi, name: object.name });
   }
 }
+const cornColors = { stem: [.34, .50, .22], leaf: [.38, .56, .25], ear: [.78, .72, .40], husk: [.42, .56, .26], silk: [.82, .68, .42], tassel: [.74, .62, .34] };
+let generatedCorn = 0;
+for (const [region, plants] of cornPlants) for (const [pi, plant] of plants.entries()) {
+  generatedCorn++;
+  for (const part of cornPlant(plant, pi * 131 + region.charCodeAt(4))) {
+    add(finish(part.geometry), { materialKey: `corn-${region}-${part.part}`, color: [...cornColors[part.part], 1], family: 'leaf', kind: 'solid', cutout: part.part === 'leaf' || part.part === 'husk', region, layer: 'crop', category: 'plant', roughness: .72, metallic: 0, doubleSided: true });
+  }
+}
+for (const object of source.objects) {
+  const tail = object.name.match(/^fish_(\d+)_tail$/i); if (!tail) continue;
+  const body = fishBodies.get(Number(tail[1])); if (!body) continue;
+  const base = object.material.pbrMetallicRoughness.baseColorFactor || [.5, .4, .3, 1];
+  add(fishFin(body, object), { materialKey: `fish-fin-${tail[1]}`, color: base, family: 'concrete', kind: 'solid', region: object.region, layer: object.layer, category: 'water', roughness: .45, metallic: .05, doubleSided: true });
+}
+const pondTank = source.objects.find(o => o.name === 'Pond_Tank');
+if (pondTank) {
+  const surface = discGrid(3.05, 40, 72); surface.translate(pondTank.bounds.center[0], 1.30, pondTank.bounds.center[2]);
+  add(surface, { materialKey: 'pond-water-surface', color: [.20, .45, .48, 1], family: 'concrete', kind: 'water', region: 'pond', layer: 'water', category: 'water', roughness: .07, metallic: 0, doubleSided: true });
+}
 const extras = extraGeometry(source.objects);
 for (const extra of extras) add(extra.geometry, { ...extra, layer:classify(extra.name).layer, materialKey: `extra-${extra.family}-${extra.color.join('-')}-${extra.emissive || false}`, kind: 'solid', metallic: extra.metallic ?? (extra.family === 'metal' ? .65 : 0), roughness: extra.roughness ?? .5 });
 const grass = grassGeometry(source.objects);
-if (grass) add(grass, { materialKey: 'grass', family: 'leaf', color: [.32, .46, .17, 1], kind: 'solid', region: 'site', layer: 'base', category: 'plant', doubleSided: true, roughness: .85, metallic: 0 });
+for (const entry of grass) add(entry.geometry, { materialKey: entry.key, family: entry.family, color: entry.family === 'grass' ? [1, 1, 1, 1] : [.52, .66, .32, 1], kind: 'solid', cutout: true, region: 'site', layer: 'base', category: 'plant', doubleSided: true, roughness: .8, metallic: 0 });
 
 const doc = { asset: { version: '2.0', generator: 'Trusted Garden V0.8 HD reproducible asset builder' }, scene: 0, scenes: [{ nodes: [] }], nodes: [], meshes: [], materials: [], accessors: [], bufferViews: [], buffers: [{ byteLength: 0 }] };
 const buffers = [], materials = [], materialMap = new Map(); let byteLength = 0, totalTriangles = 0;
@@ -50,13 +81,13 @@ for (const [key, batch] of batches) {
   const materialKey = `${batch.materialKey}-${batch.kind}`;
   if (!materialMap.has(materialKey)) {
     const index = doc.materials.length, base = batch.color.length === 4 ? batch.color : [...batch.color, 1];
-    const descriptor = { name: materialKey, family: batch.family, kind: batch.kind, roughness: batch.roughness ?? .7, metallic: batch.metallic ?? 0, color: base, emissive: !!batch.emissive, doubleSided: !!batch.doubleSided };
-    doc.materials.push({ name: materialKey, pbrMetallicRoughness: { baseColorFactor: base.map((v, i) => i < 3 ? (v < .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4)) : v), roughnessFactor: descriptor.roughness, metallicFactor: descriptor.metallic }, doubleSided: descriptor.doubleSided, extras: descriptor, ...(batch.kind !== 'solid' ? { alphaMode: 'BLEND' } : {}) });
+    const descriptor = { name: materialKey, family: batch.family, kind: batch.kind, cutout: !!batch.cutout, roughness: batch.roughness ?? .7, metallic: batch.metallic ?? 0, color: base, emissive: !!batch.emissive, doubleSided: !!batch.doubleSided };
+    doc.materials.push({ name: materialKey, pbrMetallicRoughness: { baseColorFactor: base.map((v, i) => i < 3 ? (v < .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4)) : v), roughnessFactor: descriptor.roughness, metallicFactor: descriptor.metallic }, doubleSided: descriptor.doubleSided, extras: descriptor, ...(batch.kind !== 'solid' ? { alphaMode: 'BLEND' } : batch.cutout ? { alphaMode: 'MASK', alphaCutoff: .42 } : {}) });
     materials.push(descriptor); materialMap.set(materialKey, index);
   }
   const pos = accessor(new Float32Array(p), 'VEC3', 34962), nor = accessor(new Float32Array(normal), 'VEC3', 34962), tex = accessor(new Float32Array(uv), 'VEC2', 34962);
   const indices = new Uint32Array(merged.index.array), idx = accessor(indices, 'SCALAR', 34963); totalTriangles += indices.length / 3;
-  const extra = { region: batch.region, layer: batch.layer, category: batch.category || 'detail', kind: batch.kind, family: batch.family, grass: batch.materialKey === 'grass' };
+  const extra = { region: batch.region, layer: batch.layer, category: batch.category || 'detail', kind: batch.kind, family: batch.family, grass: batch.materialKey === 'grass' || /^grass-/.test(batch.materialKey) };
   doc.meshes.push({ name: key, primitives: [{ attributes: { POSITION: pos, NORMAL: nor, TEXCOORD_0: tex }, indices: idx, material: materialMap.get(materialKey) }], extras: extra });
   doc.nodes.push({ name: key, mesh: doc.meshes.length - 1, extras: extra }); doc.scenes[0].nodes.push(doc.nodes.length - 1);
 }
@@ -98,7 +129,7 @@ const finalHeader=Buffer.alloc(20);finalHeader.write('glTF');finalHeader.writeUI
 const finalBinHeader=Buffer.alloc(8);finalBinHeader.writeUInt32LE(compressedBin.length);finalBinHeader.writeUInt32LE(0x004e4942,4);
 const encoded=Buffer.concat([finalHeader,finalPadded,finalBinHeader,compressedBin]);
 writeFileSync(`${out}/trusted-garden-v0.8-hd.glb`,encoded);
-const manifest = { version: '0.8-HD', model: 'trusted-garden-v0.8-hd.glb', materials, textures: 'textures/manifest.json', inventory: 'inventory.json', stats: { triangles: totalTriangles, drawBatches: batches.size, modelBytes: encoded.length, originalObjects: inventory.length, extraComponents: extras.length, generatedGrassTriangles: grass ? grass.getAttribute('position').count / 3 : 0 } };
+const manifest = { version: '0.8-HD', model: 'trusted-garden-v0.8-hd.glb', materials, textures: 'textures/manifest.json', inventory: 'inventory.json', stats: { triangles: totalTriangles, drawBatches: batches.size, modelBytes: encoded.length, originalObjects: inventory.length, extraComponents: extras.length, generatedCornPlants: generatedCorn, generatedGrassTriangles: grass.reduce((sum, e) => sum + e.geometry.getAttribute('position').count / 3, 0) } };
 writeFileSync(`${out}/manifest.json`, JSON.stringify(manifest, null, 2));
 writeFileSync(`${out}/inventory.json`, JSON.stringify({ sourceObjects: inventory, additions: extras.map(e => ({ name: e.name, region: e.region })), collisions, authoring: { textures: '4K Poly Haven CC0 photographic maps plus original authored leaf/metal; see textures/sources.json', geometry: 'Original farm geometry repaired and enhanced with procedural detail' } }));
 console.log(JSON.stringify(manifest.stats));

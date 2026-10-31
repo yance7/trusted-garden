@@ -33,7 +33,7 @@ async function boot() {
     world = completedWorld; scene.add(world.root, character.root); controls.configure(world.obstacles, world.solids,world.ground);
     function snapshot() { environment.render(); canvas.toBlob(blob => { if (!blob) return; const link = document.createElement('a'), url = URL.createObjectURL(blob); link.href = url; link.download = `trusted-garden-v0.8-hd-${state.view}.png`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1500); }, 'image/png'); }
     ui = new UI(state, controls, snapshot); enter.disabled = false;showTextureStatus(world.delivery);
-    let lastShadowSignature='',shadowRevision=0;
+    let lastShadowSignature='',shadowRevision=0,walkShadow=0;
     const stats = () => {
       const gl = renderer.getContext(), debug = gl.getExtension('WEBGL_debug_renderer_info');
       return { triangles: world!.manifest.stats.triangles, meshes: world!.meshes.length, calls: renderer.info.render.calls, renderedTriangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, modelBytes: world!.manifest.stats.modelBytes, headVisible: !character.first, camera: camera.position.toArray(), position: controls.position.toArray(), renderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER), canvas: [canvas.width, canvas.height], quality: state.quality, visibleLayers: state.layers, shadowRevision,textureDelivery:{...world!.delivery.state} };
@@ -45,7 +45,7 @@ async function boot() {
       const dt = Math.min(.05, Math.max(.001, (now - previous) / 1000)); previous = now;
       if (state.sundial) state.time = (state.time + dt / 80) % 1;
       controls.update(dt); character.root.visible = state.layers.base; character.update(controls.position, controls.yaw, controls.speed, dt, state.walkMode && state.person === 'first', now / 1000);
-      if (state.walkMode) renderer.shadowMap.needsUpdate = true;
+      if (state.walkMode) { environment.setShadowFocus(controls.position); walkShadow += dt; if (walkShadow > 1 / 12) { renderer.shadowMap.needsUpdate = true; walkShadow = 0; } } else environment.setShadowFocus(null);
       world!.update(state, now / 1000); environment.update(state, dt); ui.update(dt, camera);
       const shadowKey=shadowSignature(state);if(shadowKey!==lastShadowSignature){renderer.shadowMap.needsUpdate=true;lastShadowSignature=shadowKey;shadowRevision++;}
       renderer.info.reset(); environment.render();

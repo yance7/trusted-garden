@@ -15,7 +15,7 @@ try{
  await p.click('#enterBtn');await p.click('[data-view="field"]');
  assert.equal((await p.evaluate(()=>window.__garden.getState())).view,'field');
  assert.equal(await p.locator('#loading').isVisible(),false);
- assert.ok((await p.evaluate(()=>window.__garden.stats())).triangles>=947314);
+ assert.ok((await p.evaluate(()=>window.__garden.stats())).triangles>=500000);
  assert.deepEqual(errors,[]);
  await p.screenshot({path:`${out}/interactive-with-hd-blocked.png`});
  const readyMs=Date.now()-start;

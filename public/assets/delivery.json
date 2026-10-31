@@ -129,8 +129,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 100428,
-      "bytes": 7056116
+      "previewBytes": 52972,
+      "bytes": 3689952
     },
     {
       "source": "textures/leaf-normal.webp",
@@ -169,8 +169,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 2478,
-      "bytes": 3984
+      "previewBytes": 2344,
+      "bytes": 487822
     },
     {
       "source": "textures/metal-orm.webp",
@@ -179,8 +179,68 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 208820,
+      "previewBytes": 208212,
       "bytes": 3787941
+    },
+    {
+      "source": "textures/grass-color.webp",
+      "preview": "previews/grass-color.webp",
+      "compressed": "textures/grass-color.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 67862,
+      "bytes": 1183991
+    },
+    {
+      "source": "textures/grass-normal.webp",
+      "preview": "previews/grass-normal.webp",
+      "compressed": "textures/grass-normal.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 171756,
+      "bytes": 4007804
+    },
+    {
+      "source": "textures/grass-orm.webp",
+      "preview": "previews/grass-orm.webp",
+      "compressed": "textures/grass-orm.ktx2",
+      "width": 1024,
+      "height": 1024,
+      "previewWidth": 1024,
+      "previewBytes": 181998,
+      "bytes": 1086634
+    },
+    {
+      "source": "textures/turf-color.webp",
+      "preview": "previews/turf-color.webp",
+      "compressed": "textures/turf-color.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 24040,
+      "bytes": 1013941
+    },
+    {
+      "source": "textures/turf-normal.webp",
+      "preview": "previews/turf-normal.webp",
+      "compressed": "textures/turf-normal.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 259084,
+      "bytes": 4164939
+    },
+    {
+      "source": "textures/turf-orm.webp",
+      "preview": "previews/turf-orm.webp",
+      "compressed": "textures/turf-orm.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 197478,
+      "bytes": 3985506
     },
     {
       "source": "textures/water-normal.webp",
