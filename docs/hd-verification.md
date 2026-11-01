@@ -124,3 +124,5 @@ CI 在 Linux 上重新运行资产生成，`trusted-garden-v0.8-hd.glb` 比本�
 本机验证（Intel Arc B390）：资产与状态测试 18/18、类型检查与生产构建通过；`verify-hd` 十二项交互步骤通过、错误为零；`verify-review-fixes` 8/8；`verify-pages` 13 项；`verify-viewport` 四档；`verify-texture-recovery` 三种失败模式均补齐；`verify-loading` 约 5.19 秒进入，28/28 张原生材质补齐，压缩 mipmaps 数据 433,412,168 字节。
 
 帧时：八视点固定路径 30 秒，performance 均值 11.08 ms / p95 16.8 ms，high 均值 15.47 ms / p95 16.9 ms；20 秒漫游前进均值 16.18 ms / p95 25.0 ms、绘制批次 957。上一版 high 均值 14.47 ms，本轮新增约 2.3 万面地被、茎族与更细的金属微表面，代价约 1 ms。总面数 913,640、语义批次 351、模型 10.41 MB、交付材质 28 张（预览 5.94 MB、KTX2 253.32 MB）。
+
+发布复核：`865bcae` 的 Pages 运行 `41268108352` build / deploy 均成功。线上 `farm-Dan9j_EO.js` 与 `content-DYb_18uY.js` 的 SHA-256 与本地产物一致，新增的 `stalk-color.ktx2` 哈希一致；线上统计 913,640 个三角面，模型 10,919,288 字节（比本地产物多 12 字节，仍是基色浮点最后一位的 glibc / MSVC 差异）。真实网络经本机代理复核：`verify-pages` 13 项、`verify-hd` 十二项交互步骤均零错误，`verify-loading` 约 12.0 秒进入（代理链路延迟，不代表用户网络），后台补齐 28/28 张原生材质、433,412,168 字节。
