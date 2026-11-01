@@ -37,7 +37,7 @@ export async function loadWorld(onProgress: (value: number, message: string) => 
       } else if (desc.kind === 'bubble') {
         material = new T.MeshPhysicalMaterial({ color: 0xe8f4f6, roughness: .05, metalness: 0, transparent: true, opacity: .30, transmission: .55, thickness: .02, ior: 1.1, envMapIntensity: 1.4, depthWrite: false });
       } else if (desc.kind === 'water') {
-        material = new T.MeshPhysicalMaterial({ color: 0x0f363c, metalness: .04, roughness: .22, normalMap:original.normalMap,normalScale:new T.Vector2(.7,.7),transparent: true, opacity: .93, transmission: .10, thickness: .6, ior: 1.333, envMapIntensity: .6, clearcoat: .4, clearcoatRoughness: .22, depthWrite: false, side: T.DoubleSide });
+        material = new T.MeshPhysicalMaterial({ color: 0x12383e, metalness: .02, roughness: .20, normalMap:original.normalMap,normalScale:new T.Vector2(.45,.45),transparent: true, opacity: .94, transmission: .08, thickness: .6, ior: 1.333, envMapIntensity: 1.15, clearcoat: .5, clearcoatRoughness: .16, depthWrite: false, side: T.DoubleSide });
         if (material.normalMap) material.normalMap.anisotropy = 8;
       } else {
         material = original.clone(); material.envMapIntensity = .65;
@@ -51,7 +51,7 @@ export async function loadWorld(onProgress: (value: number, message: string) => 
         shader.uniforms.uGardenTime = timeUniform;
         shader.uniforms.uGardenWind=windUniform;
         shader.vertexShader = 'uniform float uGardenTime;\nuniform float uGardenWind;\n' + shader.vertexShader;
-        if (desc.family === 'leaf' || desc.family === 'grass') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvec3 gardenWorld=(modelMatrix*vec4(transformed,1.)).xyz; float breeze=sin(gardenWorld.x*1.4+gardenWorld.z*.8+uGardenTime*1.4)*.028*uGardenWind*clamp(gardenWorld.y-.15,0.,2.);transformed.x+=breeze/max(length(modelMatrix[0].xyz),.0001);transformed.z+=breeze*.45/max(length(modelMatrix[2].xyz),.0001);');
+        if (['leaf', 'grass', 'stalk'].includes(desc.family)) shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvec3 gardenWorld=(modelMatrix*vec4(transformed,1.)).xyz; float breeze=sin(gardenWorld.x*1.4+gardenWorld.z*.8+uGardenTime*1.4)*.028*uGardenWind*clamp(gardenWorld.y-.15,0.,2.);transformed.x+=breeze/max(length(modelMatrix[0].xyz),.0001);transformed.z+=breeze*.45/max(length(modelMatrix[2].xyz),.0001);');
         if (desc.kind === 'water') shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y += sin(position.x*4.+uGardenTime)*cos(position.z*3.2+uGardenTime*.7)*.012;');
       };
       material.customProgramCacheKey = () => `garden-${desc.family}-${desc.kind}`;

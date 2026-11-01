@@ -116,7 +116,7 @@
     },
     {
       "name": "source-7-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
       "roughness": 0.9,
@@ -404,7 +404,7 @@
     },
     {
       "name": "source-13-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
       "roughness": 0.78,
@@ -836,7 +836,7 @@
     },
     {
       "name": "source-57-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
       "roughness": 0.78,
@@ -1012,7 +1012,7 @@
     },
     {
       "name": "source-68-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
       "roughness": 0.74,
@@ -1380,15 +1380,15 @@
     },
     {
       "name": "corn-plotA-stem-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
-      "roughness": 0.72,
+      "roughness": 0.78,
       "metallic": 0,
       "color": [
-        0.34,
-        0.5,
-        0.22,
+        0.46,
+        0.58,
+        0.3,
         1
       ],
       "emissive": false,
@@ -1476,15 +1476,15 @@
     },
     {
       "name": "corn-plotB-stem-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
-      "roughness": 0.72,
+      "roughness": 0.78,
       "metallic": 0,
       "color": [
-        0.34,
-        0.5,
-        0.22,
+        0.46,
+        0.58,
+        0.3,
         1
       ],
       "emissive": false,
@@ -1572,15 +1572,15 @@
     },
     {
       "name": "corn-plotC-stem-solid",
-      "family": "leaf",
+      "family": "stalk",
       "kind": "solid",
       "cutout": false,
-      "roughness": 0.72,
+      "roughness": 0.78,
       "metallic": 0,
       "color": [
-        0.34,
-        0.5,
-        0.22,
+        0.46,
+        0.58,
+        0.3,
         1
       ],
       "emissive": false,
@@ -2230,12 +2230,12 @@
   "textures": "textures/manifest.json",
   "inventory": "inventory.json",
   "stats": {
-    "triangles": 890860,
-    "drawBatches": 344,
-    "modelBytes": 10583112,
+    "triangles": 913640,
+    "drawBatches": 351,
+    "modelBytes": 10919276,
     "originalObjects": 2624,
     "extraComponents": 286,
     "generatedCornPlants": 378,
-    "generatedGrassTriangles": 37980
+    "generatedGrassTriangles": 60760
   }
 }

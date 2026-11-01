@@ -13,7 +13,7 @@ for (const object of source.objects) {
   const fish = object.name.match(/^fish_(\d+)_body$/i); if (fish) fishBodies.set(Number(fish[1]), object);
 }
 function add(geometry, opt) {
-  const key = [opt.materialKey, opt.region, opt.layer, opt.kind, opt.cutout ? 'cutout' : 'opaque', opt.category === 'plant' ? 'plant' : 'solid'].join('|');
+  const key = [opt.materialKey, opt.family, opt.region, opt.layer, opt.kind, opt.cutout ? 'cutout' : 'opaque', opt.category === 'plant' ? 'plant' : 'solid'].join('|');
   if (!batches.has(key)) batches.set(key, { geometries: [], ...opt });
   batches.get(key).geometries.push(finish(geometry));
 }
@@ -21,7 +21,7 @@ for (const [index, object] of source.objects.entries()) {
   const result = upgradeGeometry(object, index + 901), family = familyFor(object);
   const mat = object.material.pbrMetallicRoughness, base = ['wood','bark','soil'].includes(family) ? [.92,.92,.92,1] : (mat.baseColorFactor || [.6, .6, .6, 1]).slice();
   // The darkest authored foliage greens vanish against the lawn once masked by the leaf silhouette.
-  const lift = family === 'leaf' && base[1] > 0 && base[1] < .34 ? .34 / base[1] : 1;
+  const lift = ['leaf', 'stalk'].includes(family) && base[1] > 0 && base[1] < .34 ? .34 / base[1] : 1;
   const color = base.map((v, i) => i < 3 ? Math.min(1, v * lift) : v);
   const kind = /^aeration_bubble_/i.test(object.name) ? 'bubble' : /glass/.test(object.material.name.toLowerCase()) ? 'glass' : /^(?:deep water|water|water surface|pond water)$/.test(object.material.name.toLowerCase()) && !/fish/.test(object.name.toLowerCase()) ? 'water' : 'solid';
   if (!result.geometry) {
@@ -36,12 +36,12 @@ for (const [index, object] of source.objects.entries()) {
     if (b.size[0] < 12 && b.size[2] < 12) collisions.push({ min: b.lo, max: b.hi, name: object.name });
   }
 }
-const cornColors = { stem: [.34, .50, .22], leaf: [.38, .56, .25], ear: [.78, .72, .40], husk: [.42, .56, .26], silk: [.82, .68, .42], tassel: [.74, .62, .34] };
+const cornColors = { stem: [.46, .58, .30], leaf: [.38, .56, .25], ear: [.78, .72, .40], husk: [.42, .56, .26], silk: [.82, .68, .42], tassel: [.74, .62, .34] };
 let generatedCorn = 0;
 for (const [region, plants] of cornPlants) for (const [pi, plant] of plants.entries()) {
   generatedCorn++;
   for (const part of cornPlant(plant, pi * 131 + region.charCodeAt(4))) {
-    add(finish(part.geometry), { materialKey: `corn-${region}-${part.part}`, color: [...cornColors[part.part], 1], family: 'leaf', kind: 'solid', cutout: part.part === 'leaf' || part.part === 'husk', region, layer: 'crop', category: 'plant', roughness: .72, metallic: 0, doubleSided: true });
+    add(finish(part.geometry), { materialKey: `corn-${region}-${part.part}`, color: [...cornColors[part.part], 1], family: part.part === 'stem' ? 'stalk' : 'leaf', kind: 'solid', cutout: part.part === 'leaf' || part.part === 'husk', region, layer: 'crop', category: 'plant', roughness: part.part === 'stem' ? .78 : .72, metallic: 0, doubleSided: true });
   }
 }
 for (const object of source.objects) {
@@ -52,7 +52,7 @@ for (const object of source.objects) {
 }
 const pondTank = source.objects.find(o => o.name === 'Pond_Tank');
 if (pondTank) {
-  const surface = discGrid(3.05, 40, 72); surface.translate(pondTank.bounds.center[0], 1.30, pondTank.bounds.center[2]);
+  const surface = discGrid(3.05, 40, 72, .22); surface.translate(pondTank.bounds.center[0], 1.30, pondTank.bounds.center[2]);
   add(surface, { materialKey: 'pond-water-surface', color: [.20, .45, .48, 1], family: 'concrete', kind: 'water', region: 'pond', layer: 'water', category: 'water', roughness: .07, metallic: 0, doubleSided: true });
 }
 const extras = extraGeometry(source.objects);
@@ -121,7 +121,7 @@ for(const material of compressedDoc.materials){
  const family=material.extras.family;if(material.extras.kind==='water'){material.normalTexture={index:textureIds.get('water-normal'),scale:.55};continue;}if(material.extras.kind!=='solid')continue;
  material.pbrMetallicRoughness.baseColorTexture={index:textureIds.get(`${family}-color`)};
  material.pbrMetallicRoughness.metallicRoughnessTexture={index:textureIds.get(`${family}-orm`)};
- material.normalTexture={index:textureIds.get(`${family}-normal`),scale:family==='metal'?.25:.6};
+ material.normalTexture={index:textureIds.get(`${family}-normal`),scale:family==='metal'?.15:.6};
  material.occlusionTexture={index:textureIds.get(`${family}-orm`),strength:.45};
 }
 const finalJSON=Buffer.from(JSON.stringify(compressedDoc)), finalPadded=Buffer.alloc(Math.ceil(finalJSON.length/4)*4,32);finalJSON.copy(finalPadded);

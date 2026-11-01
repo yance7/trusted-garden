@@ -39,16 +39,16 @@ export function grassCard(size, seed) {
   }
   return join(quads);
 }
-export function discGrid(radius, rings, segments) {
+export function discGrid(radius, rings, segments, uvScale = 1) {
   const p = [], uv = [], idx = [];
   for (let i = 0; i <= rings; i++) for (let j = 0; j <= segments; j++) {
     const a = j / segments * Math.PI * 2, rr = radius * i / rings;
-    p.push(Math.cos(a) * rr, 0, Math.sin(a) * rr); uv.push(Math.cos(a) * rr, Math.sin(a) * rr);
+    p.push(Math.cos(a) * rr, 0, Math.sin(a) * rr); uv.push(Math.cos(a) * rr * uvScale, Math.sin(a) * rr * uvScale);
   }
   for (let i = 0; i < rings; i++) for (let j = 0; j < segments; j++) {
     const a = i * (segments + 1) + j, b = a + segments + 1; idx.push(a, b, a + 1, a + 1, b, b + 1);
   }
-  const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(p, 3)); g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return finish(g, 1);
+  const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(p, 3)); g.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return finish(g);
 }
 /** Recover authored plant positions from the merged stem cylinders. */
 export function cornStemPlants(object) {
@@ -188,7 +188,9 @@ export function upgradeGeometry(o, seed) {
 export function familyFor(o) {
   const n = (o.material.name + ' ' + o.name).toLowerCase();
   if (/meadow|lawn|turf/.test(n)) return 'turf';
-  if (/leaf|foliage|corn|shrub|reed|plant|lettuce/.test(n)) return 'leaf';
+  // Bare 'stem' also occurs on masts and payload hardware, so require plant context.
+  if (/culm|reed/.test(n) || (/stalk|stem|midrib/.test(n) && /corn|hero|specimen|tassel|silk|husk|aqua|plant|leaf|shrub|lettuce|field/i.test(n))) return 'stalk';
+  if (/leaf|foliage|corn|shrub|plant|lettuce/.test(n)) return 'leaf';
   if (/wood|boardwalk|timber|deck/.test(n)) return 'wood';
   if (/bark|trunk|branch/.test(n) && o.category === 'tree') return 'bark';
   if (/soil|earth|mulch/.test(n)) return 'soil';
@@ -229,18 +231,27 @@ export function extraGeometry(objects) {
 }
 
 export function grassGeometry(objects) {
-  const random = rng(20261029), cards = [], blades = [], ground = objects.filter(o => /meadow|lawn|grass/i.test(o.name) && o.bounds.size[1] < .3);
+  const random = rng(20261029), cards = [], blades = [];
+  const lawn = objects.filter(o => /meadow|lawn|grass|site_base/i.test(o.name) && o.bounds.size[1] < .5);
   let cardSeed = 7000;
-  for (const o of ground) {
-    const [sx, , sz] = o.bounds.size, top = o.bounds.hi[1] + .004;
-    const cardCount = Math.ceil(sx * sz * 24);
+  for (const o of lawn) {
+    // Anything solid standing on or above this surface keeps its own footprint bare.
+    const blockers = objects.filter(p => p !== o && !['plant', 'tree', 'shrub'].includes(p.category)
+      && p.bounds.size[0] > .4 && p.bounds.size[2] > .4
+      && p.bounds.hi[1] > o.bounds.hi[1] - .02 && p.bounds.lo[1] < o.bounds.hi[1] + .12);
+    const clear = (x, z) => !blockers.some(p => x > p.bounds.lo[0] - .22 && x < p.bounds.hi[0] + .22 && z > p.bounds.lo[2] - .22 && z < p.bounds.hi[2] + .22);
+    const [sx, , sz] = o.bounds.size, top = o.bounds.hi[1] + .004, base = /site_base/i.test(o.name);
+    const cardCount = Math.ceil(sx * sz * (base ? 10 : 24));
     for (let j = 0; j < cardCount; j++) {
+      const x = o.bounds.lo[0] + sx * random(), z = o.bounds.lo[2] + sz * random();
+      if (!clear(x, z)) continue;
       const g = grassCard(.20 + random() * .12, cardSeed++);
-      g.translate(o.bounds.lo[0] + sx * random(), top, o.bounds.lo[2] + sz * random()); cards.push(g);
+      g.translate(x, top, z); cards.push(g);
     }
-    const bladeCount = Math.ceil(sx * sz * 2);
+    const bladeCount = Math.ceil(sx * sz * (base ? .6 : 2));
     for (let j = 0; j < bladeCount; j++) {
       const x = o.bounds.lo[0] + sx * random(), z = o.bounds.lo[2] + sz * random();
+      if (!clear(x, z)) continue;
       for (let b = 0; b < 3; b++) { const g = leaf(.12 + random() * .18, .010 + random() * .010, 4, .04); g.rotateX(-1.12 + random() * .26); g.rotateY(random() * 6.28); g.translate(x, top, z); blades.push(g); }
     }
   }

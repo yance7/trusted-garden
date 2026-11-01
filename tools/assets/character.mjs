@@ -31,9 +31,11 @@ export function createTechnician() {
   add(softBox(.31, .22, .22, .045), hips, [0, -.03, 0], 1);
   const jacket = new T.LatheGeometry([new T.Vector2(.143,-.13),new T.Vector2(.16,-.06),new T.Vector2(.177,.10),new T.Vector2(.195,.25),new T.Vector2(.18,.36),new T.Vector2(.09,.435),new T.Vector2(.052,.445)],40);jacket.scale(1,1,.66);
   add(jacket, chest, [0,0,0], 0);
-  // The vest wraps the torso instead of sitting on it as a flat plate.
-  const vestBand = new T.CylinderGeometry(.200, .213, .30, 32, 1, true); vestBand.scale(1, 1, .70);
+  // The vest must sit proud of the jacket everywhere along its height, and its reflective
+  // rings proud of the vest; anything inside the shell is invisible dead geometry.
+  const vestBand = new T.CylinderGeometry(.205, .215, .30, 32, 1, true); vestBand.scale(1, 1, .70);
   add(vestBand, chest, [0, .235, 0], 3);
+  for (const y of [.175, .30]) { const ring = new T.CylinderGeometry(.209, .211, .026, 32, 1, true); ring.scale(1, 1, .70); add(ring, chest, [0, y, 0], 6); }
   add(new T.TorusGeometry(.078, .024, 10, 24).rotateX(Math.PI / 2), neck, [0, .015, 0], 0);
   for (const x of [-.105, .105]) { add(softBox(.085, .055, .022, .005), chest, [x, .18, .146], 5); add(softBox(.078, .016, .012, .004), chest, [x, .315, .146], 6); }
   add(softBox(.24, .016, .012, .004), chest, [0, .20, .152], 6);

@@ -43,9 +43,9 @@ test('generated HD model covers all originals with normals, UVs, real material m
     assert.equal(pos.count,nor.count);
   }
   const textureDoc=JSON.parse(readFileSync('public/assets/textures/manifest.json'));
-  assert.equal(Object.keys(textureDoc.families).length,8);
+  assert.equal(Object.keys(textureDoc.families).length,9);
   for(const family of Object.values(textureDoc.families))for(const map of Object.values(family))if(typeof map==='object')assert.ok(existsSync('public/assets/'+map.url));
-  for(const [name,family] of Object.entries(textureDoc.families))assert.equal(family.color.width,(name==='grass'||name==='turf')?2048:4096,'turf and turf cards are screen-small; every other surface keeps native 4K color');
+  for(const [name,family] of Object.entries(textureDoc.families))assert.equal(family.color.width,['grass','turf','stalk'].includes(name)?2048:4096,'turf and turf cards are screen-small; every other surface keeps native 4K color');
 });
 
 test('accessor reader honors interleaved stride and view/accessor offsets', () => {
@@ -53,4 +53,31 @@ test('accessor reader honors interleaved stride and view/accessor offsets', () =
   for (const [i, v] of [1, 2, 9, 3, 4, 9].entries()) b.writeFloatLE(v, 12 + i * 4);
   const doc = { bufferViews: [{ byteOffset: 8, byteLength: 32, byteStride: 12 }], accessors: [{ bufferView: 0, byteOffset: 4, componentType: 5126, type: 'VEC2', count: 2 }] };
   assert.deepEqual([...readAccessor(doc, b, 0)], [1, 2, 3, 4]);
+});
+
+test('procedural material tiles stay seamless across repeats', async () => {
+  const { default: sharp } = await import('sharp');
+  const doc = JSON.parse(readFileSync('public/assets/textures/manifest.json'));
+  // Only tiles that repeat across one continuous surface are held to this; the leaf and grass
+  // cards sample the tile once per quad, so their wrap edge is never visible.
+  const tiling = ['turf', 'stalk', 'metal'];
+  const maps = Object.entries(doc.families)
+    .filter(([name, f]) => tiling.includes(name) && !f.photographic)
+    .flatMap(([name, f]) => Object.entries(f).filter(([, v]) => typeof v === 'object').map(([k, v]) => [`${name}-${k}`, v.url]));
+  maps.push(['water-normal', doc.water.normal.url]);
+  assert.ok(maps.length >= 9, 'every tiling procedural tile plus the water normal are covered');
+  const column = async (file, left, height) => sharp(file).extract({ left, top: 0, width: 1, height }).removeAlpha().raw().toBuffer();
+  const row = async (file, top, width) => sharp(file).extract({ left: 0, top, width, height: 1 }).removeAlpha().raw().toBuffer();
+  const meanAbs = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += Math.abs(a[i] - b[i]); return s / a.length; };
+  for (const [label, url] of maps) {
+    const file = 'public/assets/' + url;
+    const { width, height } = await sharp(file).metadata();
+    const mid = Math.floor(height / 2);
+    const hSeam = meanAbs(await column(file, 0, height), await column(file, width - 1, height));
+    const hStep = meanAbs(await column(file, mid, height), await column(file, mid + 1, height));
+    const vSeam = meanAbs(await row(file, 0, width), await row(file, height - 1, width));
+    const vStep = meanAbs(await row(file, mid, width), await row(file, mid + 1, width));
+    assert.ok(hSeam <= Math.max(1.5, hStep * 4), `${label} wraps with a ${hSeam.toFixed(1)}-level vertical seam (interior step ${hStep.toFixed(2)})`);
+    assert.ok(vSeam <= Math.max(1.5, vStep * 4), `${label} wraps with a ${vSeam.toFixed(1)}-level horizontal seam (interior step ${vStep.toFixed(2)})`);
+  }
 });

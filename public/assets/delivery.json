@@ -129,8 +129,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 52972,
-      "bytes": 3689952
+      "previewBytes": 52070,
+      "bytes": 2766193
     },
     {
       "source": "textures/leaf-normal.webp",
@@ -139,8 +139,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 71670,
-      "bytes": 2651833
+      "previewBytes": 71010,
+      "bytes": 2692511
     },
     {
       "source": "textures/leaf-orm.webp",
@@ -149,8 +149,8 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 202940,
-      "bytes": 3946236
+      "previewBytes": 195614,
+      "bytes": 3898295
     },
     {
       "source": "textures/metal-color.webp",
@@ -159,8 +159,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 27518,
-      "bytes": 1176265
+      "previewBytes": 24282,
+      "bytes": 1108100
     },
     {
       "source": "textures/metal-normal.webp",
@@ -169,8 +169,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 2344,
-      "bytes": 487822
+      "previewBytes": 1948,
+      "bytes": 79718
     },
     {
       "source": "textures/metal-orm.webp",
@@ -179,8 +179,8 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 208212,
-      "bytes": 3787941
+      "previewBytes": 15990,
+      "bytes": 779058
     },
     {
       "source": "textures/grass-color.webp",
@@ -199,8 +199,8 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 171756,
-      "bytes": 4007804
+      "previewBytes": 164882,
+      "bytes": 3944996
     },
     {
       "source": "textures/grass-orm.webp",
@@ -209,8 +209,8 @@
       "width": 1024,
       "height": 1024,
       "previewWidth": 1024,
-      "previewBytes": 181998,
-      "bytes": 1086634
+      "previewBytes": 173354,
+      "bytes": 1078307
     },
     {
       "source": "textures/turf-color.webp",
@@ -219,8 +219,8 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 24040,
-      "bytes": 1013941
+      "previewBytes": 95736,
+      "bytes": 3581679
     },
     {
       "source": "textures/turf-normal.webp",
@@ -229,8 +229,8 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 259084,
-      "bytes": 4164939
+      "previewBytes": 183890,
+      "bytes": 4198560
     },
     {
       "source": "textures/turf-orm.webp",
@@ -239,8 +239,38 @@
       "width": 2048,
       "height": 2048,
       "previewWidth": 1024,
-      "previewBytes": 197478,
-      "bytes": 3985506
+      "previewBytes": 186838,
+      "bytes": 3921820
+    },
+    {
+      "source": "textures/stalk-color.webp",
+      "preview": "previews/stalk-color.webp",
+      "compressed": "textures/stalk-color.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 35876,
+      "bytes": 1314470
+    },
+    {
+      "source": "textures/stalk-normal.webp",
+      "preview": "previews/stalk-normal.webp",
+      "compressed": "textures/stalk-normal.ktx2",
+      "width": 2048,
+      "height": 2048,
+      "previewWidth": 1024,
+      "previewBytes": 42950,
+      "bytes": 2292701
+    },
+    {
+      "source": "textures/stalk-orm.webp",
+      "preview": "previews/stalk-orm.webp",
+      "compressed": "textures/stalk-orm.ktx2",
+      "width": 1024,
+      "height": 1024,
+      "previewWidth": 1024,
+      "previewBytes": 173052,
+      "bytes": 1046962
     },
     {
       "source": "textures/water-normal.webp",
@@ -249,8 +279,8 @@
       "width": 4096,
       "height": 4096,
       "previewWidth": 1024,
-      "previewBytes": 65182,
-      "bytes": 8101942
+      "previewBytes": 176400,
+      "bytes": 15119875
     }
   ]
 }

@@ -13,16 +13,21 @@ export class Environment {
   composer: EffectComposer; ao: GTAOPass; pmrem: T.PMREMGenerator; env: T.WebGLRenderTarget; rain: T.Points; rainPositions: Float32Array;
   quality = ''; signature = ''; frameScale = 1; width = 0; height = 0;
   sunDir = new T.Vector3(.4, .8, .3); shadowFocus: T.Vector3 | null = null;
+  // Authored site footprint plus the tallest caster, used to re-fit the shadow box each time the sun moves.
+  static readonly site = { x: 22.5, z: 17.5, h: 5 }; shadowFit = { left: -24, right: 24, top: 19, bottom: -19 };
   constructor(renderer: T.WebGLRenderer, scene: T.Scene, camera: T.PerspectiveCamera) {
     this.renderer = renderer; this.scene = scene; this.camera = camera;
     scene.add(this.sun, this.sun.target, this.hemi); this.sun.castShadow = true;
-    Object.assign(this.sun.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: .5, far: 130 });
-    this.sun.shadow.bias = -.00008; this.sun.shadow.normalBias = .045; this.sun.shadow.mapSize.set(4096, 4096);
+    // Frustum fitted to the 38x31 m site: shadow texels stay near 1 cm, which is what
+    // stops the large flat equipment panels from self-shadowing into speckle.
+    Object.assign(this.sun.shadow.camera, { left: -24, right: 24, top: 19, bottom: -19, near: .5, far: 130 });
+    this.sun.shadow.bias = -.00004; this.sun.shadow.normalBias = .075; this.sun.shadow.mapSize.set(3072, 3072);
     this.sky.scale.setScalar(450); scene.add(this.sky);
     Object.assign(this.sky.material.uniforms, { turbidity: { value: 3 }, rayleigh: { value: 2.1 }, mieCoefficient: { value: .003 }, mieDirectionalG: { value: .84 } });
     this.pmrem = new T.PMREMGenerator(renderer); const room = new RoomEnvironment(); this.env = this.pmrem.fromScene(room, .05); scene.environment = this.env.texture; scene.environmentIntensity=.4; room.dispose();
-    const ground = new T.Mesh(new T.PlaneGeometry(900, 900), new T.MeshStandardMaterial({ color: 0x8f9a83, roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.position.y = -.51; ground.receiveShadow = true; scene.add(ground);
-    scene.fog = new T.FogExp2(0xc8d5d5, .003);
+    // The surrounding plane is only scenery; haze it out before its edge becomes a hard horizon line.
+    const ground = new T.Mesh(new T.PlaneGeometry(900, 900), new T.MeshStandardMaterial({ color: 0x7d8a6f, roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.position.y = -.51; ground.receiveShadow = true; scene.add(ground);
+    scene.fog = new T.FogExp2(0xc8d5d5, .0055);
     const target = new T.WebGLRenderTarget(1, 1, { type: T.HalfFloatType }); target.samples = Math.min(4, renderer.capabilities.maxSamples);
     this.composer = new EffectComposer(renderer, target); this.composer.addPass(new RenderPass(scene, camera));
     // GTAO reuses the beauty buffer, so ambient occlusion costs one extra geometry pass instead of two.
@@ -45,13 +50,37 @@ export class Environment {
     const cam = this.sun.shadow.camera as T.OrthographicCamera;
     if (!position) {
       if (!this.shadowFocus) return;
-      this.shadowFocus = null; cam.left = -30; cam.right = 30; cam.top = 30; cam.bottom = -30; cam.updateProjectionMatrix();
+      this.shadowFocus = null;
       this.sun.target.position.set(0, 0, 0); this.sun.position.copy(this.sunDir).multiplyScalar(65);
-      this.renderer.shadowMap.needsUpdate = true; return;
+      this.fitShadowFrustum(); this.renderer.shadowMap.needsUpdate = true; return;
     }
     if (!this.shadowFocus) { this.shadowFocus = new T.Vector3(); cam.left = -9; cam.right = 9; cam.top = 9; cam.bottom = -9; cam.updateProjectionMatrix(); }
     this.shadowFocus.copy(position);
     this.sun.target.position.copy(position); this.sun.position.copy(position).addScaledVector(this.sunDir, 65);
+  }
+  /** The ortho box lives in light space, so a box sized to the site footprint drops the edge
+   *  trees and cuts long shadows once the sun swings; re-project the site corners instead. */
+  fitShadowFrustum() {
+    const dir = this.sunDir.clone().normalize();
+    const right = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), dir);
+    if (right.lengthSq() < 1e-6) right.set(1, 0, 0); else right.normalize();
+    const up = new T.Vector3().crossVectors(dir, right).normalize();
+    const probe = new T.Vector3(), { x, z, h } = Environment.site;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const px of [-x, x]) for (const pz of [-z, z]) for (const py of [0, h]) {
+      probe.set(px - this.sun.target.position.x, py - this.sun.target.position.y, pz - this.sun.target.position.z);
+      const lx = right.dot(probe), ly = up.dot(probe);
+      minX = Math.min(minX, lx); maxX = Math.max(maxX, lx); minY = Math.min(minY, ly); maxY = Math.max(maxY, ly);
+    }
+    const fit = { left: minX - 1.5, right: maxX + 1.5, top: maxY + 1.5, bottom: minY - 1.5 };
+    const changed = Math.abs(fit.left - this.shadowFit.left) > .01 || Math.abs(fit.right - this.shadowFit.right) > .01
+      || Math.abs(fit.top - this.shadowFit.top) > .01 || Math.abs(fit.bottom - this.shadowFit.bottom) > .01;
+    this.shadowFit = fit;
+    if (!this.shadowFocus) {
+      const cam = this.sun.shadow.camera as T.OrthographicCamera;
+      Object.assign(cam, fit);
+      if (changed) { cam.updateProjectionMatrix(); this.renderer.shadowMap.needsUpdate = true; }
+    }
   }
   resize() {
     const w = innerWidth, h = innerHeight;
@@ -77,13 +106,14 @@ export class Environment {
       this.sunDir.copy(sun);
       if (this.shadowFocus) { this.sun.target.position.copy(this.shadowFocus); this.sun.position.copy(this.shadowFocus).addScaledVector(sun, 65); }
       else { this.sun.position.copy(sun).multiplyScalar(65); this.sun.target.position.set(0, 0, 0); }
+      this.fitShadowFrustum();
       this.sky.material.uniforms.sunPosition.value.copy(sun);
       this.sky.material.uniforms.turbidity.value = cloudy ? 9 : state.weather === 'heat' ? 5 : 2.8;
       this.sun.intensity = state.weather === 'storm' ? .35 : cloudy ? 1.2 : 2.8; this.sun.color.set(elevation < .42 ? 0xffcf91 : 0xfff3e4);
       this.hemi.intensity = state.weather === 'storm' ? .5 : cloudy ? 1.0 : .9;
       const fogColor = (content.weather as Record<string, { fogColor?: number[] }>)[state.weather]?.fogColor;
       if (fogColor) (this.scene.fog as T.FogExp2).color.setRGB(fogColor[0], fogColor[1], fogColor[2]);
-      (this.scene.fog as T.FogExp2).density = state.weather === 'fog' ? .035 : state.weather === 'storm' ? .016 : state.weather === 'rain' ? .010 : .003;
+      (this.scene.fog as T.FogExp2).density = state.weather === 'fog' ? .035 : state.weather === 'storm' ? .016 : state.weather === 'rain' ? .010 : .0055;
       this.renderer.toneMappingExposure = elevation < .4 ? 1.05 : .95;
       this.rain.visible = ['rain', 'storm'].includes(state.weather);
     }

@@ -1,5 +1,5 @@
 {
-  "revision": "hd-materials-11",
+  "revision": "hd-materials-16",
   "source": "Poly Haven CC0 photographic surfaces plus original procedural leaf/metal materials",
   "families": {
     "concrete": {
@@ -91,19 +91,19 @@
         "url": "textures/leaf-color.webp",
         "width": 4096,
         "height": 4096,
-        "bytes": 329700
+        "bytes": 315868
       },
       "normal": {
         "url": "textures/leaf-normal.webp",
         "width": 4096,
         "height": 4096,
-        "bytes": 623710
+        "bytes": 622394
       },
       "orm": {
         "url": "textures/leaf-orm.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 783308
+        "bytes": 763684
       }
     },
     "metal": {
@@ -111,19 +111,19 @@
         "url": "textures/metal-color.webp",
         "width": 4096,
         "height": 4096,
-        "bytes": 220940
+        "bytes": 207614
       },
       "normal": {
         "url": "textures/metal-normal.webp",
         "width": 4096,
         "height": 4096,
-        "bytes": 120364
+        "bytes": 39060
       },
       "orm": {
         "url": "textures/metal-orm.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 797494
+        "bytes": 180828
       }
     },
     "grass": {
@@ -137,13 +137,13 @@
         "url": "textures/grass-normal.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 880132
+        "bytes": 901540
       },
       "orm": {
         "url": "textures/grass-orm.webp",
         "width": 1024,
         "height": 1024,
-        "bytes": 344530
+        "bytes": 341200
       }
     },
     "turf": {
@@ -151,19 +151,39 @@
         "url": "textures/turf-color.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 82208
+        "bytes": 247488
       },
       "normal": {
         "url": "textures/turf-normal.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 1019750
+        "bytes": 851134
       },
       "orm": {
         "url": "textures/turf-orm.webp",
         "width": 2048,
         "height": 2048,
-        "bytes": 761358
+        "bytes": 741568
+      }
+    },
+    "stalk": {
+      "color": {
+        "url": "textures/stalk-color.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 108008
+      },
+      "normal": {
+        "url": "textures/stalk-normal.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 307136
+      },
+      "orm": {
+        "url": "textures/stalk-orm.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 338420
       }
     }
   },
@@ -173,7 +193,7 @@
       "url": "textures/water-normal.webp",
       "width": 4096,
       "height": 4096,
-      "bytes": 775022
+      "bytes": 1758498
     },
     "source": "Original periodic multi-frequency surface-normal synthesis in water.py"
   }
