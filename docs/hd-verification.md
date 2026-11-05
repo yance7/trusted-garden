@@ -140,3 +140,5 @@ CI 在 Linux 上重新运行资产生成，`trusted-garden-v0.8-hd.glb` 比本�
 独立审查在本轮末发现并已修复：视图与绘图模式的选中态背景与面板同色（选中项几乎只剩 3 像素陶土条），改为独立的 #eae6da 选中色并给模式按钮补上陶土内阴影；焦点环与开关的陶土底色同色，改为墨色描边；次级文字 #6f6f68 在卡片底上仅 4.59:1，改为 #676760（纸面 5.41:1、卡片 5.17:1）；设计令牌原本在四个样式表各自定义并出现漂移，现集中到 navigation.css，其余样式表引用，场景面板的 18 处顶部偏移改为按 --chrome 计算，≤800px 折叠时 --chrome 同步降为 67px，消除页头与面板之间的空带；架构设备清单改为真正的 dl/dt/dd；视图、天气、场景、模式与画质按钮补上 aria-current / aria-pressed 状态；文档页 `.document-layout` 未闭合与页脚比正文宽 40px 的排版问题一并修正。
 
 验证：资产与状态测试 18/18；`verify-pages` 13 项、`verify-viewport` 1440/390/360/320 四档、`verify-review-fixes` 8/8、`verify-hd` 十二项交互步骤、`verify-loading` 本机约 3.9 秒进入且 28/28 材质补齐，页面错误均为零。
+
+发布复核：`404969b` 的 Pages 运行 `42024785151` build / deploy 均成功。线上 `navigation-DA9AhdWA.css` 与 `farm-BcGJ3gJ2.js` 的 SHA-256 与本地产物一致，`story.html` 已含新的卡片结构。真实网络经本机代理复核：`verify-pages` 13 项、`verify-viewport` 1440/390/360/320 四档、`verify-hd` 十二项交互步骤全部零错误，线上截图确认页头两层结构、选中态与文档卡片渲染正常。
