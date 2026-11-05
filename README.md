@@ -29,7 +29,7 @@ High detail 为完整材质与接触阴影；Performance 降低输出和阴影�
 
 ## 结构与交付
 
-网站已分为独立页面：首页 `index.html` 为交互 3D 农场；`story.html`、`design.html`、`architecture.html` 和 `notes.html` 分别承载项目介绍、设计依据、系统架构和模拟田野笔记。说明页独立加载，不下载 Three.js、模型或材质。首页的 Live controls 保留天气、图层与场景操作，顶部导航用于真正跳转页面；视点与场景通过 URL 连接田野笔记和 3D 农场。
+网站已分为独立页面：首页 `index.html` 为交互 3D 农场；`story.html`、`design.html`、`architecture.html` 和 `notes.html` 分别承载项目介绍、设计依据、系统架构和模拟田野笔记。全部页面共用一套纸质暖白 + 近黑墨色 + 陶土强调色的设计令牌与两层页头。说明页独立加载，不下载 Three.js、模型或材质。首页的 Live controls 保留天气、图层与场景操作，顶部导航用于真正跳转页面；视点与场景通过 URL 连接田野笔记和 3D 农场。
 
 - `src/`：渲染、天气、界面、相机、碰撞与人物动画。
 - `src/pages/` 与 `src/styles/`：页面导航、田野笔记和独立样式；`tools/site/navigation.ts` 在构建时生成共享导航。

@@ -12,7 +12,7 @@ export class UI {
   constructor(state: AppState, controls: Controls, snapshot: () => void) {
     this.state = state; this.controls = controls; this.snapshot = snapshot;
     state.scenario=this.entry.scenario;
-    document.querySelector('.wordmark span')!.textContent = 'REFERENCE FARM 001 · INTELLIGENT LANDSCAPE / V0.8 HD';
+    document.querySelector('.wordmark .tagline')!.textContent = 'Reference Farm 001 · Intelligent landscape · V0.8 HD';
     byId('hero').querySelectorAll('p').forEach(p => { if (/self-contained|V0\.8/.test(p.textContent || '')) p.textContent = 'A high-detail reference farm. Explore the physical systems, biological loops and human-supervised intelligence. All live readings are simulated.'; });
     byId('qualityHigh').id = 'quality-high'; byId('qualityPerf').id = 'quality-performance';
     byId('quality-high').textContent = 'High detail'; byId('quality-performance').textContent = 'Performance';
@@ -83,12 +83,12 @@ export class UI {
     const url=new URL(location.href);url.searchParams.set('view',s.view);url.searchParams.set('scenario',s.scenario);if(url.href!==location.href)history.replaceState(history.state,'',url);
     const drawerOpen=byId('drawer').classList.contains('open');byId('dataBtn').setAttribute('aria-expanded',String(drawerOpen));byId('dataBtn').classList.toggle('active',drawerOpen);
     for(const [id,pressed]of Object.entries({tourBtn:s.tour,v8Walk:s.walkMode,v7Sundial:s.sundial,v7Cinema:s.cinematic,v7Photo:s.photo}))byId(id).setAttribute('aria-pressed',String(pressed));
-    document.querySelectorAll<HTMLElement>('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===s.mode));byId<HTMLSelectElement>('hdMobileView').value=s.view;byId<HTMLSelectElement>('hdMobileMode').value=s.mode;
-    document.querySelectorAll<HTMLElement>('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === s.view));
-    document.querySelectorAll<HTMLElement>('[data-w]').forEach(b => b.classList.toggle('active', b.dataset.w === s.weather));
-    document.querySelectorAll<HTMLElement>('[data-s]').forEach(b => b.classList.toggle('active', b.dataset.s === s.scenario));
+    document.querySelectorAll<HTMLElement>('[data-mode]').forEach(b=>{const on=b.dataset.mode===s.mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});byId<HTMLSelectElement>('hdMobileView').value=s.view;byId<HTMLSelectElement>('hdMobileMode').value=s.mode;
+    document.querySelectorAll<HTMLElement>('[data-view]').forEach(b => {const on=b.dataset.view===s.view;b.classList.toggle('active', on);b.setAttribute('aria-current', on ? 'true' : 'false');});
+    document.querySelectorAll<HTMLElement>('[data-w]').forEach(b => {const on=b.dataset.w===s.weather;b.classList.toggle('active', on);b.setAttribute('aria-pressed', String(on));});
+    document.querySelectorAll<HTMLElement>('[data-s]').forEach(b => {const on=b.dataset.s===s.scenario;b.classList.toggle('active', on);b.setAttribute('aria-pressed', String(on));});
     document.querySelectorAll<HTMLElement>('[data-layer]').forEach(b => { b.classList.toggle('on', s.layers[b.dataset.layer!] !== false); b.setAttribute('aria-pressed', String(s.layers[b.dataset.layer!] !== false)); });
-    for (const q of ['high', 'performance', 'photo']) byId(`quality-${q}`).classList.toggle('active', q === s.quality);
+    for (const q of ['high', 'performance', 'photo']) { const el = byId(`quality-${q}`); el.classList.toggle('active', q === s.quality); el.setAttribute('aria-pressed', String(q === s.quality)); }
     byId('hdWalkPanel').classList.toggle('hidden', !s.walkMode); byId('v8Walk').classList.toggle('active', s.walkMode); byId('v8First').classList.toggle('active', s.person === 'first'); byId('v8Third').classList.toggle('active', s.person === 'third');
     byId('hdCrosshair').classList.toggle('visible', s.walkMode && s.person === 'first'); byId('tourBtn').classList.toggle('active', s.tour);
     byId('labelSwitch').classList.toggle('on', s.labels); byId('dataOverlay').classList.toggle('on', s.overlay);
